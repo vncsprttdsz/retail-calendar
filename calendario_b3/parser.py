@@ -48,8 +48,15 @@ def papel_do_cabecalho(texto: object) -> str | None:
     return None
 
 
+def _vazio(v: object) -> bool:
+    try:
+        return v is None or bool(pd.isna(v))  # None, NaN, NaT
+    except (TypeError, ValueError):
+        return False
+
+
 def parse_data(v: object) -> tuple[date, time | None] | None:
-    if v is None or (isinstance(v, float) and pd.isna(v)):
+    if _vazio(v):
         return None
     if isinstance(v, pd.Timestamp):
         if pd.isna(v):
@@ -86,7 +93,7 @@ def parse_data(v: object) -> tuple[date, time | None] | None:
 
 
 def parse_hora(v: object) -> time | None:
-    if v is None or (isinstance(v, float) and pd.isna(v)):
+    if _vazio(v):
         return None
     if isinstance(v, datetime):
         return v.time()
@@ -102,7 +109,7 @@ def parse_hora(v: object) -> time | None:
 
 
 def _texto(v: object) -> str:
-    if v is None or (isinstance(v, float) and pd.isna(v)):
+    if _vazio(v):
         return ""
     if isinstance(v, float) and v.is_integer():
         v = int(v)
@@ -301,16 +308,18 @@ def extrair_linhas(df: pd.DataFrame, forcadas: dict[str, str] | None = None) -> 
     return linhas
 
 
-def descrever(df: pd.DataFrame, forcadas: dict[str, str] | None = None) -> str:
+def descrever(df: pd.DataFrame, forcadas: dict[str, str] | None = None, linhas_amostra: int = 30) -> str:
+    with pd.option_context("display.width", 250, "display.max_columns", 40):
+        amostra = df.head(linhas_amostra).to_string(max_colwidth=28)
+    saida = f"  primeiras {linhas_amostra} linhas (cruas):\n{amostra}\n"
     est = detectar_estrutura(df, forcadas)
     if est is None:
-        amostra = df.head(8).to_string(max_colwidth=30)
-        return f"  estrutura NÃO reconhecida. Primeiras linhas:\n{amostra}"
+        return saida + "  estrutura NÃO reconhecida."
     papeis = {p: est.cabecalho[j] for p, j in est.papeis.items()}
     datas = [est.cabecalho[j] for j in est.colunas_data]
     linhas = extrair_linhas(df, forcadas)
-    ex = "\n".join(f"    {l}" for l in linhas[:5])
-    return (
+    ex = "\n".join(f"    {l}" for l in linhas[:8])
+    return saida + (
         f"  cabeçalho na linha {est.linha_cabecalho + 1}: {est.cabecalho}\n"
         f"  formato: {est.formato} | papéis: {_fmt(papeis)} | colunas de data: {datas}\n"
         f"  {len(linhas)} linhas com data. Exemplos:\n{ex}"

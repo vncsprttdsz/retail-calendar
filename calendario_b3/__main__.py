@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
+import traceback
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -76,7 +77,10 @@ def main(argv: list[str] | None = None) -> int:
     if args.inspecionar:
         for nome, df in tabelas:
             print(f"\n== {nome} ({df.shape[0]}x{df.shape[1]})")
-            print(parser.descrever(df, forcadas))
+            try:
+                print(parser.descrever(df, forcadas))
+            except Exception:  # inspeção mostra o erro de uma aba e segue para as outras
+                traceback.print_exc(file=sys.stdout)
         return 0
 
     linhas: list[LinhaFonte] = []

@@ -232,3 +232,11 @@ def test_cli_nao_sobrescreve_quando_nada_e_lido(tmp_path: Path):
 
 def test_html_sem_tabela_nao_quebra():
     assert parser.tabelas_de_html("<html><body><p>sem tabela</p></body></html>") == []
+
+
+def test_celulas_vazias_de_data_nat():
+    df = pd.DataFrame(
+        [["Empresa", "Evento", "Data"], ["Lojas Renner", "Resultado 3T26", pd.NaT], ["Lojas Renner", "Resultado 4T26", pd.Timestamp("2027-02-25")]]
+    )
+    assert parser.parse_data(pd.NaT) is None
+    assert [l.data for l in parser.extrair_linhas(df)] == [date(2027, 2, 25)]
