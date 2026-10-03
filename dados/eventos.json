@@ -1,0 +1,762 @@
+[
+  {
+    "ticker": "ASAI3",
+    "empresa": "ASSAI",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-02-11",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "RIAA3",
+    "empresa": "RIACHUELO",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-02-11",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "CEAB3",
+    "empresa": "CEA MODAS",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-02-24",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "PGMN3",
+    "empresa": "PAGUE MENOS",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-02-27",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "RADL3",
+    "empresa": "RAIADROGASIL",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-03-03",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "VULC3",
+    "empresa": "VULCABRAS",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-03-03",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "LJQQ3",
+    "empresa": "QUERO-QUERO",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-03-04",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "LREN3",
+    "empresa": "LOJAS RENNER",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-03-05",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "SBFG3",
+    "empresa": "GRUPO SBF",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-03-09",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "TFCO4",
+    "empresa": "TRACK FIELD",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-03-09",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "AZZA3",
+    "empresa": "AZZAS 2154",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-03-11",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "SMFT3",
+    "empresa": "SMART FIT",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-03-11",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "MGLU3",
+    "empresa": "MAGAZ LUIZA",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-03-12",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "NATU3",
+    "empresa": "NATURA",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-03-16",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "GMAT3",
+    "empresa": "GRUPO MATEUS",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-03-18",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "VIVA3",
+    "empresa": "VIVARA S.A.",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-03-18",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "PNVL3",
+    "empresa": "DIMED",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-03-19",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "ALLD3",
+    "empresa": "ALLIED",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-03-25",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "AUAU3",
+    "empresa": "PETZCOBASI",
+    "evento": "Resultado 4T25 (DFP)",
+    "data": "2026-03-26",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "ASAI3",
+    "empresa": "ASSAI",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-04-27",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "PGMN3",
+    "empresa": "PAGUE MENOS",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-04",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "CEAB3",
+    "empresa": "CEA MODAS",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-05",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "RADL3",
+    "empresa": "RAIADROGASIL",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-05",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "VULC3",
+    "empresa": "VULCABRAS",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-05",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "PNVL3",
+    "empresa": "DIMED",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-06",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "RIAA3",
+    "empresa": "RIACHUELO",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-06",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "SMFT3",
+    "empresa": "SMART FIT",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-06",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "ALLD3",
+    "empresa": "ALLIED",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-07",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "AUAU3",
+    "empresa": "PETZCOBASI",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-07",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "AZZA3",
+    "empresa": "AZZAS 2154",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-07",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "LJQQ3",
+    "empresa": "QUERO-QUERO",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-07",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "LREN3",
+    "empresa": "LOJAS RENNER",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-07",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "MGLU3",
+    "empresa": "MAGAZ LUIZA",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-07",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "VIVA3",
+    "empresa": "VIVARA S.A.",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-07",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "NATU3",
+    "empresa": "NATURA",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-11",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "SBFG3",
+    "empresa": "GRUPO SBF",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-11",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "TFCO4",
+    "empresa": "TRACK FIELD",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-11",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "GMAT3",
+    "empresa": "GRUPO MATEUS",
+    "evento": "Resultado 1T26 (ITR)",
+    "data": "2026-05-14",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "PGMN3",
+    "empresa": "PAGUE MENOS",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-03",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "CEAB3",
+    "empresa": "CEA MODAS",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-04",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "RADL3",
+    "empresa": "RAIADROGASIL",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-04",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "VULC3",
+    "empresa": "VULCABRAS",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-04",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "RIAA3",
+    "empresa": "RIACHUELO",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-05",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "SMFT3",
+    "empresa": "SMART FIT",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-05",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "VIVA3",
+    "empresa": "VIVARA S.A.",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-05",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "ASAI3",
+    "empresa": "ASSAI",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-06",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "LJQQ3",
+    "empresa": "QUERO-QUERO",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-06",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "LREN3",
+    "empresa": "LOJAS RENNER",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-06",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "MGLU3",
+    "empresa": "MAGAZ LUIZA",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-06",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "PNVL3",
+    "empresa": "DIMED",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-06",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "NATU3",
+    "empresa": "NATURA",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-10",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "SBFG3",
+    "empresa": "GRUPO SBF",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-10",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "ALLD3",
+    "empresa": "ALLIED",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-12",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "AZZA3",
+    "empresa": "AZZAS 2154",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-12",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "TFCO4",
+    "empresa": "TRACK FIELD",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-12",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "AUAU3",
+    "empresa": "PETZCOBASI",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-13",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "GMAT3",
+    "empresa": "GRUPO MATEUS",
+    "evento": "Resultado 2T26 (ITR)",
+    "data": "2026-08-13",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "RADL3",
+    "empresa": "RAIADROGASIL",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-03",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "CEAB3",
+    "empresa": "CEA MODAS",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-04",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "PGMN3",
+    "empresa": "PAGUE MENOS",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-04",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "RIAA3",
+    "empresa": "RIACHUELO",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-04",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "SMFT3",
+    "empresa": "SMART FIT",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-04",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "ASAI3",
+    "empresa": "ASSAI",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-05",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "LJQQ3",
+    "empresa": "QUERO-QUERO",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-05",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "LREN3",
+    "empresa": "LOJAS RENNER",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-05",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "MGLU3",
+    "empresa": "MAGAZ LUIZA",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-05",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "PNVL3",
+    "empresa": "DIMED",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-05",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "VIVA3",
+    "empresa": "VIVARA S.A.",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-05",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "SBFG3",
+    "empresa": "GRUPO SBF",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-09",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "VULC3",
+    "empresa": "VULCABRAS",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-10",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "AZZA3",
+    "empresa": "AZZAS 2154",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-11",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "ALLD3",
+    "empresa": "ALLIED",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-12",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "AUAU3",
+    "empresa": "PETZCOBASI",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-12",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "GMAT3",
+    "empresa": "GRUPO MATEUS",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-12",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "NATU3",
+    "empresa": "NATURA",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-12",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "TFCO4",
+    "empresa": "TRACK FIELD",
+    "evento": "Resultado 3T26 (ITR)",
+    "data": "2026-11-12",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  }
+]

@@ -1,0 +1,1152 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//retail-calendar//Calendario de Resultados B3//PT
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Resultados - Cobertura Varejo
+X-WR-CALDESC:Datas de divulgação de resultados das empresas da cobertura 
+ (fonte: B3 - Cronograma de Eventos Corporativos)
+X-WR-TIMEZONE:America/Sao_Paulo
+REFRESH-INTERVAL;VALUE=DURATION:PT4H
+X-PUBLISHED-TTL:PT4H
+BEGIN:VEVENT
+UID:2555313a24e209c1@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260211
+DTEND;VALUE=DATE:20260212
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:ASAI3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: ASSAI\nTicker: ASAI3\nEvento: Resultado 4T25 (DFP)\nHo
+ rário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/produto
+ s-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-event
+ os-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:1033b67d2ab229a0@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260211
+DTEND;VALUE=DATE:20260212
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:RIAA3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: RIACHUELO\nTicker: RIAA3\nEvento: Resultado 4T25 (DFP)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:52a24ca51bac365f@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260224
+DTEND;VALUE=DATE:20260225
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:CEAB3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: CEA MODAS\nTicker: CEAB3\nEvento: Resultado 4T25 (DFP)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:423941e4e2eab0bb@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260227
+DTEND;VALUE=DATE:20260228
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:PGMN3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: PAGUE MENOS\nTicker: PGMN3\nEvento: Resultado 4T25 (DF
+ P)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:39c6adc56ca65a7b@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260303
+DTEND;VALUE=DATE:20260304
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:RADL3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: RAIADROGASIL\nTicker: RADL3\nEvento: Resultado 4T25 (D
+ FP)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/
+ produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-d
+ e-eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:8abe645bc68b0559@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260303
+DTEND;VALUE=DATE:20260304
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:VULC3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: VULCABRAS\nTicker: VULC3\nEvento: Resultado 4T25 (DFP)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:be05a340f7220153@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260304
+DTEND;VALUE=DATE:20260305
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:LJQQ3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: QUERO-QUERO\nTicker: LJQQ3\nEvento: Resultado 4T25 (DF
+ P)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:080dd6397a426614@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260305
+DTEND;VALUE=DATE:20260306
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:LREN3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: LOJAS RENNER\nTicker: LREN3\nEvento: Resultado 4T25 (D
+ FP)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/
+ produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-d
+ e-eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:ab4208f63203d201@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260309
+DTEND;VALUE=DATE:20260310
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:SBFG3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: GRUPO SBF\nTicker: SBFG3\nEvento: Resultado 4T25 (DFP)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:bb213c0d736f6e89@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260309
+DTEND;VALUE=DATE:20260310
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:TFCO4 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: TRACK FIELD\nTicker: TFCO4\nEvento: Resultado 4T25 (DF
+ P)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:f090cdaab2d1e0d0@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260311
+DTEND;VALUE=DATE:20260312
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:AZZA3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: AZZAS 2154\nTicker: AZZA3\nEvento: Resultado 4T25 (DFP
+ )\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pr
+ odutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-
+ eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:1fba10638dddd4e8@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260311
+DTEND;VALUE=DATE:20260312
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:SMFT3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: SMART FIT\nTicker: SMFT3\nEvento: Resultado 4T25 (DFP)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:038644b606d452aa@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260312
+DTEND;VALUE=DATE:20260313
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:MGLU3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: MAGAZ LUIZA\nTicker: MGLU3\nEvento: Resultado 4T25 (DF
+ P)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:a2b53a9e37ff948e@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260316
+DTEND;VALUE=DATE:20260317
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:NATU3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: NATURA\nTicker: NATU3\nEvento: Resultado 4T25 (DFP)\nH
+ orário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/produt
+ os-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-even
+ tos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:036515b2130f3a52@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260318
+DTEND;VALUE=DATE:20260319
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:GMAT3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: GRUPO MATEUS\nTicker: GMAT3\nEvento: Resultado 4T25 (D
+ FP)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/
+ produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-d
+ e-eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:cef0647f36bf9644@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260318
+DTEND;VALUE=DATE:20260319
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:VIVA3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: VIVARA S.A.\nTicker: VIVA3\nEvento: Resultado 4T25 (DF
+ P)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:70ead4c7c1d3f7d8@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260319
+DTEND;VALUE=DATE:20260320
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:PNVL3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: DIMED\nTicker: PNVL3\nEvento: Resultado 4T25 (DFP)\nHo
+ rário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/produto
+ s-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-event
+ os-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:6c895ef8ae48a5b2@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260325
+DTEND;VALUE=DATE:20260326
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:ALLD3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: ALLIED\nTicker: ALLD3\nEvento: Resultado 4T25 (DFP)\nH
+ orário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/produt
+ os-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-even
+ tos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:c56ef0d586910e93@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260326
+DTEND;VALUE=DATE:20260327
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:AUAU3 - Resultado 4T25 (DFP)
+DESCRIPTION:Empresa: PETZCOBASI\nTicker: AUAU3\nEvento: Resultado 4T25 (DFP
+ )\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pr
+ odutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-
+ eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:23082a73c181cec2@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260427
+DTEND;VALUE=DATE:20260428
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:ASAI3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: ASSAI\nTicker: ASAI3\nEvento: Resultado 1T26 (ITR)\nHo
+ rário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/produto
+ s-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-event
+ os-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:ab3b7e5f0d9ba8ba@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260504
+DTEND;VALUE=DATE:20260505
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:PGMN3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: PAGUE MENOS\nTicker: PGMN3\nEvento: Resultado 1T26 (IT
+ R)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:c7026d1eec85877f@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260505
+DTEND;VALUE=DATE:20260506
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:CEAB3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: CEA MODAS\nTicker: CEAB3\nEvento: Resultado 1T26 (ITR)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:bd9da139cf741471@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260505
+DTEND;VALUE=DATE:20260506
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:RADL3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: RAIADROGASIL\nTicker: RADL3\nEvento: Resultado 1T26 (I
+ TR)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/
+ produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-d
+ e-eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:e4bfd03c65561e73@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260505
+DTEND;VALUE=DATE:20260506
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:VULC3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: VULCABRAS\nTicker: VULC3\nEvento: Resultado 1T26 (ITR)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:1a66fb689832cf87@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260506
+DTEND;VALUE=DATE:20260507
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:PNVL3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: DIMED\nTicker: PNVL3\nEvento: Resultado 1T26 (ITR)\nHo
+ rário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/produto
+ s-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-event
+ os-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:97826002fd834370@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260506
+DTEND;VALUE=DATE:20260507
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:RIAA3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: RIACHUELO\nTicker: RIAA3\nEvento: Resultado 1T26 (ITR)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:6bc7aa613c337b5e@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260506
+DTEND;VALUE=DATE:20260507
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:SMFT3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: SMART FIT\nTicker: SMFT3\nEvento: Resultado 1T26 (ITR)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:68ba58c672f7eafa@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260507
+DTEND;VALUE=DATE:20260508
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:ALLD3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: ALLIED\nTicker: ALLD3\nEvento: Resultado 1T26 (ITR)\nH
+ orário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/produt
+ os-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-even
+ tos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:111f30f448415cfa@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260507
+DTEND;VALUE=DATE:20260508
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:AUAU3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: PETZCOBASI\nTicker: AUAU3\nEvento: Resultado 1T26 (ITR
+ )\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pr
+ odutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-
+ eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:8cec714cba24b42c@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260507
+DTEND;VALUE=DATE:20260508
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:AZZA3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: AZZAS 2154\nTicker: AZZA3\nEvento: Resultado 1T26 (ITR
+ )\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pr
+ odutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-
+ eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:fe67e674a71827bf@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260507
+DTEND;VALUE=DATE:20260508
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:LJQQ3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: QUERO-QUERO\nTicker: LJQQ3\nEvento: Resultado 1T26 (IT
+ R)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:93127ad99c09d281@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260507
+DTEND;VALUE=DATE:20260508
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:LREN3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: LOJAS RENNER\nTicker: LREN3\nEvento: Resultado 1T26 (I
+ TR)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/
+ produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-d
+ e-eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:b19f6c746554ff30@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260507
+DTEND;VALUE=DATE:20260508
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:MGLU3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: MAGAZ LUIZA\nTicker: MGLU3\nEvento: Resultado 1T26 (IT
+ R)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:61aebaa8695d8a5b@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260507
+DTEND;VALUE=DATE:20260508
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:VIVA3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: VIVARA S.A.\nTicker: VIVA3\nEvento: Resultado 1T26 (IT
+ R)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:9204d0e693a31928@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260511
+DTEND;VALUE=DATE:20260512
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:NATU3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: NATURA\nTicker: NATU3\nEvento: Resultado 1T26 (ITR)\nH
+ orário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/produt
+ os-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-even
+ tos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:9b0f180f297e63bb@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260511
+DTEND;VALUE=DATE:20260512
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:SBFG3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: GRUPO SBF\nTicker: SBFG3\nEvento: Resultado 1T26 (ITR)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:a1b753739d9c9c8c@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260511
+DTEND;VALUE=DATE:20260512
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:TFCO4 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: TRACK FIELD\nTicker: TFCO4\nEvento: Resultado 1T26 (IT
+ R)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:572c3bf05e3eb501@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260514
+DTEND;VALUE=DATE:20260515
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:GMAT3 - Resultado 1T26 (ITR)
+DESCRIPTION:Empresa: GRUPO MATEUS\nTicker: GMAT3\nEvento: Resultado 1T26 (I
+ TR)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/
+ produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-d
+ e-eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:850aa5496450461c@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260803
+DTEND;VALUE=DATE:20260804
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:PGMN3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: PAGUE MENOS\nTicker: PGMN3\nEvento: Resultado 2T26 (IT
+ R)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:cff4deac56da3261@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260804
+DTEND;VALUE=DATE:20260805
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:CEAB3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: CEA MODAS\nTicker: CEAB3\nEvento: Resultado 2T26 (ITR)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:7aa080a6e583325c@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260804
+DTEND;VALUE=DATE:20260805
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:RADL3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: RAIADROGASIL\nTicker: RADL3\nEvento: Resultado 2T26 (I
+ TR)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/
+ produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-d
+ e-eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:c3bd2e2430a77e02@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260804
+DTEND;VALUE=DATE:20260805
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:VULC3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: VULCABRAS\nTicker: VULC3\nEvento: Resultado 2T26 (ITR)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:a722c48423f2807b@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260805
+DTEND;VALUE=DATE:20260806
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:RIAA3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: RIACHUELO\nTicker: RIAA3\nEvento: Resultado 2T26 (ITR)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:34f6537fbf4f2e9e@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260805
+DTEND;VALUE=DATE:20260806
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:SMFT3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: SMART FIT\nTicker: SMFT3\nEvento: Resultado 2T26 (ITR)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:c70e72963fdb9ce8@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260805
+DTEND;VALUE=DATE:20260806
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:VIVA3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: VIVARA S.A.\nTicker: VIVA3\nEvento: Resultado 2T26 (IT
+ R)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:8cf00577d6c77841@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260806
+DTEND;VALUE=DATE:20260807
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:ASAI3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: ASSAI\nTicker: ASAI3\nEvento: Resultado 2T26 (ITR)\nHo
+ rário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/produto
+ s-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-event
+ os-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:a02bd162ca8182dc@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260806
+DTEND;VALUE=DATE:20260807
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:LJQQ3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: QUERO-QUERO\nTicker: LJQQ3\nEvento: Resultado 2T26 (IT
+ R)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:57cbb326271b2b30@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260806
+DTEND;VALUE=DATE:20260807
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:LREN3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: LOJAS RENNER\nTicker: LREN3\nEvento: Resultado 2T26 (I
+ TR)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/
+ produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-d
+ e-eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:e3ccffbb509d6345@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260806
+DTEND;VALUE=DATE:20260807
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:MGLU3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: MAGAZ LUIZA\nTicker: MGLU3\nEvento: Resultado 2T26 (IT
+ R)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:a795d6492d06ad04@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260806
+DTEND;VALUE=DATE:20260807
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:PNVL3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: DIMED\nTicker: PNVL3\nEvento: Resultado 2T26 (ITR)\nHo
+ rário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/produto
+ s-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-event
+ os-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:68cd1103e9fe7443@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260810
+DTEND;VALUE=DATE:20260811
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:NATU3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: NATURA\nTicker: NATU3\nEvento: Resultado 2T26 (ITR)\nH
+ orário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/produt
+ os-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-even
+ tos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:d88973443549bc53@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260810
+DTEND;VALUE=DATE:20260811
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:SBFG3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: GRUPO SBF\nTicker: SBFG3\nEvento: Resultado 2T26 (ITR)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:e3dcc09e2b7ce0ec@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260812
+DTEND;VALUE=DATE:20260813
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:ALLD3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: ALLIED\nTicker: ALLD3\nEvento: Resultado 2T26 (ITR)\nH
+ orário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/produt
+ os-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-even
+ tos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:596d81ca3829ad6c@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260812
+DTEND;VALUE=DATE:20260813
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:AZZA3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: AZZAS 2154\nTicker: AZZA3\nEvento: Resultado 2T26 (ITR
+ )\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pr
+ odutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-
+ eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:927a226d405a3f63@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260812
+DTEND;VALUE=DATE:20260813
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:TFCO4 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: TRACK FIELD\nTicker: TFCO4\nEvento: Resultado 2T26 (IT
+ R)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:da1c264359d0907e@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260813
+DTEND;VALUE=DATE:20260814
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:AUAU3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: PETZCOBASI\nTicker: AUAU3\nEvento: Resultado 2T26 (ITR
+ )\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pr
+ odutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-
+ eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:885033bc5ee00e5b@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20260813
+DTEND;VALUE=DATE:20260814
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:GMAT3 - Resultado 2T26 (ITR)
+DESCRIPTION:Empresa: GRUPO MATEUS\nTicker: GMAT3\nEvento: Resultado 2T26 (I
+ TR)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/
+ produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-d
+ e-eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:2206324bf99d847e@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261103
+DTEND;VALUE=DATE:20261104
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:RADL3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: RAIADROGASIL\nTicker: RADL3\nEvento: Resultado 3T26 (I
+ TR)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/
+ produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-d
+ e-eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:ac254194395538ed@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261104
+DTEND;VALUE=DATE:20261105
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:CEAB3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: CEA MODAS\nTicker: CEAB3\nEvento: Resultado 3T26 (ITR)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:cb2e186124a55580@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261104
+DTEND;VALUE=DATE:20261105
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:PGMN3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: PAGUE MENOS\nTicker: PGMN3\nEvento: Resultado 3T26 (IT
+ R)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:00305959efd58b7d@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261104
+DTEND;VALUE=DATE:20261105
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:RIAA3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: RIACHUELO\nTicker: RIAA3\nEvento: Resultado 3T26 (ITR)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:6ac495391d9be173@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261104
+DTEND;VALUE=DATE:20261105
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:SMFT3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: SMART FIT\nTicker: SMFT3\nEvento: Resultado 3T26 (ITR)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:874b2b3fcc2ca358@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261105
+DTEND;VALUE=DATE:20261106
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:ASAI3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: ASSAI\nTicker: ASAI3\nEvento: Resultado 3T26 (ITR)\nHo
+ rário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/produto
+ s-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-event
+ os-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:8906efd1ef5598e3@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261105
+DTEND;VALUE=DATE:20261106
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:LJQQ3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: QUERO-QUERO\nTicker: LJQQ3\nEvento: Resultado 3T26 (IT
+ R)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:cbc29f6ef0305131@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261105
+DTEND;VALUE=DATE:20261106
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:LREN3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: LOJAS RENNER\nTicker: LREN3\nEvento: Resultado 3T26 (I
+ TR)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/
+ produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-d
+ e-eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:c261f2e2c510e855@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261105
+DTEND;VALUE=DATE:20261106
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:MGLU3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: MAGAZ LUIZA\nTicker: MGLU3\nEvento: Resultado 3T26 (IT
+ R)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:c2652766b05a4d80@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261105
+DTEND;VALUE=DATE:20261106
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:PNVL3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: DIMED\nTicker: PNVL3\nEvento: Resultado 3T26 (ITR)\nHo
+ rário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/produto
+ s-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-event
+ os-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:fbefbc8353f04b93@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261105
+DTEND;VALUE=DATE:20261106
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:VIVA3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: VIVARA S.A.\nTicker: VIVA3\nEvento: Resultado 3T26 (IT
+ R)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:aa1b0639500fd63c@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261109
+DTEND;VALUE=DATE:20261110
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:SBFG3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: GRUPO SBF\nTicker: SBFG3\nEvento: Resultado 3T26 (ITR)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:fc0ebb015be7e224@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261110
+DTEND;VALUE=DATE:20261111
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:VULC3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: VULCABRAS\nTicker: VULC3\nEvento: Resultado 3T26 (ITR)
+ \nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pro
+ dutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-e
+ ventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:e19eabd8417ac9e1@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261111
+DTEND;VALUE=DATE:20261112
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:AZZA3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: AZZAS 2154\nTicker: AZZA3\nEvento: Resultado 3T26 (ITR
+ )\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pr
+ odutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-
+ eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:0946f01bc7654f65@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261112
+DTEND;VALUE=DATE:20261113
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:ALLD3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: ALLIED\nTicker: ALLD3\nEvento: Resultado 3T26 (ITR)\nH
+ orário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/produt
+ os-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-even
+ tos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:5b4d90d6cad98e89@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261112
+DTEND;VALUE=DATE:20261113
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:AUAU3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: PETZCOBASI\nTicker: AUAU3\nEvento: Resultado 3T26 (ITR
+ )\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/pr
+ odutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-
+ eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:8e394e1ef4765f02@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261112
+DTEND;VALUE=DATE:20261113
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:GMAT3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: GRUPO MATEUS\nTicker: GMAT3\nEvento: Resultado 3T26 (I
+ TR)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/
+ produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-d
+ e-eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:068ff9c7fd7e7dcd@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261112
+DTEND;VALUE=DATE:20261113
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:NATU3 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: NATURA\nTicker: NATU3\nEvento: Resultado 3T26 (ITR)\nH
+ orário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/produt
+ os-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-even
+ tos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+BEGIN:VEVENT
+UID:a84bd800296839cf@retail-calendar
+DTSTAMP:20261003T171057Z
+DTSTART;VALUE=DATE:20261112
+DTEND;VALUE=DATE:20261113
+TRANSP:TRANSPARENT
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
+SUMMARY:TFCO4 - Resultado 3T26 (ITR)
+DESCRIPTION:Empresa: TRACK FIELD\nTicker: TFCO4\nEvento: Resultado 3T26 (IT
+ R)\nHorário: não informado pela B3\nFonte: https://www.b3.com.br/pt_br/p
+ rodutos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de
+ -eventos-corporativos/
+CATEGORIES:Resultados
+END:VEVENT
+END:VCALENDAR
