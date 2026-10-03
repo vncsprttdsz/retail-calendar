@@ -1,0 +1,199 @@
+import io
+from datetime import date, datetime, time, timezone
+from pathlib import Path
+
+import openpyxl
+import pandas as pd
+import pytest
+
+from calendario_b3 import __main__ as cli
+from calendario_b3 import fonte, historico, ics, parser
+from calendario_b3.filtros import carregar_cobertura, filtrar
+from calendario_b3.modelo import Evento, LinhaFonte
+
+PADROES = ["resultado", r"\bITR\b", r"\bDFP\b", "demonstra", "teleconfer"]
+COBERTURA = carregar_cobertura(
+    [
+        {"ticker": "LREN3", "nomes": ["Lojas Renner"]},
+        {"ticker": "MGLU3", "nomes": ["Magazine Luiza"]},
+        {"ticker": "ASAI3", "nomes": ["Assai", "Sendas"]},
+    ]
+)
+
+
+def xlsx(linhas: list[list]) -> bytes:
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Cronograma"
+    for linha in linhas:
+        ws.append(linha)
+    buf = io.BytesIO()
+    wb.save(buf)
+    return buf.getvalue()
+
+
+def planilha_longa() -> bytes:
+    return xlsx(
+        [
+            ["Cronograma de Eventos Corporativos"],
+            ["Atualizado em 03/10/2026"],
+            [],
+            ["Empresa", "Código", "Evento", "Data do Evento", "Horário"],
+            ["LOJAS RENNER S.A.", "LREN3", "Divulgação de Resultados 3T26", datetime(2026, 10, 29), "18:00"],
+            [None, None, "Teleconferência de Resultados", datetime(2026, 10, 30, 10, 0), None],
+            ["MAGAZINE LUIZA S.A.", "MGLU3", "Divulgação de Resultados 3T26", "06/11/2026", None],
+            ["MAGAZINE LUIZA S.A.", "MGLU3", "Assembleia Geral Extraordinária", "20/11/2026", None],
+            ["PETROBRAS", "PETR4", "Divulgação de Resultados 3T26", "05/11/2026", None],
+        ]
+    )
+
+
+def planilha_larga() -> bytes:
+    return xlsx(
+        [
+            ["Emissor", "Razão Social", "ITR 3T26", "DFP 2026", "AGO"],
+            ["LREN", "LOJAS RENNER S.A.", datetime(2026, 10, 29), datetime(2027, 2, 25), datetime(2027, 4, 20)],
+            ["ASAI", "SENDAS DISTRIBUIDORA S.A.", datetime(2026, 11, 3), "", ""],
+            ["VALE", "VALE S.A.", datetime(2026, 10, 23), datetime(2027, 2, 19), ""],
+        ]
+    )
+
+
+def eventos_de(conteudo: bytes, nome="x.xlsx"):
+    linhas = []
+    for _, df in parser.tabelas_de_arquivo(conteudo, nome):
+        linhas += parser.extrair_linhas(df)
+    return filtrar(linhas, COBERTURA, PADROES, incluir_todos=False)
+
+
+def test_formato_longo_com_titulo_e_celulas_mescladas():
+    eventos = eventos_de(planilha_longa())
+    resumo = [(e.ticker, e.evento, e.data, e.hora) for e in eventos]
+    assert resumo == [
+        ("LREN3", "Divulgação de Resultados 3T26", date(2026, 10, 29), time(18, 0)),
+        ("LREN3", "Teleconferência de Resultados", date(2026, 10, 30), time(10, 0)),
+        ("MGLU3", "Divulgação de Resultados 3T26", date(2026, 11, 6), None),
+    ]
+
+
+def test_formato_largo_usa_cabecalho_como_evento():
+    eventos = eventos_de(planilha_larga())
+    resumo = [(e.ticker, e.evento, e.data) for e in eventos]
+    assert resumo == [
+        ("LREN3", "ITR 3T26", date(2026, 10, 29)),
+        ("ASAI3", "ITR 3T26", date(2026, 11, 3)),
+        ("LREN3", "DFP 2026", date(2027, 2, 25)),
+    ]
+
+
+def test_incluir_todos_traz_assembleia():
+    linhas = []
+    for _, df in parser.tabelas_de_arquivo(planilha_longa(), "x.xlsx"):
+        linhas += parser.extrair_linhas(df)
+    eventos = filtrar(linhas, COBERTURA, PADROES, incluir_todos=True)
+    assert any("Assembleia" in e.evento for e in eventos)
+    assert not any(e.ticker == "PETR4" for e in eventos)
+
+
+def test_csv_ponto_e_virgula_sem_coluna_de_codigo():
+    csv = "Companhia;Evento;Data\nLojas Renner S.A.;Resultado 3T26;29/10/2026\nOutra;Resultado;01/11/2026\n"
+    eventos = eventos_de(csv.encode("cp1252"), "x.csv")
+    assert [(e.ticker, e.data) for e in eventos] == [("LREN3", date(2026, 10, 29))]
+
+
+def test_colunas_forcadas():
+    df = pd.DataFrame([["Cia", "O que", "Quando"], ["Magazine Luiza", "Resultados", "06/11/2026"]])
+    linhas = parser.extrair_linhas(df, {"empresa": "Cia", "evento": "O que", "data": "Quando"})
+    assert [(l.empresa, l.data) for l in linhas] == [("Magazine Luiza", date(2026, 11, 6))]
+
+
+@pytest.mark.parametrize(
+    "valor,esperado",
+    [
+        ("29/10/2026", (date(2026, 10, 29), None)),
+        ("29/10/26 às 18h30", (date(2026, 10, 29), time(18, 30))),
+        ("2026-10-29", (date(2026, 10, 29), None)),
+        (46324, (date(2026, 10, 29), None)),
+        (pd.Timestamp("2026-10-29 09:00"), (date(2026, 10, 29), time(9, 0))),
+        ("a definir", None),
+        ("31/02/2026", None),
+    ],
+)
+def test_parse_data(valor, esperado):
+    assert parser.parse_data(valor) == esperado
+
+
+def test_links_de_arquivo_prioriza_cronograma():
+    html = """
+      <a href="/pt_br/outra-pagina/">Outra</a>
+      <a href="/data/files/AA/manual.pdf">Manual</a>
+      <a href="/data/files/11/22/Outro.xlsx">Tarifas</a>
+      <a href="/lumis/portal/file/fileDownload.jsp?fileId=8AA8">Cronograma de Eventos Corporativos (xlsx)</a>
+    """
+    links = fonte.links_de_arquivo(html, "https://www.b3.com.br/pt_br/x/")
+    assert links == [
+        "https://www.b3.com.br/lumis/portal/file/fileDownload.jsp?fileId=8AA8",
+        "https://www.b3.com.br/data/files/11/22/Outro.xlsx",
+    ]
+
+
+def test_historico_mantem_passado_e_descarta_futuro_remarcado():
+    agora = datetime(2026, 10, 3, 12, tzinfo=timezone.utc)
+    passado = Evento("LREN3", "Renner", "Resultados 2T26", date(2026, 7, 30), visto_em="2026-07-01T00:00:00Z")
+    remarcado = Evento("MGLU3", "Magalu", "Resultados 3T26", date(2026, 11, 5), visto_em="2026-09-01T00:00:00Z")
+    fora = Evento("PETR4", "Petrobras", "Resultados 2T26", date(2026, 8, 1))
+    mantido = Evento("LREN3", "Renner", "Resultados 3T26", date(2026, 10, 29), visto_em="2026-09-15T00:00:00Z")
+    novos = [
+        Evento("LREN3", "Renner", "Resultados 3T26", date(2026, 10, 29)),
+        Evento("MGLU3", "Magalu", "Resultados 3T26", date(2026, 11, 6)),
+    ]
+    r = historico.mesclar([passado, remarcado, fora, mantido], novos, date(2026, 10, 3), {"LREN3", "MGLU3"}, agora)
+    assert [(e.ticker, e.data, e.visto_em) for e in r] == [
+        ("LREN3", date(2026, 7, 30), "2026-07-01T00:00:00Z"),
+        ("LREN3", date(2026, 10, 29), "2026-09-15T00:00:00Z"),
+        ("MGLU3", date(2026, 11, 6), "2026-10-03T12:00:00Z"),
+    ]
+
+
+def test_ics_valido_e_estavel():
+    eventos = [
+        Evento("LREN3", "Lojas Renner", "Divulgação de Resultados", date(2026, 10, 29), periodo="3T26", visto_em="2026-10-01T00:00:00Z"),
+        Evento("MGLU3", "Magazine Luiza", "Teleconferência, resultados; 3T26", date(2026, 11, 7), time(10, 0), visto_em="2026-10-01T00:00:00Z"),
+    ]
+    a = ics.gerar(eventos, "Cal", "Desc", "America/Sao_Paulo", 60, "https://b3")
+    b = ics.gerar(eventos, "Cal", "Desc", "America/Sao_Paulo", 60, "https://b3")
+    assert a == b  # sem timestamps variáveis -> sem commits desnecessários
+    assert "SUMMARY:LREN3 - Divulgação de Resultados 3T26" in a
+    assert "DTSTART;VALUE=DATE:20261029" in a and "DTEND;VALUE=DATE:20261030" in a
+    assert "DTSTART:20261107T130000Z" in a  # 10h BRT = 13h UTC
+    assert "SUMMARY:MGLU3 - Teleconferência\\, resultados\\; 3T26" in a
+    assert all(len(l.encode()) <= 75 for l in a.split("\r\n"))
+    assert a.count("BEGIN:VEVENT") == 2
+
+
+def test_cli_ponta_a_ponta(tmp_path: Path):
+    arq = tmp_path / "cronograma.xlsx"
+    arq.write_bytes(planilha_longa())
+    cfg = tmp_path / "config.yaml"
+    cfg.write_text(
+        Path(cli.RAIZ / "config.yaml").read_text(encoding="utf-8"), encoding="utf-8"
+    )
+    saida, hist = tmp_path / "cal.ics", tmp_path / "eventos.json"
+    argv = ["--config", str(cfg), "--arquivo", str(arq), "--saida", str(saida), "--historico", str(hist)]
+    assert cli.main(argv) == 0
+    texto = saida.read_text(encoding="utf-8")
+    assert texto.count("BEGIN:VEVENT") == 3
+    assert "PETR4" not in texto
+    primeira = saida.read_bytes()
+    assert cli.main(argv) == 0
+    assert saida.read_bytes() == primeira
+
+
+def test_cli_nao_sobrescreve_quando_nada_e_lido(tmp_path: Path):
+    arq = tmp_path / "vazio.csv"
+    arq.write_text("nada;aqui\n1;2\n")
+    saida = tmp_path / "cal.ics"
+    saida.write_text("ANTIGO")
+    argv = ["--arquivo", str(arq), "--saida", str(saida), "--historico", str(tmp_path / "h.json")]
+    assert cli.main(argv) == 2
+    assert saida.read_text() == "ANTIGO"

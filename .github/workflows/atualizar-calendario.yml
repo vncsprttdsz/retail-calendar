@@ -1,0 +1,60 @@
+name: Atualizar calendário de resultados
+
+on:
+  schedule:
+    # 07:45, 11:45, 15:45 e 19:45 (horário de Brasília = UTC-3)
+    - cron: "45 10,14,18,22 * * *"
+  workflow_dispatch:
+    inputs:
+      inspecionar:
+        description: "Só mostrar como o arquivo da B3 foi interpretado (não altera o calendário)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: atualizar-calendario
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Inspecionar arquivo da B3
+        if: ${{ inputs.inspecionar }}
+        run: python -m calendario_b3 --inspecionar
+
+      - name: Ler cronograma da B3 e gerar .ics
+        if: ${{ !inputs.inspecionar }}
+        run: python -m calendario_b3
+
+      - name: Commit se houve mudança
+        if: ${{ !inputs.inspecionar }}
+        run: |
+          git add dados/eventos.json publico/calendario.ics
+          if git diff --cached --quiet; then
+            echo "Sem mudanças no calendário."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Atualiza calendário de resultados ($(date -u +%Y-%m-%dT%H:%MZ))"
+            git push
+          fi
+
+      - name: Publicar no Gist (link assinado pelo Outlook)
+        if: ${{ !inputs.inspecionar }}
+        env:
+          GIST_ID: ${{ secrets.GIST_ID }}
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+        run: python -m calendario_b3.publicar publico/calendario.ics

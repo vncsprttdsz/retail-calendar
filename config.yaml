@@ -1,0 +1,54 @@
+# Configuração do calendário de resultados (B3 -> Outlook)
+
+calendario:
+  nome: "Resultados - Cobertura Varejo"
+  descricao: "Datas de divulgação de resultados das empresas da cobertura (fonte: B3 - Cronograma de Eventos Corporativos)"
+  fuso: "America/Sao_Paulo"
+  # Duração usada quando a B3 informa horário (eventos sem horário viram "dia inteiro").
+  duracao_minutos: 60
+
+fonte:
+  pagina: "https://www.b3.com.br/pt_br/produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-eventos-corporativos/"
+  # Opcional: URL direta do arquivo (xlsx/xls/csv). Se vazio, o link é descoberto na página.
+  url_arquivo: ""
+  # Opcional: força o mapeamento de colunas caso a detecção automática erre.
+  # Rode `python -m calendario_b3 --inspecionar` para ver as colunas do arquivo.
+  # Chaves aceitas: empresa, codigo, evento, data, hora, periodo
+  colunas: {}
+
+eventos:
+  # Só entram eventos cujo texto (evento/período/cabeçalho) casa com algum destes
+  # padrões (regex, sem diferenciar maiúsculas/acentos). Use incluir_todos: true para
+  # levar todos os eventos corporativos das empresas da cobertura.
+  incluir_todos: false
+  palavras_chave:
+    - "resultado"
+    - "\\bITR\\b"
+    - "\\bDFP\\b"
+    - "demonstra"            # demonstrações financeiras
+    - "informa.{0,5}trimestra"
+    - "teleconfer"
+    - "conference call"
+    - "webcast"
+    - "earnings"
+
+# Empresas da cobertura. `ticker` casa pela raiz (4 letras: LREN3 -> LREN);
+# `nomes` são buscados no nome da empresa (sem acentos, sem diferenciar maiúsculas).
+# >>> EXEMPLO: ajuste para a sua cobertura <<<
+cobertura:
+  - { ticker: LREN3, nomes: ["Lojas Renner"] }
+  - { ticker: MGLU3, nomes: ["Magazine Luiza"] }
+  - { ticker: AZZA3, nomes: ["Azzas 2154", "Arezzo"] }
+  - { ticker: GUAR3, nomes: ["Guararapes", "Riachuelo"] }
+  - { ticker: CEAB3, nomes: ["C&A Modas"] }
+  - { ticker: VIVA3, nomes: ["Vivara"] }
+  - { ticker: ASAI3, nomes: ["Assai", "Sendas"] }
+  - { ticker: PCAR3, nomes: ["Pao de Acucar", "GPA"] }
+  - { ticker: GMAT3, nomes: ["Grupo Mateus", "Mateus Supermercados"] }
+  - { ticker: RADL3, nomes: ["Raia Drogasil", "RD Saude"] }
+  - { ticker: PGMN3, nomes: ["Pague Menos"] }
+  - { ticker: BHIA3, nomes: ["Casas Bahia", "Grupo Casas Bahia"] }
+  - { ticker: SBFG3, nomes: ["Grupo SBF", "Centauro"] }
+  - { ticker: ALPA4, nomes: ["Alpargatas"] }
+  - { ticker: VULC3, nomes: ["Vulcabras"] }
+  - { ticker: LJQQ3, nomes: ["Quero-Quero", "Lojas Quero Quero"] }
