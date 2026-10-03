@@ -288,3 +288,69 @@ def test_titulo_no_formato_pedido():
     assert ics.titulo(e) == "TFCO Resultado 3Q26"
     dfp = Evento("LREN3", "LOJAS RENNER", parser.titulo_evento("Padronizadas - DFP", date(2026, 3, 5)), date(2026, 3, 5))
     assert ics.titulo(dfp) == "LREN Resultado 4Q25"
+
+
+# --------------------------------------------------------------------------- exterior (MELI)
+
+from zoneinfo import ZoneInfo
+
+from calendario_b3 import exterior
+
+SP = ZoneInfo("America/Sao_Paulo")
+
+
+@pytest.fixture(autouse=True)
+def sem_yahoo(monkeypatch):
+    """Nenhum teste acessa a internet: o Yahoo responde 'sem data' salvo quando o teste troca."""
+    monkeypatch.setattr(exterior, "consultar_yahoo", lambda simbolo, tz: None)
+
+
+def test_trimestre_reportado():
+    assert exterior.trimestre_reportado(date(2026, 2, 24)) == "4Q25"
+    assert exterior.trimestre_reportado(date(2026, 5, 7)) == "1Q26"
+    assert exterior.trimestre_reportado(date(2026, 8, 5)) == "2Q26"
+    assert exterior.trimestre_reportado(date(2026, 11, 4)) == "3Q26"
+
+
+def test_yahoo_confirmado_com_horario():
+    # 04/11/2026 16:05 ET = 21:05 UTC = 18:05 em Brasília
+    ts = int(datetime(2026, 11, 4, 21, 5, tzinfo=timezone.utc).timestamp())
+    d = exterior.interpretar_calendar_events({"earningsDate": [ts], "isEarningsDateEstimate": False}, SP)
+    assert (d.dia, d.hora, d.estimado) == (date(2026, 11, 4), time(18, 5), False)
+
+
+def test_yahoo_estimado_intervalo_e_data_sem_horario():
+    meia_noite = [int(datetime(2026, 10, 28, tzinfo=timezone.utc).timestamp()), int(datetime(2026, 11, 3, tzinfo=timezone.utc).timestamp())]
+    d = exterior.interpretar_calendar_events({"earningsDate": meia_noite}, SP)
+    # meia-noite UTC não pode virar 27/10 21h em Brasília
+    assert (d.dia, d.hora, d.estimado) == (date(2026, 10, 28), None, True)
+
+
+def test_coletar_estimado_e_manual_prevalece():
+    yahoo = lambda simbolo, tz: exterior.DataYahoo(date(2026, 11, 4), None, estimado=True)
+    itens = [{"ticker": "MELI", "nome": "MercadoLibre"}]
+    evs, falhas = exterior.coletar(itens, "America/Sao_Paulo", consulta=yahoo)
+    assert [(e.ticker, e.evento, e.data) for e in evs] == [("MELI", "Resultado 3Q26 (estimado)", date(2026, 11, 4))]
+    assert ics.titulo(evs[0]) == "MELI Resultado 3Q26 (estimado)"
+
+    itens[0]["manual"] = {"3Q26": "2026-11-05 18:00"}
+    evs, _ = exterior.coletar(itens, "America/Sao_Paulo", consulta=yahoo)
+    assert [(e.evento, e.data, e.hora) for e in evs] == [("Resultado 3Q26", date(2026, 11, 5), time(18, 0))]
+
+
+def test_yahoo_fora_do_ar_mantem_evento_futuro():
+    def quebrado(simbolo, tz):
+        raise ConnectionError("yahoo fora")
+
+    evs, falhas = exterior.coletar([{"ticker": "MELI"}], "America/Sao_Paulo", consulta=quebrado)
+    assert evs == [] and falhas == {"MELI"}
+    antigo = Evento("MELI", "MercadoLibre", "Resultado 3Q26", date(2026, 11, 4), visto_em="2026-10-01T00:00:00Z")
+    r = historico.mesclar([antigo], evs, date(2026, 10, 3), {"MELI"}, preservar=falhas)
+    assert [e.evento for e in r] == ["Resultado 3Q26"]
+    # sem falha, evento futuro que sumiu da fonte sai (remarcado)
+    assert historico.mesclar([antigo], [], date(2026, 10, 3), {"MELI"}) == []
+
+
+def test_data_manual_invalida():
+    with pytest.raises(ValueError):
+        exterior.coletar([{"ticker": "MELI", "manual": {"3Q26": "04/11/2026"}}], "America/Sao_Paulo")

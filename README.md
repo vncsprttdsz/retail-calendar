@@ -32,6 +32,13 @@ https://raw.githubusercontent.com/vncsprttdsz/retail-calendar/main/publico/calen
    `config.yaml` → `fonte.colunas`. Depois rode de novo sem marcar a opção: isso cria
    `publico/calendario.ics`.
 
+4. **Empresas listadas fora do Brasil** (ex.: MELI): `config.yaml` → `exterior`. A próxima
+   data vem do Yahoo Finance; enquanto não for confirmada, o título leva "(estimado)".
+   Quando a empresa anunciar a data (MELI avisa ~1 semana antes), dá para fixá-la em
+   `manual`, que prevalece sobre o Yahoo: `manual: { 3Q26: "2026-11-04 18:00" }`
+   (horário de Brasília; sem horário = dia inteiro). Se o Yahoo estiver fora do ar,
+   o evento já conhecido é mantido.
+
 Nenhum token ou secret é necessário: o workflow só lê a B3 e grava no próprio repo.
 
 ## Assinar no Outlook

@@ -19,7 +19,7 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 import yaml
 
-from . import fonte, historico, ics, parser
+from . import exterior, fonte, historico, ics, parser
 from .filtros import carregar_cobertura, empresa_da_linha, filtrar
 from .modelo import LinhaFonte
 
@@ -91,6 +91,12 @@ def main(argv: list[str] | None = None) -> int:
         print("\n== cobertura")
         for emp in cobertura:
             print(f"  {emp.ticker}: {sorted(achadas[emp.ticker]) if emp.ticker in achadas else 'NÃO ENCONTRADA'}")
+        externos, falhas = exterior.coletar(cfg.get("exterior"), cfg["calendario"]["fuso"])
+        print("\n== exterior (Yahoo Finance + manual)")
+        for e in externos:
+            print(f"  {e.ticker}: {e.evento} em {e.data} {e.hora or '(dia inteiro)'}")
+        if falhas:
+            print(f"  falha na consulta: {sorted(falhas)}")
         nomes = sorted({l.empresa or l.codigo for l in linhas})
         print(f"\n== {len(nomes)} empresas no arquivo:\n  " + " | ".join(nomes))
         return 0
@@ -115,7 +121,10 @@ def main(argv: list[str] | None = None) -> int:
         log.info("sem eventos no arquivo da B3: %s", ", ".join(sem_evento))
 
     hoje = datetime.now(ZoneInfo(cfg_cal["fuso"])).date()
-    eventos = historico.mesclar(historico.carregar(args.historico), novos, hoje, {e.ticker for e in cobertura})
+    externos, falhas = exterior.coletar(cfg.get("exterior"), cfg_cal["fuso"])
+    novos += externos
+    tickers = {e.ticker for e in cobertura} | {str(i["ticker"]).upper() for i in cfg.get("exterior") or []}
+    eventos = historico.mesclar(historico.carregar(args.historico), novos, hoje, tickers, preservar=falhas)
     historico.salvar(args.historico, eventos)
 
     args.saida.parent.mkdir(parents=True, exist_ok=True)
