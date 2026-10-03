@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
@@ -35,12 +36,14 @@ def _utc(dt: datetime) -> str:
 
 
 def titulo(e: Evento) -> str:
+    """'LREN Resultado 3Q26': ticker sem o número da classe (LREN3 -> LREN)."""
     evento = e.evento.strip() or "Evento corporativo"
     periodo = f" {e.periodo.strip()}" if e.periodo.strip() and e.periodo.strip() not in evento else ""
-    return f"{e.ticker} - {evento}{periodo}"
+    ticker = re.sub(r"\d+$", "", e.ticker)
+    return f"{ticker} {evento}{periodo}"
 
 
-def gerar(eventos: list[Evento], nome: str, descricao: str, fuso: str, duracao_minutos: int, fonte_url: str) -> str:
+def gerar(eventos: list[Evento], nome: str, descricao: str, fuso: str, duracao_minutos: int) -> str:
     tz = ZoneInfo(fuso)
     linhas = [
         "BEGIN:VCALENDAR",
@@ -56,12 +59,6 @@ def gerar(eventos: list[Evento], nome: str, descricao: str, fuso: str, duracao_m
     ]
     for e in eventos:
         visto = datetime.strptime(e.visto_em, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc) if e.visto_em else datetime(2000, 1, 1, tzinfo=timezone.utc)
-        detalhes = [f"Empresa: {e.empresa}", f"Ticker: {e.ticker}", f"Evento: {e.evento}"]
-        if e.periodo:
-            detalhes.append(f"Período: {e.periodo}")
-        if e.hora is None:
-            detalhes.append("Horário: não informado pela B3")
-        detalhes.append(f"Fonte: {fonte_url}")
         linhas += ["BEGIN:VEVENT", f"UID:{e.chave}@retail-calendar", f"DTSTAMP:{_utc(visto)}"]
         if e.hora is None:
             linhas += [
@@ -81,7 +78,6 @@ def gerar(eventos: list[Evento], nome: str, descricao: str, fuso: str, duracao_m
             ]
         linhas += [
             f"SUMMARY:{_escapar(titulo(e))}",
-            f"DESCRIPTION:{_escapar(chr(10).join(detalhes))}",
             "CATEGORIES:Resultados",
             "END:VEVENT",
         ]

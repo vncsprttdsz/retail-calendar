@@ -80,9 +80,9 @@ def test_formato_largo_usa_cabecalho_como_evento():
     eventos = eventos_de(planilha_larga())
     resumo = [(e.ticker, e.evento, e.data) for e in eventos]
     assert resumo == [
-        ("LREN3", "Resultado 3T26 (ITR)", date(2026, 10, 29)),
-        ("ASAI3", "Resultado 3T26 (ITR)", date(2026, 11, 3)),
-        ("LREN3", "Resultado 4T26 (DFP)", date(2027, 2, 25)),
+        ("LREN3", "Resultado 3Q26", date(2026, 10, 29)),
+        ("ASAI3", "Resultado 3Q26", date(2026, 11, 3)),
+        ("LREN3", "Resultado 4Q26", date(2027, 2, 25)),
     ]
 
 
@@ -160,13 +160,14 @@ def test_ics_valido_e_estavel():
         Evento("LREN3", "Lojas Renner", "Divulgação de Resultados", date(2026, 10, 29), periodo="3T26", visto_em="2026-10-01T00:00:00Z"),
         Evento("MGLU3", "Magazine Luiza", "Teleconferência, resultados; 3T26", date(2026, 11, 7), time(10, 0), visto_em="2026-10-01T00:00:00Z"),
     ]
-    a = ics.gerar(eventos, "Cal", "Desc", "America/Sao_Paulo", 60, "https://b3")
-    b = ics.gerar(eventos, "Cal", "Desc", "America/Sao_Paulo", 60, "https://b3")
+    a = ics.gerar(eventos, "Cal", "Desc", "America/Sao_Paulo", 60)
+    b = ics.gerar(eventos, "Cal", "Desc", "America/Sao_Paulo", 60)
     assert a == b  # sem timestamps variáveis -> sem commits desnecessários
-    assert "SUMMARY:LREN3 - Divulgação de Resultados 3T26" in a
+    assert "SUMMARY:LREN Divulgação de Resultados 3T26" in a
+    assert "DESCRIPTION" not in a
     assert "DTSTART;VALUE=DATE:20261029" in a and "DTEND;VALUE=DATE:20261030" in a
     assert "DTSTART:20261107T130000Z" in a  # 10h BRT = 13h UTC
-    assert "SUMMARY:MGLU3 - Teleconferência\\, resultados\\; 3T26" in a
+    assert "SUMMARY:MGLU Teleconferência\\, resultados\\; 3T26" in a
     assert all(len(l.encode()) <= 75 for l in a.split("\r\n"))
     assert a.count("BEGIN:VEVENT") == 2
 
@@ -269,14 +270,21 @@ def test_layout_real_da_b3():
     cobertura = carregar_cobertura([{"ticker": "AUAU3", "nomes": ["PETZCOBASI"]}, {"ticker": "LREN3", "nomes": ["LOJAS RENNER"]}])
     eventos = filtrar(linhas, cobertura, PADROES, incluir_todos=False)
     assert [(e.ticker, e.evento, e.data) for e in eventos] == [
-        ("AUAU3", "Resultado 4T25 (DFP)", date(2026, 3, 26)),
-        ("LREN3", "Resultado 4T25 (DFP)", date(2026, 3, 31)),  # entrega prevalece sobre previsão
-        ("AUAU3", "Resultado 1T26 (ITR)", date(2026, 5, 7)),
-        ("LREN3", "Resultado 1T26 (ITR)", date(2026, 5, 14)),
-        ("AUAU3", "Resultado 2T26 (ITR)", date(2026, 8, 13)),
-        ("LREN3", "Resultado 2T26 (ITR)", date(2026, 8, 14)),
-        ("LREN3", "Resultado 3T26 (ITR)", date(2026, 11, 11)),  # sem entrega -> previsão
-        ("AUAU3", "Resultado 3T26 (ITR)", date(2026, 11, 12)),
+        ("AUAU3", "Resultado 4Q25", date(2026, 3, 26)),
+        ("LREN3", "Resultado 4Q25", date(2026, 3, 31)),  # entrega prevalece sobre previsão
+        ("AUAU3", "Resultado 1Q26", date(2026, 5, 7)),
+        ("LREN3", "Resultado 1Q26", date(2026, 5, 14)),
+        ("AUAU3", "Resultado 2Q26", date(2026, 8, 13)),
+        ("LREN3", "Resultado 2Q26", date(2026, 8, 14)),
+        ("LREN3", "Resultado 3Q26", date(2026, 11, 11)),  # sem entrega -> previsão
+        ("AUAU3", "Resultado 3Q26", date(2026, 11, 12)),
     ]
     # Formulário de Referência não é resultado e fica de fora
     assert not any("Formul" in e.evento for e in eventos)
+
+
+def test_titulo_no_formato_pedido():
+    e = Evento("TFCO4", "TRACK FIELD", parser.titulo_evento("Informações do 3º Trimestre - ITR", date(2026, 11, 12)), date(2026, 11, 12))
+    assert ics.titulo(e) == "TFCO Resultado 3Q26"
+    dfp = Evento("LREN3", "LOJAS RENNER", parser.titulo_evento("Padronizadas - DFP", date(2026, 3, 5)), date(2026, 3, 5))
+    assert ics.titulo(dfp) == "LREN Resultado 4Q25"

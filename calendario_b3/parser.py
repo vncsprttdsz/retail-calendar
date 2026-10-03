@@ -317,15 +317,15 @@ def _eventos_largos(df: pd.DataFrame, est: Estrutura) -> None:
 
 
 def titulo_evento(nome: str, dia: date) -> str:
-    """'Informações do 3º Trimestre - ITR' -> 'Resultado 3T26 (ITR)'; DFP -> 'Resultado 4T25 (DFP)'."""
+    """'Informações do 3º Trimestre - ITR' -> 'Resultado 3Q26'; DFP (anual) -> 'Resultado 4Q25'."""
     t = normalizar(nome)
     if re.search(r"\bITR\b", t):
         m = re.search(r"\b([1-3])\s*(?:O\s*)?(?:TRIMESTRE|T\d{0,4})\b", t)
         if m:
-            return f"Resultado {m[1]}T{dia.year % 100:02d} (ITR)"
+            return f"Resultado {m[1]}Q{dia.year % 100:02d}"
     if re.search(r"\bDFP\b", t):
         ano = dia.year - 1 if dia.month <= 6 else dia.year
-        return f"Resultado 4T{ano % 100:02d} (DFP)"
+        return f"Resultado 4Q{ano % 100:02d}"
     return nome
 
 

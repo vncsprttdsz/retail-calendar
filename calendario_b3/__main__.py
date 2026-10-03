@@ -125,7 +125,6 @@ def main(argv: list[str] | None = None) -> int:
         descricao=cfg_cal.get("descricao", ""),
         fuso=cfg_cal["fuso"],
         duracao_minutos=int(cfg_cal.get("duracao_minutos", 60)),
-        fonte_url=cfg_fonte["pagina"],
     )
     args.saida.write_bytes(conteudo.encode("utf-8"))
     log.info("calendário gravado em %s (%d eventos)", args.saida, len(eventos))
