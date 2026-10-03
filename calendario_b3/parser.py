@@ -129,7 +129,7 @@ def tabelas_de_arquivo(conteudo: bytes, nome: str = "") -> list[tuple[str, pd.Da
 
 def tabelas_de_html(html: str) -> list[tuple[str, pd.DataFrame]]:
     try:
-        dfs = pd.read_html(io.StringIO(html))
+        dfs = pd.read_html(io.StringIO(html), flavor="lxml")
     except ValueError:  # nenhuma <table>
         return []
     saida = []

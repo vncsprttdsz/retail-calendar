@@ -228,3 +228,7 @@ def test_cli_nao_sobrescreve_quando_nada_e_lido(tmp_path: Path):
     argv = ["--arquivo", str(arq), "--saida", str(saida), "--historico", str(tmp_path / "h.json")]
     assert cli.main(argv) == 2
     assert saida.read_text() == "ANTIGO"
+
+
+def test_html_sem_tabela_nao_quebra():
+    assert parser.tabelas_de_html("<html><body><p>sem tabela</p></body></html>") == []
