@@ -32,31 +32,32 @@ eventos:
     - "webcast"
     - "earnings"
 
-# Empresas da cobertura: lidas do retail-coverage (config/coverage.yaml), o mesmo
-# universo do dashboard. Só entram as empresas com exchange B3 (MELI fica de fora).
-# O workflow baixa o arquivo para _coverage/; localmente, aponte com COVERAGE_FILE=...
-# O ticker casa pela raiz (LREN3 -> LREN). Os nomes servem quando a planilha da B3
-# só traz a razão social, sem código.
+# Empresas da cobertura (universo do dashboard retail-coverage, só as listadas na B3;
+# MELI fica de fora por ser NASDAQ). O ticker casa pela raiz (LREN3 -> LREN); os nomes
+# servem quando a planilha da B3 só traz a razão social, sem código.
 cobertura:
-  arquivo: "_coverage/config/coverage.yaml"
-  # Razões sociais / nomes na B3 que diferem do `name` do dashboard.
-  nomes_extras:
-    AZZA3: ["Azzas 2154", "Arezzo"]
-    CEAB3: ["C&A Modas"]
-    RIAA3: ["Guararapes", "Riachuelo"]
-    LREN3: ["Lojas Renner"]
-    TFCO4: ["Track & Field", "Track Field"]
-    ASAI3: ["Sendas Distribuidora", "Assai Atacadista"]
-    GMAT3: ["Mateus Supermercados"]
-    PGMN3: ["Empreendimentos Pague Menos"]
-    PNVL3: ["Dimed"]
-    RADL3: ["Raia Drogasil", "RD Saude"]
-    ALLD3: ["Allied Tecnologia"]
-    LJQQ3: ["Quero-Quero"]
-    NATU3: ["Natura Cosmeticos", "Natura &Co"]
-    AUAU3: ["Petz", "Cobasi"]
-    SMFT3: ["Smartfit", "Smart Fit Escola"]
-    VIVA3: ["Vivara Participacoes"]
-  # Empresas fora do dashboard que você queira acompanhar mesmo assim:
-  empresas: []
-  #  - { ticker: XXXX3, nomes: ["Nome da Empresa"] }
+  empresas:
+    # Apparel
+    - { ticker: AZZA3, nomes: ["Azzas", "Azzas 2154", "Arezzo"] }
+    - { ticker: CEAB3, nomes: ["C&A Modas"] }
+    - { ticker: RIAA3, nomes: ["Riachuelo", "Guararapes"] }
+    - { ticker: SBFG3, nomes: ["Grupo SBF"] }
+    - { ticker: LREN3, nomes: ["Lojas Renner", "Renner"] }
+    - { ticker: TFCO4, nomes: ["Track and Field", "Track & Field"] }
+    - { ticker: VULC3, nomes: ["Vulcabras"] }
+    # Food Retailers
+    - { ticker: ASAI3, nomes: ["Assai", "Sendas Distribuidora"] }
+    - { ticker: GMAT3, nomes: ["Grupo Mateus", "Mateus Supermercados"] }
+    # E-commerce
+    - { ticker: MGLU3, nomes: ["Magazine Luiza"] }
+    # Drugstores
+    - { ticker: PGMN3, nomes: ["Pague Menos"] }
+    - { ticker: PNVL3, nomes: ["Panvel", "Dimed"] }
+    - { ticker: RADL3, nomes: ["Raia Drogasil", "RD Saude"] }
+    # Other Segments
+    - { ticker: ALLD3, nomes: ["Allied", "Allied Tecnologia"] }
+    - { ticker: LJQQ3, nomes: ["Lojas Quero Quero", "Quero-Quero"] }
+    - { ticker: NATU3, nomes: ["Natura", "Natura Cosmeticos"] }
+    - { ticker: AUAU3, nomes: ["Petz Cobasi", "Petz", "Cobasi"] }
+    - { ticker: SMFT3, nomes: ["Smart Fit", "Smartfit"] }
+    - { ticker: VIVA3, nomes: ["Vivara"] }

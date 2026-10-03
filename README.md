@@ -2,45 +2,39 @@
 
 Lê o **Cronograma de Eventos Corporativos** da B3
 ([página](https://www.b3.com.br/pt_br/produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-eventos-corporativos/)),
-filtra as empresas da sua cobertura e os eventos de resultado (ITR, DFP, divulgação de
+filtra as empresas da cobertura e os eventos de resultado (ITR, DFP, divulgação de
 resultados, teleconferência), e gera um calendário `.ics` que o Outlook **assina por link**.
 Quando a B3 atualiza ou remarca uma data, o Outlook recebe a mudança sozinho.
 
 ```
-retail-coverage/config/coverage.yaml ─────────────┐
-GitHub Actions (4x/dia) ──► B3 (página + planilha) ──► filtro cobertura/eventos
-                                                           │
-     Outlook (assinatura) ◄── link raw (repo público) ou Gist ◄─┴─ publico/calendario.ics
+GitHub Actions (4x/dia)
+  ├─ baixa a página + planilha do cronograma da B3
+  ├─ filtra cobertura (config.yaml) + eventos de resultado
+  └─ grava publico/calendario.ics no repo ──► link raw ──► Outlook (assinatura)
 ```
 
-## Configuração (uma vez)
+Link para assinar:
 
-1. **Cobertura**: vem do `config/coverage.yaml` do repo **retail-coverage** (o mesmo universo
-   do dashboard; só empresas com `exchange: B3`). Para incluir ou tirar empresas, edite lá.
-   Razões sociais diferentes do nome do dashboard ficam em `config.yaml` → `cobertura.nomes_extras`.
+```
+https://raw.githubusercontent.com/vncsprttdsz/retail-calendar/main/publico/calendario.ics
+```
+
+## Configuração
+
+1. **Cobertura**: `config.yaml` → `cobertura.empresas` (mesmo universo do dashboard
+   retail-coverage, só empresas listadas na B3). O ticker casa pela raiz (LREN3 → LREN);
+   os `nomes` servem quando a planilha da B3 traz só a razão social.
    Para levar todos os eventos (assembleias, dividendos etc.), use `eventos.incluir_todos: true`.
-2. **Token** (*Settings → Developer settings → Personal access tokens → Fine-grained*):
-   - *Repository access*: só `retail-coverage`, com **Contents: Read-only**;
-   - *Account permissions*: **Gists: Read and write** (só se o retail-calendar ficar privado).
-
-   Salve como secret `CALENDARIO_TOKEN` neste repo (*Settings → Secrets and variables → Actions*).
-3. **Onde o `.ics` fica publicado**, escolha um:
-   - **Repo público** (mais simples): nada a fazer; o link é
-     `https://raw.githubusercontent.com/vncsprttdsz/retail-calendar/main/publico/calendario.ics`.
-     O código, o `.ics` e o `dados/eventos.json` (tickers da cobertura + datas públicas da B3)
-     ficam visíveis; o retail-coverage continua privado.
-   - **Repo privado**: crie um gist **secret** em <https://gist.github.com> com um arquivo
-     `calendario.ics` (qualquer conteúdo) e salve o ID (fim da URL) no secret `GIST_ID`.
-     O link fica `https://gist.githubusercontent.com/vncsprttdsz/<GIST_ID>/raw/calendario.ics`.
-4. Leve estes arquivos para a branch `main` (agendamentos do GitHub Actions só rodam na branch padrão).
-5. **Primeira execução**: *Actions → Atualizar calendário de resultados → Run workflow*
+2. Leve estes arquivos para a branch `main` (agendamentos do GitHub Actions só rodam na branch padrão).
+3. **Primeira execução**: *Actions → Atualizar calendário de resultados → Run workflow*
    marcando **inspecionar**. O log mostra quais colunas da planilha da B3 foram reconhecidas
    (empresa, código, evento, data). Se algo vier errado, force os nomes das colunas em
-   `config.yaml` → `fonte.colunas`. Depois rode de novo sem marcar a opção.
+   `config.yaml` → `fonte.colunas`. Depois rode de novo sem marcar a opção: isso cria
+   `publico/calendario.ics`.
+
+Nenhum token ou secret é necessário: o workflow só lê a B3 e grava no próprio repo.
 
 ## Assinar no Outlook
-
-Use o link do passo 3.
 
 - **Outlook Web / novo Outlook**: Calendário → *Adicionar calendário* → *Assinar da Web* → cole o link.
 - **Outlook clássico (Windows)**: Calendário → *Adicionar Calendário* → *Da Internet...* → cole o link.
@@ -51,7 +45,8 @@ Observações:
 - Quem decide quando atualizar a assinatura é o Outlook/Exchange (em geral, algumas horas
   depois da mudança); o script roda 4x ao dia (07:45, 11:45, 15:45 e 19:45).
 - Eventos sem horário viram "dia inteiro" e todos ficam como *Livre*, sem bloquear a agenda.
-- O gist secreto não aparece em buscas, mas quem tiver o link consegue ver o calendário.
+- O repo é público: o código, o `.ics` e o `dados/eventos.json` (tickers da cobertura +
+  datas públicas da B3) ficam visíveis.
 - Alguns ambientes corporativos bloqueiam calendários da internet. Nesse caso, uma alternativa
   é importar o `.ics` manualmente ou gravar direto no Outlook via Microsoft Graph (precisa de aprovação da TI).
 
@@ -71,7 +66,6 @@ Observações:
 ```bash
 pip install -r requirements.txt
 python -m calendario_b3 --inspecionar           # ver como a planilha da B3 foi interpretada
-export COVERAGE_FILE=../retail-coverage/config/coverage.yaml
 python -m calendario_b3                         # gera publico/calendario.ics
 python -m calendario_b3 --arquivo planilha.xlsx # usar um arquivo baixado manualmente
 pip install pytest && python -m pytest -q
