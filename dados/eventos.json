@@ -590,6 +590,16 @@
     "extras": {}
   },
   {
+    "ticker": "MELI",
+    "empresa": "MercadoLibre",
+    "evento": "Resultado 3Q26",
+    "data": "2026-11-04",
+    "hora": "17:00",
+    "periodo": "",
+    "visto_em": "2026-10-03T18:11:43Z",
+    "extras": {}
+  },
+  {
     "ticker": "PGMN3",
     "empresa": "PAGUE MENOS",
     "evento": "Resultado 3Q26",
