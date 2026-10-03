@@ -20,7 +20,7 @@ import pandas as pd
 import yaml
 
 from . import fonte, historico, ics, parser
-from .filtros import carregar_cobertura, filtrar
+from .filtros import carregar_cobertura, empresa_da_linha, filtrar
 from .modelo import LinhaFonte
 
 log = logging.getLogger("calendario_b3")
@@ -81,6 +81,18 @@ def main(argv: list[str] | None = None) -> int:
                 print(parser.descrever(df, forcadas))
             except Exception:  # inspeção mostra o erro de uma aba e segue para as outras
                 traceback.print_exc(file=sys.stdout)
+        linhas = [l for _, df in tabelas for l in parser.extrair_linhas(df, forcadas)]
+        cobertura = carregar_cobertura(cfg.get("cobertura"), args.config.resolve().parent)
+        achadas = {}
+        for l in linhas:
+            emp = empresa_da_linha(l, cobertura)
+            if emp:
+                achadas.setdefault(emp.ticker, set()).add(l.empresa or l.codigo)
+        print("\n== cobertura")
+        for emp in cobertura:
+            print(f"  {emp.ticker}: {sorted(achadas[emp.ticker]) if emp.ticker in achadas else 'NÃO ENCONTRADA'}")
+        nomes = sorted({l.empresa or l.codigo for l in linhas})
+        print(f"\n== {len(nomes)} empresas no arquivo:\n  " + " | ".join(nomes))
         return 0
 
     linhas: list[LinhaFonte] = []

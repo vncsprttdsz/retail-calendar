@@ -80,9 +80,9 @@ def test_formato_largo_usa_cabecalho_como_evento():
     eventos = eventos_de(planilha_larga())
     resumo = [(e.ticker, e.evento, e.data) for e in eventos]
     assert resumo == [
-        ("LREN3", "ITR 3T26", date(2026, 10, 29)),
-        ("ASAI3", "ITR 3T26", date(2026, 11, 3)),
-        ("LREN3", "DFP 2026", date(2027, 2, 25)),
+        ("LREN3", "Resultado 3T26 (ITR)", date(2026, 10, 29)),
+        ("ASAI3", "Resultado 3T26 (ITR)", date(2026, 11, 3)),
+        ("LREN3", "Resultado 4T26 (DFP)", date(2027, 2, 25)),
     ]
 
 
@@ -240,3 +240,43 @@ def test_celulas_vazias_de_data_nat():
     )
     assert parser.parse_data(pd.NaT) is None
     assert [l.data for l in parser.extrair_linhas(df)] == [date(2027, 2, 25)]
+
+
+def planilha_b3_real() -> bytes:
+    """Mesmo layout do arquivo publicado pela B3 (aba ANO, cabeçalho em 3 linhas)."""
+    return xlsx(
+        [
+            ["NOME DE PREGÃO", "SEGMENTO", None, None, "Formulário de Referência", None,
+             "Informações do 1º Trimestre - ITR", None, "Informações do 2º Trimestre - ITR", None,
+             "Informações do 3º Trimestre - ITR", None, None, "Atualizado", datetime(2026, 9, 24)],
+            [None, None, "Padronizadas - DFP"],
+            [None, None, "Previsão", "Entrega", "Previsão", "Entrega", "Previsão", "Entrega",
+             "Previsão", "Entrega", "Previsão", "Entrega"],
+            ["PETZCOBASI", "NM|A", "26/03/2026", "26/03/2026", "28/05/2026", datetime(2026, 5, 28),
+             "07/05/2026", "07/05/2026", "13/08/2026", datetime(2026, 8, 13), "12/11/2026", None],
+            ["LOJAS RENNER", "NM|A", "30/03/2026", "31/03/2026", "29/05/2026", datetime(2026, 5, 29),
+             "14/05/2026", "14/05/2026", datetime(2026, 8, 14), datetime(2026, 8, 14), datetime(2026, 11, 11), None],
+            ["GRUPO SALTA", "N2|A", "24/02/2026", "24/02/2026", "29/05/2026", None,
+             "07/05/2026", "07/05/2026", "06/08/2026", None, "12/11/2026", None],
+        ]
+    )
+
+
+def test_layout_real_da_b3():
+    linhas = []
+    for _, df in parser.tabelas_de_arquivo(planilha_b3_real(), "b3.xlsx"):
+        linhas += parser.extrair_linhas(df)
+    cobertura = carregar_cobertura([{"ticker": "AUAU3", "nomes": ["PETZCOBASI"]}, {"ticker": "LREN3", "nomes": ["LOJAS RENNER"]}])
+    eventos = filtrar(linhas, cobertura, PADROES, incluir_todos=False)
+    assert [(e.ticker, e.evento, e.data) for e in eventos] == [
+        ("AUAU3", "Resultado 4T25 (DFP)", date(2026, 3, 26)),
+        ("LREN3", "Resultado 4T25 (DFP)", date(2026, 3, 31)),  # entrega prevalece sobre previsão
+        ("AUAU3", "Resultado 1T26 (ITR)", date(2026, 5, 7)),
+        ("LREN3", "Resultado 1T26 (ITR)", date(2026, 5, 14)),
+        ("AUAU3", "Resultado 2T26 (ITR)", date(2026, 8, 13)),
+        ("LREN3", "Resultado 2T26 (ITR)", date(2026, 8, 14)),
+        ("LREN3", "Resultado 3T26 (ITR)", date(2026, 11, 11)),  # sem entrega -> previsão
+        ("AUAU3", "Resultado 3T26 (ITR)", date(2026, 11, 12)),
+    ]
+    # Formulário de Referência não é resultado e fica de fora
+    assert not any("Formul" in e.evento for e in eventos)

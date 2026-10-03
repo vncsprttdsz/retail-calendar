@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import io
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, datetime, time, timedelta
 
 import pandas as pd
@@ -43,7 +43,8 @@ def papel_do_cabecalho(texto: object) -> str | None:
         return "empresa"
     if re.search(r"\b(EVENTO|DESCRICAO|ASSUNTO|TIPO|CATEGORIA|DOCUMENTO)\b", t):
         return "evento"
-    if re.search(r"\b(PERIODO|REFERENCIA|TRIMESTRE|EXERCICIO)\b", t):
+    # "Formulário de Referência" e "Informações do 1º Trimestre" são eventos, não período.
+    if re.search(r"\bPERIODO\b|\bEXERCICIO SOCIAL\b", t) or t in ("REFERENCIA", "TRIMESTRE", "EXERCICIO"):
         return "periodo"
     return None
 
@@ -177,6 +178,9 @@ class Estrutura:
     cabecalho: list[str]
     papeis: dict[str, int]  # papel -> índice de coluna (formato longo)
     colunas_data: list[int]  # todas as colunas de data (formato largo usa todas)
+    # formato largo: (nome do evento, colunas em ordem de preferência), ex.: ("ITR", [entrega, previsão])
+    eventos_largos: list[tuple[str, list[int]]] = field(default_factory=list)
+    inicio_dados: int = 0
 
     @property
     def formato(self) -> str:
@@ -263,14 +267,73 @@ def detectar_estrutura(df: pd.DataFrame, forcadas: dict[str, str] | None = None)
         papeis.setdefault("data", colunas_data[0])
     if not ({"empresa", "codigo"} & papeis.keys()):
         return None
-    return Estrutura(i, cab, papeis, colunas_data)
+    est = Estrutura(i, cab, papeis, colunas_data, inicio_dados=i + 1)
+    if est.formato == "largo":
+        _eventos_largos(df, est)
+    return est
+
+
+_SUB_PREVISAO = {"PREVISAO", "PREVISTO", "PREVISTA", "DATA PREVISTA"}
+_SUB_ENTREGA = {"ENTREGA", "REALIZADO", "REALIZADA", "REALIZACAO", "DATA DE ENTREGA"}
+
+
+def _eventos_largos(df: pd.DataFrame, est: Estrutura) -> None:
+    """Cabeçalho em várias linhas, como no arquivo da B3:
+
+        | NOME DE PREGÃO |            | Informações do 1º Trimestre - ITR |         |
+        |                | ...DFP     |                                   |         |
+        |                | Previsão   | Entrega | Previsão                | Entrega |
+
+    Cada par Previsão/Entrega vira um evento; a data de entrega (quando existe) prevalece.
+    """
+    i = est.linha_cabecalho
+    sub_i = None
+    for k in range(i + 1, min(i + 4, len(df))):
+        vals = [normalizar(v) for v in df.iloc[k].tolist()]
+        if sum(v in _SUB_PREVISAO | _SUB_ENTREGA for v in vals) >= 2:
+            sub_i, sub = k, vals
+            break
+    if sub_i is None:
+        est.eventos_largos = [(est.cabecalho[j], [j]) for j in est.colunas_data]
+        return
+
+    def nome(j: int) -> str:
+        partes = [_texto(df.iat[r, j]) for r in range(i, sub_i)]
+        return " ".join(p for p in partes if p)
+
+    eventos, usadas = [], set()
+    for j, v in enumerate(sub):
+        if v in _SUB_PREVISAO:
+            entrega = j + 1 if j + 1 < len(sub) and sub[j + 1] in _SUB_ENTREGA else None
+            cols = [entrega, j] if entrega is not None else [j]
+            eventos.append((nome(j) or nome(entrega or j), cols))
+            usadas.update(cols)
+    for j, v in enumerate(sub):
+        if v in _SUB_ENTREGA and j not in usadas:
+            eventos.append((nome(j), [j]))
+    est.eventos_largos = [(n, c) for n, c in eventos if n]
+    est.colunas_data = sorted(c for _, cols in est.eventos_largos for c in cols)
+    est.inicio_dados = sub_i + 1
+
+
+def titulo_evento(nome: str, dia: date) -> str:
+    """'Informações do 3º Trimestre - ITR' -> 'Resultado 3T26 (ITR)'; DFP -> 'Resultado 4T25 (DFP)'."""
+    t = normalizar(nome)
+    if re.search(r"\bITR\b", t):
+        m = re.search(r"\b([1-3])\s*(?:O\s*)?(?:TRIMESTRE|T\d{0,4})\b", t)
+        if m:
+            return f"Resultado {m[1]}T{dia.year % 100:02d} (ITR)"
+    if re.search(r"\bDFP\b", t):
+        ano = dia.year - 1 if dia.month <= 6 else dia.year
+        return f"Resultado 4T{ano % 100:02d} (DFP)"
+    return nome
 
 
 def extrair_linhas(df: pd.DataFrame, forcadas: dict[str, str] | None = None) -> list[LinhaFonte]:
     est = detectar_estrutura(df, forcadas)
     if est is None:
         return []
-    corpo = df.iloc[est.linha_cabecalho + 1 :].reset_index(drop=True)
+    corpo = df.iloc[est.inicio_dados :].reset_index(drop=True)
     # Células mescladas (empresa repetida em várias linhas) chegam vazias: propaga para baixo.
     for papel in ("empresa", "codigo"):
         if papel in est.papeis:
@@ -288,13 +351,15 @@ def extrair_linhas(df: pd.DataFrame, forcadas: dict[str, str] | None = None) -> 
         periodo = campo(row, "periodo")
         hora_col = parse_hora(row.iloc[est.papeis["hora"]]) if "hora" in est.papeis else None
         if est.formato == "longo":
-            alvos = [(campo(row, "evento"), est.papeis["data"])]
+            alvos = [(campo(row, "evento"), [est.papeis["data"]])]
         else:
-            alvos = [(est.cabecalho[j], j) for j in est.colunas_data]
-        for nome_evento, j in alvos:
-            dt = parse_data(row.iloc[j])
+            alvos = est.eventos_largos
+        for nome_evento, cols in alvos:
+            dt = next((d for d in (parse_data(row.iloc[j]) for j in cols) if d), None)
             if dt is None:
                 continue
+            if est.formato == "largo":
+                nome_evento = titulo_evento(nome_evento, dt[0])
             linhas.append(
                 LinhaFonte(
                     empresa=empresa,
@@ -316,12 +381,12 @@ def descrever(df: pd.DataFrame, forcadas: dict[str, str] | None = None, linhas_a
     if est is None:
         return saida + "  estrutura NÃO reconhecida."
     papeis = {p: est.cabecalho[j] for p, j in est.papeis.items()}
-    datas = [est.cabecalho[j] for j in est.colunas_data]
+    datas = [n for n, _ in est.eventos_largos] if est.formato == "largo" else [est.cabecalho[est.papeis["data"]]]
     linhas = extrair_linhas(df, forcadas)
     ex = "\n".join(f"    {l}" for l in linhas[:8])
     return saida + (
         f"  cabeçalho na linha {est.linha_cabecalho + 1}: {est.cabecalho}\n"
-        f"  formato: {est.formato} | papéis: {_fmt(papeis)} | colunas de data: {datas}\n"
+        f"  formato: {est.formato} | papéis: {_fmt(papeis)} | eventos/datas: {datas}\n"
         f"  {len(linhas)} linhas com data. Exemplos:\n{ex}"
     )
 

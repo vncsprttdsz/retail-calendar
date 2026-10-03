@@ -75,6 +75,10 @@ def empresa_da_linha(linha: LinhaFonte, cobertura: list[Empresa]) -> Empresa | N
         # Sem coluna de código: tenta ticker/raiz e nomes dentro do nome da empresa.
         if any(_contem_palavras(nome, t) for t in (emp.ticker, emp.raiz, *emp.nomes)):
             return emp
+        # Nome de pregão da B3 junta palavras ("PETZCOBASI"): compara sem espaços.
+        compacto = nome.replace(" ", "")
+        if compacto and any(normalizar(n).replace(" ", "") == compacto for n in emp.nomes):
+            return emp
     return None
 
 
