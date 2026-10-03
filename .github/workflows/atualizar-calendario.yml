@@ -24,6 +24,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Cobertura = mesmo universo do dashboard (repo privado -> precisa de token só-leitura)
+      - name: Baixar cobertura do retail-coverage
+        uses: actions/checkout@v4
+        with:
+          repository: vncsprttdsz/retail-coverage
+          token: ${{ secrets.CALENDARIO_TOKEN }}
+          path: _coverage
+          sparse-checkout: config/coverage.yaml
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -52,9 +63,10 @@ jobs:
             git push
           fi
 
+      # Só para repositório privado. Com o repo público, o Outlook assina o link raw do próprio repo.
       - name: Publicar no Gist (link assinado pelo Outlook)
         if: ${{ !inputs.inspecionar }}
         env:
           GIST_ID: ${{ secrets.GIST_ID }}
-          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+          GIST_TOKEN: ${{ secrets.CALENDARIO_TOKEN }}
         run: python -m calendario_b3.publicar publico/calendario.ics

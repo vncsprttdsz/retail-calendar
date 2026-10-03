@@ -171,15 +171,46 @@ def test_ics_valido_e_estavel():
     assert a.count("BEGIN:VEVENT") == 2
 
 
-def test_cli_ponta_a_ponta(tmp_path: Path):
+COVERAGE_YAML = """
+companies:
+  - {ticker: LREN3, name: Renner, sector: Apparel, exchange: B3, currency: BRL}
+  - {ticker: CEAB3, name: C&A, sector: Apparel, exchange: B3, currency: BRL}
+  - {ticker: MGLU3, name: Magazine Luiza, sector: E-commerce, exchange: B3, currency: BRL}
+  - {ticker: MELI, name: MercadoLibre, sector: E-commerce, exchange: NASDAQ, currency: USD}
+"""
+
+
+def test_cobertura_do_retail_coverage(tmp_path: Path, monkeypatch):
+    (tmp_path / "coverage.yaml").write_text(COVERAGE_YAML, encoding="utf-8")
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+    cfg = {
+        "arquivo": "coverage.yaml",
+        "nomes_extras": {"CEAB3": ["C&A Modas"], "LREN3": ["Lojas Renner"]},
+        "empresas": [{"ticker": "VIVA3", "nomes": ["Vivara"]}],
+    }
+    cob = {e.ticker: e.nomes for e in carregar_cobertura(cfg, tmp_path)}
+    assert cob == {
+        "LREN3": ["Renner", "Lojas Renner"],
+        "CEAB3": ["C&A Modas"],  # "C&A" é curto demais para busca por nome
+        "MGLU3": ["Magazine Luiza"],
+        "VIVA3": ["Vivara"],
+    }  # MELI (NASDAQ) fica de fora
+
+
+def test_cobertura_arquivo_ausente_falha(tmp_path: Path, monkeypatch):
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+    with pytest.raises(FileNotFoundError):
+        carregar_cobertura({"arquivo": "nao-existe.yaml"}, tmp_path)
+
+
+def test_cli_ponta_a_ponta(tmp_path: Path, monkeypatch):
     arq = tmp_path / "cronograma.xlsx"
     arq.write_bytes(planilha_longa())
-    cfg = tmp_path / "config.yaml"
-    cfg.write_text(
-        Path(cli.RAIZ / "config.yaml").read_text(encoding="utf-8"), encoding="utf-8"
-    )
+    cov = tmp_path / "coverage.yaml"
+    cov.write_text(COVERAGE_YAML, encoding="utf-8")
+    monkeypatch.setenv("COVERAGE_FILE", str(cov))
     saida, hist = tmp_path / "cal.ics", tmp_path / "eventos.json"
-    argv = ["--config", str(cfg), "--arquivo", str(arq), "--saida", str(saida), "--historico", str(hist)]
+    argv = ["--arquivo", str(arq), "--saida", str(saida), "--historico", str(hist)]
     assert cli.main(argv) == 0
     texto = saida.read_text(encoding="utf-8")
     assert texto.count("BEGIN:VEVENT") == 3

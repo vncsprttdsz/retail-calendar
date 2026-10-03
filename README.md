@@ -7,33 +7,40 @@ resultados, teleconferência), e gera um calendário `.ics` que o Outlook **assi
 Quando a B3 atualiza ou remarca uma data, o Outlook recebe a mudança sozinho.
 
 ```
+retail-coverage/config/coverage.yaml ─────────────┐
 GitHub Actions (4x/dia) ──► B3 (página + planilha) ──► filtro cobertura/eventos
                                                            │
-                    Outlook (assinatura) ◄── Gist secreto ◄─┴─ publico/calendario.ics
+     Outlook (assinatura) ◄── link raw (repo público) ou Gist ◄─┴─ publico/calendario.ics
 ```
 
 ## Configuração (uma vez)
 
-1. **Cobertura**: edite `config.yaml` → `cobertura` (o que está lá é só um exemplo de varejo).
-   O `ticker` casa pela raiz (LREN3 → LREN); `nomes` servem quando a B3 só traz o nome da empresa.
+1. **Cobertura**: vem do `config/coverage.yaml` do repo **retail-coverage** (o mesmo universo
+   do dashboard; só empresas com `exchange: B3`). Para incluir ou tirar empresas, edite lá.
+   Razões sociais diferentes do nome do dashboard ficam em `config.yaml` → `cobertura.nomes_extras`.
    Para levar todos os eventos (assembleias, dividendos etc.), use `eventos.incluir_todos: true`.
-2. **Gist secreto** (onde o `.ics` fica publicado, já que o repositório é privado):
-   em <https://gist.github.com>, crie um gist **secret** com um arquivo chamado
-   `calendario.ics` (qualquer conteúdo). O ID é o código no fim da URL do gist.
-3. **Token**: em *Settings → Developer settings → Personal access tokens*, crie um token
-   fine-grained com permissão de conta **Gists: Read and write** (ou um token classic com escopo `gist`).
-4. **Secrets do repositório** (*Settings → Secrets and variables → Actions*):
-   `GIST_ID` e `GIST_TOKEN`.
-5. Leve estes arquivos para a branch `main` (agendamentos do GitHub Actions só rodam na branch padrão).
-6. **Primeira execução**: *Actions → Atualizar calendário de resultados → Run workflow*
+2. **Token** (*Settings → Developer settings → Personal access tokens → Fine-grained*):
+   - *Repository access*: só `retail-coverage`, com **Contents: Read-only**;
+   - *Account permissions*: **Gists: Read and write** (só se o retail-calendar ficar privado).
+
+   Salve como secret `CALENDARIO_TOKEN` neste repo (*Settings → Secrets and variables → Actions*).
+3. **Onde o `.ics` fica publicado**, escolha um:
+   - **Repo público** (mais simples): nada a fazer; o link é
+     `https://raw.githubusercontent.com/vncsprttdsz/retail-calendar/main/publico/calendario.ics`.
+     O código, o `.ics` e o `dados/eventos.json` (tickers da cobertura + datas públicas da B3)
+     ficam visíveis; o retail-coverage continua privado.
+   - **Repo privado**: crie um gist **secret** em <https://gist.github.com> com um arquivo
+     `calendario.ics` (qualquer conteúdo) e salve o ID (fim da URL) no secret `GIST_ID`.
+     O link fica `https://gist.githubusercontent.com/vncsprttdsz/<GIST_ID>/raw/calendario.ics`.
+4. Leve estes arquivos para a branch `main` (agendamentos do GitHub Actions só rodam na branch padrão).
+5. **Primeira execução**: *Actions → Atualizar calendário de resultados → Run workflow*
    marcando **inspecionar**. O log mostra quais colunas da planilha da B3 foram reconhecidas
    (empresa, código, evento, data). Se algo vier errado, force os nomes das colunas em
    `config.yaml` → `fonte.colunas`. Depois rode de novo sem marcar a opção.
 
 ## Assinar no Outlook
 
-Link do calendário: `https://gist.githubusercontent.com/<seu-usuario>/<GIST_ID>/raw/calendario.ics`
-(o log do passo "Publicar no Gist" imprime o link exato).
+Use o link do passo 3.
 
 - **Outlook Web / novo Outlook**: Calendário → *Adicionar calendário* → *Assinar da Web* → cole o link.
 - **Outlook clássico (Windows)**: Calendário → *Adicionar Calendário* → *Da Internet...* → cole o link.
@@ -44,8 +51,7 @@ Observações:
 - Quem decide quando atualizar a assinatura é o Outlook/Exchange (em geral, algumas horas
   depois da mudança); o script roda 4x ao dia (07:45, 11:45, 15:45 e 19:45).
 - Eventos sem horário viram "dia inteiro" e todos ficam como *Livre*, sem bloquear a agenda.
-- O gist secreto não aparece em buscas, mas quem tiver o link consegue ver o calendário
-  (datas públicas da B3 + a lista da sua cobertura).
+- O gist secreto não aparece em buscas, mas quem tiver o link consegue ver o calendário.
 - Alguns ambientes corporativos bloqueiam calendários da internet. Nesse caso, uma alternativa
   é importar o `.ics` manualmente ou gravar direto no Outlook via Microsoft Graph (precisa de aprovação da TI).
 
@@ -65,6 +71,7 @@ Observações:
 ```bash
 pip install -r requirements.txt
 python -m calendario_b3 --inspecionar           # ver como a planilha da B3 foi interpretada
+export COVERAGE_FILE=../retail-coverage/config/coverage.yaml
 python -m calendario_b3                         # gera publico/calendario.ics
 python -m calendario_b3 --arquivo planilha.xlsx # usar um arquivo baixado manualmente
 pip install pytest && python -m pytest -q

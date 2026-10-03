@@ -90,7 +90,7 @@ def main(argv: list[str] | None = None) -> int:
         log.error("nenhum evento lido da B3 (%d tabelas). Rode com --inspecionar.", len(tabelas))
         return 2
 
-    cobertura = carregar_cobertura(cfg.get("cobertura"))
+    cobertura = carregar_cobertura(cfg.get("cobertura"), args.config.resolve().parent)
     novos = filtrar(linhas, cobertura, cfg_ev.get("palavras_chave", []), bool(cfg_ev.get("incluir_todos")))
     encontrados = {e.ticker for e in novos}
     log.info("%d eventos da cobertura (%d empresas)", len(novos), len(encontrados))

@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+import os
 import re
 import unicodedata
 from dataclasses import dataclass
+from pathlib import Path
+
+import yaml
 
 from .modelo import Evento, LinhaFonte, normalizar
 
@@ -17,13 +21,43 @@ class Empresa:
         return normalizar(self.ticker).replace(" ", "")[:4]
 
 
-def carregar_cobertura(itens: list) -> list[Empresa]:
+def _de_lista(itens: list) -> list[Empresa]:
     saida = []
     for item in itens or []:
         if isinstance(item, str):
             item = {"ticker": item}
         saida.append(Empresa(ticker=str(item["ticker"]).upper().strip(), nomes=list(item.get("nomes") or [])))
     return saida
+
+
+def carregar_cobertura(cfg: dict | list | None, base: Path = Path(".")) -> list[Empresa]:
+    """Cobertura a partir de `arquivo` (config/coverage.yaml do retail-coverage), `empresas` (lista
+    no próprio config) ou uma lista direta. `nomes_extras` acrescenta razões sociais por ticker."""
+    if not isinstance(cfg, dict):
+        return _de_lista(cfg or [])
+    empresas: list[Empresa] = []
+    caminho = os.environ.get("COVERAGE_FILE") or cfg.get("arquivo")
+    if caminho:
+        p = Path(caminho) if Path(caminho).is_absolute() else base / caminho
+        if not p.exists():
+            raise FileNotFoundError(f"arquivo de cobertura não encontrado: {p}")
+        for c in (yaml.safe_load(p.read_text(encoding="utf-8")) or {}).get("companies") or []:
+            if str(c.get("exchange", "B3")).upper() != "B3":
+                continue  # ex.: MELI (NASDAQ) não está no cronograma da B3
+            nome = str(c.get("name") or "")
+            # Nomes curtos ("RD", "C&A") geram falso positivo na busca por nome; ficam só pelo ticker.
+            nomes = [nome] if len(normalizar(nome).replace(" ", "")) >= 4 else []
+            empresas.append(Empresa(str(c["ticker"]).upper().strip(), nomes))
+    empresas += _de_lista(cfg.get("empresas") or [])
+
+    extras = {str(k).upper(): list(v or []) for k, v in (cfg.get("nomes_extras") or {}).items()}
+    por_ticker: dict[str, Empresa] = {}
+    for e in empresas:
+        atual = por_ticker.setdefault(e.ticker, Empresa(e.ticker, []))
+        for n in [*e.nomes, *extras.get(e.ticker, [])]:
+            if n not in atual.nomes:
+                atual.nomes.append(n)
+    return list(por_ticker.values())
 
 
 def _contem_palavras(texto_norm: str, termo: str) -> bool:

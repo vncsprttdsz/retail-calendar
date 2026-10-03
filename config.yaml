@@ -32,23 +32,31 @@ eventos:
     - "webcast"
     - "earnings"
 
-# Empresas da cobertura. `ticker` casa pela raiz (4 letras: LREN3 -> LREN);
-# `nomes` são buscados no nome da empresa (sem acentos, sem diferenciar maiúsculas).
-# >>> EXEMPLO: ajuste para a sua cobertura <<<
+# Empresas da cobertura: lidas do retail-coverage (config/coverage.yaml), o mesmo
+# universo do dashboard. Só entram as empresas com exchange B3 (MELI fica de fora).
+# O workflow baixa o arquivo para _coverage/; localmente, aponte com COVERAGE_FILE=...
+# O ticker casa pela raiz (LREN3 -> LREN). Os nomes servem quando a planilha da B3
+# só traz a razão social, sem código.
 cobertura:
-  - { ticker: LREN3, nomes: ["Lojas Renner"] }
-  - { ticker: MGLU3, nomes: ["Magazine Luiza"] }
-  - { ticker: AZZA3, nomes: ["Azzas 2154", "Arezzo"] }
-  - { ticker: GUAR3, nomes: ["Guararapes", "Riachuelo"] }
-  - { ticker: CEAB3, nomes: ["C&A Modas"] }
-  - { ticker: VIVA3, nomes: ["Vivara"] }
-  - { ticker: ASAI3, nomes: ["Assai", "Sendas"] }
-  - { ticker: PCAR3, nomes: ["Pao de Acucar", "GPA"] }
-  - { ticker: GMAT3, nomes: ["Grupo Mateus", "Mateus Supermercados"] }
-  - { ticker: RADL3, nomes: ["Raia Drogasil", "RD Saude"] }
-  - { ticker: PGMN3, nomes: ["Pague Menos"] }
-  - { ticker: BHIA3, nomes: ["Casas Bahia", "Grupo Casas Bahia"] }
-  - { ticker: SBFG3, nomes: ["Grupo SBF", "Centauro"] }
-  - { ticker: ALPA4, nomes: ["Alpargatas"] }
-  - { ticker: VULC3, nomes: ["Vulcabras"] }
-  - { ticker: LJQQ3, nomes: ["Quero-Quero", "Lojas Quero Quero"] }
+  arquivo: "_coverage/config/coverage.yaml"
+  # Razões sociais / nomes na B3 que diferem do `name` do dashboard.
+  nomes_extras:
+    AZZA3: ["Azzas 2154", "Arezzo"]
+    CEAB3: ["C&A Modas"]
+    RIAA3: ["Guararapes", "Riachuelo"]
+    LREN3: ["Lojas Renner"]
+    TFCO4: ["Track & Field", "Track Field"]
+    ASAI3: ["Sendas Distribuidora", "Assai Atacadista"]
+    GMAT3: ["Mateus Supermercados"]
+    PGMN3: ["Empreendimentos Pague Menos"]
+    PNVL3: ["Dimed"]
+    RADL3: ["Raia Drogasil", "RD Saude"]
+    ALLD3: ["Allied Tecnologia"]
+    LJQQ3: ["Quero-Quero"]
+    NATU3: ["Natura Cosmeticos", "Natura &Co"]
+    AUAU3: ["Petz", "Cobasi"]
+    SMFT3: ["Smartfit", "Smart Fit Escola"]
+    VIVA3: ["Vivara Participacoes"]
+  # Empresas fora do dashboard que você queira acompanhar mesmo assim:
+  empresas: []
+  #  - { ticker: XXXX3, nomes: ["Nome da Empresa"] }
