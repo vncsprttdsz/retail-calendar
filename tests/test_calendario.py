@@ -204,14 +204,25 @@ def test_cobertura_arquivo_ausente_falha(tmp_path: Path, monkeypatch):
         carregar_cobertura({"arquivo": "nao-existe.yaml"}, tmp_path)
 
 
+CONFIG_TESTE = """
+calendario: { nome: Teste, fuso: America/Sao_Paulo }
+fonte: { pagina: "https://b3" }
+eventos: { palavras_chave: ["resultado", "teleconfer"] }
+cobertura:
+  empresas:
+    - { ticker: LREN3, nomes: ["Lojas Renner"] }
+    - { ticker: MGLU3, nomes: ["Magazine Luiza"] }
+"""
+
+
 def test_cli_ponta_a_ponta(tmp_path: Path, monkeypatch):
     arq = tmp_path / "cronograma.xlsx"
     arq.write_bytes(planilha_longa())
-    cov = tmp_path / "coverage.yaml"
-    cov.write_text(COVERAGE_YAML, encoding="utf-8")
-    monkeypatch.setenv("COVERAGE_FILE", str(cov))
+    cfg = tmp_path / "config.yaml"
+    cfg.write_text(CONFIG_TESTE, encoding="utf-8")
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
     saida, hist = tmp_path / "cal.ics", tmp_path / "eventos.json"
-    argv = ["--arquivo", str(arq), "--saida", str(saida), "--historico", str(hist)]
+    argv = ["--config", str(cfg), "--arquivo", str(arq), "--saida", str(saida), "--historico", str(hist)]
     assert cli.main(argv) == 0
     texto = saida.read_text(encoding="utf-8")
     assert texto.count("BEGIN:VEVENT") == 3
@@ -354,3 +365,77 @@ def test_yahoo_fora_do_ar_mantem_evento_futuro():
 def test_data_manual_invalida():
     with pytest.raises(ValueError):
         exterior.coletar([{"ticker": "MELI", "manual": {"3Q26": "04/11/2026"}}], "America/Sao_Paulo")
+
+
+# --------------------------------------------------------------------------- ajustes e avisos
+
+from calendario_b3 import ajustes, notificar
+
+
+def test_data_manual_substitui_a_da_b3():
+    b3 = [Evento("MGLU3", "MAGAZ LUIZA", "Resultado 3Q26", date(2026, 11, 5)),
+          Evento("MGLU3", "MAGAZ LUIZA", "Resultado 2Q26", date(2026, 8, 6))]
+    manuais = ajustes.manuais([{"ticker": "MGLU3", "nomes": ["MAGAZ LUIZA"], "manual": {"3Q26": "2026-11-09"}}])
+    r = ajustes.substituir(b3, manuais)
+    assert sorted((e.evento, e.data) for e in r) == [("Resultado 2Q26", date(2026, 8, 6)), ("Resultado 3Q26", date(2026, 11, 9))]
+
+
+def test_diferencas_para_o_telegram():
+    hoje = date(2026, 10, 8)
+    antes = [
+        Evento("MGLU3", "M", "Resultado 3Q26", date(2026, 11, 5)),
+        Evento("MELI", "ML", "Resultado 4Q26 (estimado)", date(2027, 2, 24)),
+        Evento("LREN3", "R", "Resultado 3Q26", date(2026, 11, 5)),
+        Evento("VIVA3", "V", "Resultado 3Q26", date(2026, 11, 5)),
+        Evento("LREN3", "R", "Resultado 2Q26", date(2026, 8, 6)),  # passado: ignorado
+    ]
+    depois = [
+        Evento("MGLU3", "M", "Resultado 3Q26", date(2026, 11, 9)),
+        Evento("MELI", "ML", "Resultado 4Q26", date(2027, 2, 24), time(18, 5)),
+        Evento("LREN3", "R", "Resultado 3Q26", date(2026, 11, 5)),
+        Evento("ASAI3", "A", "Resultado 3Q26", date(2026, 11, 6)),
+    ]
+    assert notificar.diferencas(antes, depois, hoje) == [
+        "🗑️ VIVA Resultado 3Q26 (05/11) saiu do calendário",
+        "🆕 ASAI Resultado 3Q26: 06/11",
+        "📅 MGLU Resultado 3Q26: 05/11 → 09/11",
+        "📅 MELI Resultado 4Q26: 24/02 → 24/02 18:05",
+    ]
+    assert notificar.diferencas(antes, antes, hoje) == []
+
+
+def test_estimado_vira_confirmado_sem_mudar_data():
+    hoje = date(2026, 10, 8)
+    antes = [Evento("MELI", "ML", "Resultado 3Q26 (estimado)", date(2026, 11, 4))]
+    depois = [Evento("MELI", "ML", "Resultado 3Q26", date(2026, 11, 4))]
+    assert notificar.diferencas(antes, depois, hoje) == ["✅ MELI Resultado 3Q26: 04/11 (antes: MELI Resultado 3Q26 (estimado))"]
+
+
+def test_telegram_nao_vaza_token(monkeypatch, caplog):
+    import requests as rq
+
+    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "123:SEGREDO")
+    monkeypatch.setenv("TELEGRAM_CHAT_ID", "42")
+
+    def falha(url, **kw):
+        raise rq.ConnectionError(f"Max retries exceeded with url: {url}")
+
+    monkeypatch.setattr(notificar.requests, "post", falha)
+    assert notificar.enviar(["📅 MGLU Resultado 3Q26: 05/11 → 09/11"]) is False
+    assert "SEGREDO" not in caplog.text
+
+
+def test_telegram_envia_mensagem(monkeypatch):
+    enviados = []
+
+    class Resp:
+        def raise_for_status(self):
+            pass
+
+    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "123:abc")
+    monkeypatch.setenv("TELEGRAM_CHAT_ID", "42")
+    monkeypatch.setattr(notificar.requests, "post", lambda url, json, timeout: enviados.append((url, json)) or Resp())
+    assert notificar.enviar(["linha 1", "linha 2"]) is True
+    url, corpo = enviados[0]
+    assert url.endswith("/bot123:abc/sendMessage") and corpo["chat_id"] == "42"
+    assert corpo["text"].endswith("linha 1\nlinha 2")

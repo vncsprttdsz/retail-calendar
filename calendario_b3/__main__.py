@@ -19,7 +19,7 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 import yaml
 
-from . import exterior, fonte, historico, ics, parser
+from . import ajustes, cvm, exterior, fonte, historico, ics, notificar, parser
 from .filtros import carregar_cobertura, empresa_da_linha, filtrar
 from .modelo import LinhaFonte
 
@@ -56,6 +56,10 @@ def coletar_tabelas(cfg_fonte: dict, arquivo_local: Path | None) -> list[tuple[s
             continue
         tabelas += [(f"{doc.nome}:{aba}", df) for aba, df in abas]
     return tabelas
+
+
+def _cnpjs(cfg: dict) -> dict[str, str]:
+    return {str(i["ticker"]).upper(): i.get("cnpj", "") for i in (cfg.get("cobertura") or {}).get("empresas") or []}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -99,6 +103,10 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  falha na consulta: {sorted(falhas)}")
         nomes = sorted({l.empresa or l.codigo for l in linhas})
         print(f"\n== {len(nomes)} empresas no arquivo:\n  " + " | ".join(nomes))
+        try:
+            cvm.diagnostico(_cnpjs(cfg), datetime.now(ZoneInfo(cfg["calendario"]["fuso"])).date())
+        except Exception:
+            traceback.print_exc(file=sys.stdout)
         return 0
 
     linhas: list[LinhaFonte] = []
@@ -120,12 +128,21 @@ def main(argv: list[str] | None = None) -> int:
     if sem_evento:
         log.info("sem eventos no arquivo da B3: %s", ", ".join(sem_evento))
 
+    # Datas manuais prevalecem sobre a planilha da B3.
+    manuais = ajustes.manuais((cfg.get("cobertura") or {}).get("empresas"))
+    for m in manuais:
+        log.info("data manual: %s %s em %s", m.ticker, m.evento, m.data)
+    novos = ajustes.substituir(novos, manuais)
+
     hoje = datetime.now(ZoneInfo(cfg_cal["fuso"])).date()
     externos, falhas = exterior.coletar(cfg.get("exterior"), cfg_cal["fuso"])
     novos += externos
     tickers = {e.ticker for e in cobertura} | {str(i["ticker"]).upper() for i in cfg.get("exterior") or []}
-    eventos = historico.mesclar(historico.carregar(args.historico), novos, hoje, tickers, preservar=falhas)
+    antes = historico.carregar(args.historico)
+    eventos = historico.mesclar(antes, novos, hoje, tickers, preservar=falhas)
     historico.salvar(args.historico, eventos)
+    if antes:  # primeira execução não gera aviso de "tudo novo"
+        notificar.enviar(notificar.diferencas(antes, eventos, hoje))
 
     args.saida.parent.mkdir(parents=True, exist_ok=True)
     conteudo = ics.gerar(

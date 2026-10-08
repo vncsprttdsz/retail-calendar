@@ -37,6 +37,9 @@ jobs:
 
       - name: Ler cronograma da B3 e gerar .ics
         if: ${{ !inputs.inspecionar }}
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python -m calendario_b3
 
       - name: Commit se houve mudança
