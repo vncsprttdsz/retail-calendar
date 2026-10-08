@@ -660,16 +660,6 @@
     "extras": {}
   },
   {
-    "ticker": "MGLU3",
-    "empresa": "MAGAZ LUIZA",
-    "evento": "Resultado 3Q26",
-    "data": "2026-11-05",
-    "hora": null,
-    "periodo": "",
-    "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
-  },
-  {
     "ticker": "PNVL3",
     "empresa": "DIMED",
     "evento": "Resultado 3Q26",
@@ -687,6 +677,16 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
+    "extras": {}
+  },
+  {
+    "ticker": "MGLU3",
+    "empresa": "MAGAZ LUIZA",
+    "evento": "Resultado 3Q26",
+    "data": "2026-11-09",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-08T19:22:14Z",
     "extras": {}
   },
   {
