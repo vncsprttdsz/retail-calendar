@@ -10,6 +10,10 @@ on:
         description: "Só mostrar como o arquivo da B3 foi interpretado (não altera o calendário)"
         type: boolean
         default: false
+      detalhar:
+        description: "Com inspecionar: tickers para imprimir o calendário da CVM (ex.: MGLU3,TFCO4)"
+        type: string
+        default: ""
 
 permissions:
   contents: write
@@ -33,7 +37,9 @@ jobs:
 
       - name: Inspecionar arquivo da B3
         if: ${{ inputs.inspecionar }}
-        run: python -m calendario_b3 --inspecionar
+        env:
+          DETALHAR: ${{ inputs.detalhar }}
+        run: python -m calendario_b3 --inspecionar --detalhar "$DETALHAR"
 
       - name: Ler cronograma da B3 e gerar .ics
         if: ${{ !inputs.inspecionar }}

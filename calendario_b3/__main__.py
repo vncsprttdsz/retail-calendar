@@ -90,6 +90,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--saida", type=Path, default=RAIZ / "publico" / "calendario.ics")
     ap.add_argument("--historico", type=Path, default=RAIZ / "dados" / "eventos.json")
     ap.add_argument("--inspecionar", action="store_true", help="só mostra a estrutura detectada")
+    ap.add_argument("--detalhar", default="", help="com --inspecionar: tickers (vírgula) cujo calendário da CVM é impresso")
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
@@ -125,7 +126,8 @@ def main(argv: list[str] | None = None) -> int:
         nomes = sorted({l.empresa or l.codigo for l in linhas})
         print(f"\n== {len(nomes)} empresas no arquivo:\n  " + " | ".join(nomes))
         try:
-            cvm.diagnostico(_cnpjs(cfg), datetime.now(ZoneInfo(cfg["calendario"]["fuso"])).date())
+            detalhar = tuple(t.strip().upper() for t in args.detalhar.split(",") if t.strip())
+            cvm.diagnostico(_cnpjs(cfg), datetime.now(ZoneInfo(cfg["calendario"]["fuso"])).date(), detalhar)
         except Exception:
             traceback.print_exc(file=sys.stdout)
         return 0

@@ -513,3 +513,17 @@ def test_cvm_fora_do_ar_nao_derruba(monkeypatch, tmp_path):
     monkeypatch.setattr(cvm, "ler_ipe", quebrado)
     cfg = {"cobertura": {"empresas": [{"ticker": "MGLU3", "cnpj": "47.960.950/0001-21"}]}}
     assert cli._datas_cvm(cfg, [], date(2026, 10, 8), tmp_path / "c.json") == []
+
+
+def test_prazo_legal_descarta_leitura_errada():
+    assert cvm.dentro_do_prazo("3Q26", date(2026, 11, 12))
+    assert not cvm.dentro_do_prazo("3Q26", date(2026, 11, 26))  # TFCO4: leitura errada do PDF
+    assert cvm.dentro_do_prazo("4Q25", date(2026, 3, 31))
+    assert not cvm.dentro_do_prazo("4Q25", date(2026, 6, 29))
+
+
+def test_cvm_ignora_data_fora_do_prazo(monkeypatch):
+    ipe = _ipe(("59.418.806/0001-47", "Calendário de Eventos Corporativos", "", "2026-12-31", "2026-06-18", "3", "tf"))
+    monkeypatch.setattr(cvm, "ler_ipe", lambda anos: ipe)
+    monkeypatch.setattr(cvm, "texto_pdf", lambda link: CALENDARIO_MGLU.replace("3º trimestre 05/11/2026", "3º trimestre 26/11/2026"))
+    assert cvm.coletar({"TFCO4": "59.418.806/0001-47"}, {}, date(2026, 10, 8), {}) == []

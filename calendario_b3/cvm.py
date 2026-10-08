@@ -12,7 +12,7 @@ import logging
 import re
 import zipfile
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, timedelta
 
 import pandas as pd
 import requests
@@ -120,6 +120,18 @@ def datas_de_resultado(texto: str) -> dict[str, date]:
     return saida
 
 
+def dentro_do_prazo(rotulo: str, dia: date) -> bool:
+    """Prazo legal da CVM: ITR até 45 dias após o trimestre; DFP até 3 meses após o exercício.
+
+    Uma data fora do prazo indica leitura errada do PDF (ou outro evento, como o call).
+    """
+    q, ano = int(rotulo[0]), 2000 + int(rotulo[2:])
+    if q == 4:
+        return date(ano, 12, 31) < dia <= date(ano + 1, 4, 5)  # 31/03 + folga de fim de semana
+    fim_tri = {1: date(ano, 3, 31), 2: date(ano, 6, 30), 3: date(ano, 9, 30)}[q]
+    return fim_tri < dia <= fim_tri + timedelta(days=47)
+
+
 def calendarios_recentes(ipe: pd.DataFrame, cnpjs: dict[str, str]) -> list[DocCVM]:
     """Último calendário entregue por empresa e ano de referência (reapresentações substituem)."""
     vistos, saida = set(), []
@@ -150,15 +162,19 @@ def coletar(cnpjs: dict[str, str], nomes: dict[str, str], hoje: date, cache: dic
         datas = {k: date.fromisoformat(v) for k, v in cache[doc.link].items()}
         if not datas:
             log.warning("%s: calendário da CVM sem datas de ITR/DFP reconhecidas: %s", doc.ticker, doc.link)
+        fora = {q: d for q, d in datas.items() if not dentro_do_prazo(q, d)}
+        if fora:
+            log.warning("%s: datas fora do prazo legal no calendário da CVM, ignoradas: %s (%s)", doc.ticker,
+                        ", ".join(f"{q} {d:%d/%m/%Y}" for q, d in sorted(fora.items())), doc.link)
         for q, dia in datas.items():
-            if dia >= hoje:
+            if dia >= hoje and q not in fora:
                 eventos.append(Evento(doc.ticker, nomes.get(doc.ticker, doc.ticker), f"Resultado {q}", dia))
         log.info("%s: calendário CVM %s v%s -> %s", doc.ticker, doc.data_entrega, doc.versao,
                  ", ".join(f"{q} {d:%d/%m}" for q, d in sorted(datas.items())))
     return eventos
 
 
-def diagnostico(cnpjs: dict[str, str], hoje: date, detalhar: tuple[str, ...] = ("MGLU3",)) -> None:
+def diagnostico(cnpjs: dict[str, str], hoje: date, detalhar: tuple[str, ...] = ()) -> None:
     """Imprime o que a CVM tem: calendários recentes da cobertura e o texto dos detalhados."""
     ipe = ler_ipe([hoje.year])
     print(f"\n== CVM IPE {hoje.year}: {len(ipe)} documentos; colunas: {list(ipe.columns)}")
