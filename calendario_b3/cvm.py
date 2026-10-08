@@ -21,6 +21,8 @@ log = logging.getLogger(__name__)
 
 IPE_URL = "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/IPE/DADOS/ipe_cia_aberta_{ano}.zip"
 HEADERS = {"User-Agent": "Mozilla/5.0 (retail-calendar)"}
+# Sobe quando a leitura do PDF muda: entradas antigas do cache são relidas.
+VERSAO_PARSER = 2
 
 
 @dataclass
@@ -110,13 +112,19 @@ def datas_de_resultado(texto: str) -> dict[str, date]:
     if m:
         saida[f"4Q{int(m[1]) % 100:02d}"] = _data(m[2])
     ref = re.search(r"Data de refer[êe]ncia:\s*(\d{4})", t, re.I)
-    # Só a seção do ITR: a de "Apresentação Pública" repete "Referentes ao 3º trimestre" com a data do call.
-    sec = re.search(r"Informa[çc][õo]es Trimestrais.*?(?=Assembleia|Apresenta[çc][ãa]o P[úu]blica|Altera[çc][õo]es efetuadas|$)", t, re.S | re.I)
-    if sec:
-        for q, d in re.findall(r"([1-3])\s*[º°o]?\s*trimestre\D{0,40}?" + _DATA, sec[0], re.I):
-            dia = _data(d)
-            ano = int(ref[1]) if ref else dia.year
-            saida[f"{q}Q{ano % 100:02d}"] = dia
+    # Só as linhas logo abaixo de "Informações Trimestrais – ITR". Outras seções repetem
+    # "Referentes ao 3º trimestre" com outras datas: ITR em inglês, apresentação pública (call).
+    linhas = [l.strip() for l in t.splitlines()]
+    for i, l in enumerate(linhas):
+        if re.match(r"Informa[çc][õo]es Trimestrais\s*[–-]\s*ITR\b", l, re.I):
+            for item in linhas[i + 1 :]:
+                m = re.match(r"Referentes? ao ([1-3])\s*[º°o]?\s*trimestre\D{0,40}?" + _DATA, item, re.I)
+                if not m:
+                    break
+                dia = _data(m[2])
+                ano = int(ref[1]) if ref else dia.year
+                saida.setdefault(f"{m[1]}Q{ano % 100:02d}", dia)
+            break
     return saida
 
 
@@ -151,15 +159,18 @@ def coletar(cnpjs: dict[str, str], nomes: dict[str, str], hoje: date, cache: dic
     from .modelo import Evento
 
     ipe = ler_ipe(sorted({hoje.year, hoje.year - 1 if hoje.month <= 2 else hoje.year}))
+    for k in [k for k in cache if not k.startswith(f"v{VERSAO_PARSER} ")]:
+        del cache[k]  # leitura de versão anterior do parser
     eventos = []
     for doc in calendarios_recentes(ipe, cnpjs):
-        if doc.link not in cache:
+        chave = f"v{VERSAO_PARSER} {doc.link}"
+        if chave not in cache:
             try:
-                cache[doc.link] = {k: v.isoformat() for k, v in datas_de_resultado(texto_pdf(doc.link)).items()}
+                cache[chave] = {k: v.isoformat() for k, v in datas_de_resultado(texto_pdf(doc.link)).items()}
             except Exception as e:
                 log.warning("%s: não consegui ler o calendário da CVM (%s): %s", doc.ticker, doc.link, e)
                 continue
-        datas = {k: date.fromisoformat(v) for k, v in cache[doc.link].items()}
+        datas = {k: date.fromisoformat(v) for k, v in cache[chave].items()}
         if not datas:
             log.warning("%s: calendário da CVM sem datas de ITR/DFP reconhecidas: %s", doc.ticker, doc.link)
         fora = {q: d for q, d in datas.items() if not dentro_do_prazo(q, d)}

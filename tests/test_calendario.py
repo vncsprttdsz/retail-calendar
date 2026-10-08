@@ -527,3 +527,40 @@ def test_cvm_ignora_data_fora_do_prazo(monkeypatch):
     monkeypatch.setattr(cvm, "ler_ipe", lambda anos: ipe)
     monkeypatch.setattr(cvm, "texto_pdf", lambda link: CALENDARIO_MGLU.replace("3º trimestre 05/11/2026", "3º trimestre 26/11/2026"))
     assert cvm.coletar({"TFCO4": "59.418.806/0001-47"}, {}, date(2026, 10, 8), {}) == []
+
+
+# Texto real do calendário da TFCO4 (CVM, 18/06/2026 v3): tem ITR em inglês e lista de calls.
+CALENDARIO_TFCO = """CALENDÁRIO ANUAL DE EVENTOS CORPORATIVOS
+Denominação Social: TRACK & FIELD CO S.A.
+Data de referência: 2026
+Datas programadas para divulgação de informações periódicas e eventuais
+Demonstrações Financeiras Anuais Completas e Demonstrações Financeiras Padronizadas –
+DFP relativas ao exercício social findo em 31/12/2025 09/03/2026
+Demonstrações Financeiras Anuais traduzidas para o inglês, relativas ao exercício social
+findo em 31/12/2025 23/03/2026
+Formulário de Referência, relativo ao exercício social em curso 01/06/2026
+Informações Trimestrais – ITR
+Referentes ao 1º trimestre 11/05/2026
+Referentes ao 2º trimestre 12/08/2026
+Referentes ao 3º trimestre 12/11/2026
+ 
+Informações Trimestrais traduzidas para o inglês
+Referentes ao 1º trimestre 25/05/2026
+Referentes ao 2º trimestre 26/08/2026
+Referentes ao 3º trimestre 26/11/2026
+ 
+Assembleia Geral Ordinária
+Lista de Reuniões Públicas com Analistas
+Call de Resultados 3T26 13/11/2026
+Alterações efetuadas:
+Data de divulgação do ITR (2º trimestre) alterada de 13/08/2026 para 12/08/2026
+"""
+
+
+def test_cvm_ignora_itr_em_ingles():
+    assert cvm.datas_de_resultado(CALENDARIO_TFCO) == {
+        "4Q25": date(2026, 3, 9),
+        "1Q26": date(2026, 5, 11),
+        "2Q26": date(2026, 8, 12),
+        "3Q26": date(2026, 11, 12),
+    }
