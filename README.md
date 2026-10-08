@@ -39,7 +39,39 @@ https://raw.githubusercontent.com/vncsprttdsz/retail-calendar/main/publico/calen
    (horário de Brasília; sem horário = dia inteiro). Se o Yahoo estiver fora do ar,
    o evento já conhecido é mantido.
 
-Nenhum token ou secret é necessário: o workflow só lê a B3 e grava no próprio repo.
+5. **Data corrigida à mão** (empresas da B3): `manual` na empresa, ex.:
+   `- { ticker: MGLU3, ..., manual: { 3Q26: "2026-11-09" } }`. Prevalece sobre B3 e CVM.
+   Remova quando a fonte oficial já trouxer a data nova.
+
+### Avisos no Telegram (opcional)
+
+A cada mudança de data (remarcação, confirmação de data estimada, evento novo ou removido)
+o workflow manda uma mensagem, ex.: `📅 MGLU Resultado 3Q26: 05/11 → 09/11`.
+
+1. No Telegram, fale com **@BotFather** → `/newbot` → escolha nome e usuário. Ele responde com o
+   **token** do bot (algo como `123456:ABC-...`).
+2. Abra a conversa com o seu bot e mande qualquer mensagem (ex.: "oi").
+3. No navegador, abra `https://api.telegram.org/bot<TOKEN>/getUpdates` e copie o número em
+   `"chat":{"id": ...}` — é o **chat id**. (Para avisar um grupo: adicione o bot ao grupo,
+   mande uma mensagem lá e use o id do grupo, que começa com `-`.)
+4. No GitHub: *Settings → Secrets and variables → Actions → New repository secret*:
+   `TELEGRAM_BOT_TOKEN` e `TELEGRAM_CHAT_ID`.
+
+Sem os secrets, as mudanças aparecem só no log do workflow. O token nunca é impresso no log.
+
+## De onde vêm as datas
+
+| Prioridade | Fonte | O que traz |
+|---|---|---|
+| 1 | `manual` no `config.yaml` | correção pontual |
+| 2 | Calendário de Eventos Corporativos na **CVM** (dados abertos, IPE) | última versão entregue pela companhia; pega remarcações antes da B3 |
+| 3 | Planilha consolidada da **B3** | base para todas as empresas, inclusive datas já realizadas |
+| — | **Yahoo Finance** | empresas listadas fora do Brasil (`exterior`) |
+
+Os dados abertos da CVM podem levar alguns dias para refletir um documento novo; se a
+empresa já anunciou a data e ela ainda não apareceu, use `manual`.
+
+Nenhum token é obrigatório: o workflow só lê fontes públicas e grava no próprio repo.
 
 ## Assinar no Outlook
 

@@ -9,6 +9,7 @@ Uso:
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import sys
 import traceback
@@ -60,6 +61,26 @@ def coletar_tabelas(cfg_fonte: dict, arquivo_local: Path | None) -> list[tuple[s
 
 def _cnpjs(cfg: dict) -> dict[str, str]:
     return {str(i["ticker"]).upper(): i.get("cnpj", "") for i in (cfg.get("cobertura") or {}).get("empresas") or []}
+
+
+def _datas_cvm(cfg: dict, b3: list, hoje, caminho_cache: Path) -> list:
+    """Eventos futuros pelos calendários da CVM; se a CVM falhar, segue só com a B3."""
+    empresas = (cfg.get("cobertura") or {}).get("empresas") or []
+    nomes = {str(i["ticker"]).upper(): (i.get("nomes") or [i["ticker"]])[0] for i in empresas}
+    try:
+        cache = json.loads(caminho_cache.read_text(encoding="utf-8")) if caminho_cache.exists() else {}
+        eventos = cvm.coletar(_cnpjs(cfg), nomes, hoje, cache)
+    except Exception as e:
+        log.warning("calendários da CVM indisponíveis nesta rodada (%s); usando só a B3", e)
+        return []
+    caminho_cache.parent.mkdir(parents=True, exist_ok=True)
+    caminho_cache.write_text(json.dumps(cache, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    por_chave = {(e.ticker, ajustes.rotulo(e)): e for e in b3}
+    for e in eventos:
+        anterior = por_chave.get((e.ticker, ajustes.rotulo(e)))
+        if anterior and anterior.data != e.data:
+            log.info("CVM diverge da B3: %s %s B3 %s -> CVM %s", e.ticker, e.evento, anterior.data, e.data)
+    return eventos
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -128,13 +149,17 @@ def main(argv: list[str] | None = None) -> int:
     if sem_evento:
         log.info("sem eventos no arquivo da B3: %s", ", ".join(sem_evento))
 
-    # Datas manuais prevalecem sobre a planilha da B3.
+    hoje = datetime.now(ZoneInfo(cfg_cal["fuso"])).date()
+
+    # Calendário reapresentado na CVM chega antes da planilha consolidada da B3.
+    novos = ajustes.substituir(novos, _datas_cvm(cfg, novos, hoje, args.historico.parent / "cvm_cache.json"))
+
+    # Datas manuais prevalecem sobre B3 e CVM.
     manuais = ajustes.manuais((cfg.get("cobertura") or {}).get("empresas"))
     for m in manuais:
         log.info("data manual: %s %s em %s", m.ticker, m.evento, m.data)
     novos = ajustes.substituir(novos, manuais)
 
-    hoje = datetime.now(ZoneInfo(cfg_cal["fuso"])).date()
     externos, falhas = exterior.coletar(cfg.get("exterior"), cfg_cal["fuso"])
     novos += externos
     tickers = {e.ticker for e in cobertura} | {str(i["ticker"]).upper() for i in cfg.get("exterior") or []}

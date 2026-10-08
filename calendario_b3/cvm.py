@@ -87,6 +87,77 @@ def texto_pdf(link: str) -> str:
     return "\n".join((p.extract_text() or "") for p in PdfReader(io.BytesIO(r.content)).pages)
 
 
+_DATA = r"(\d{2}/\d{2}/\d{4})"
+
+
+def _data(s: str) -> date:
+    d, m, a = map(int, s.split("/"))
+    return date(a, m, d)
+
+
+def datas_de_resultado(texto: str) -> dict[str, date]:
+    """Datas de ITR/DFP no texto do 'Calendário Anual de Eventos Corporativos' da CVM.
+
+        Data de referência: 2026
+        ...Padronizadas – DFP relativas ao exercício social findo em 31/12/2025 12/03/2026
+        Informações Trimestrais – ITR
+        Referentes ao 3º trimestre 05/11/2026
+    -> {"4Q25": 12/03/2026, "3Q26": 05/11/2026}
+    """
+    t = re.sub(r"[ \t\xa0]+", " ", texto)
+    saida: dict[str, date] = {}
+    m = re.search(r"Padronizadas\s*[–-]\s*DFP.{0,200}?findo em\s*\d{2}/\d{2}/(\d{4})\s*" + _DATA, t, re.S | re.I)
+    if m:
+        saida[f"4Q{int(m[1]) % 100:02d}"] = _data(m[2])
+    ref = re.search(r"Data de refer[êe]ncia:\s*(\d{4})", t, re.I)
+    # Só a seção do ITR: a de "Apresentação Pública" repete "Referentes ao 3º trimestre" com a data do call.
+    sec = re.search(r"Informa[çc][õo]es Trimestrais.*?(?=Assembleia|Apresenta[çc][ãa]o P[úu]blica|Altera[çc][õo]es efetuadas|$)", t, re.S | re.I)
+    if sec:
+        for q, d in re.findall(r"([1-3])\s*[º°o]?\s*trimestre\D{0,40}?" + _DATA, sec[0], re.I):
+            dia = _data(d)
+            ano = int(ref[1]) if ref else dia.year
+            saida[f"{q}Q{ano % 100:02d}"] = dia
+    return saida
+
+
+def calendarios_recentes(ipe: pd.DataFrame, cnpjs: dict[str, str]) -> list[DocCVM]:
+    """Último calendário entregue por empresa e ano de referência (reapresentações substituem)."""
+    vistos, saida = set(), []
+    for d in documentos(ipe, cnpjs, categoria="Calend"):
+        k = (d.ticker, d.data_referencia[:4])
+        if k not in vistos:
+            vistos.add(k)
+            saida.append(d)
+    return saida
+
+
+def coletar(cnpjs: dict[str, str], nomes: dict[str, str], hoje: date, cache: dict) -> list:
+    """Eventos futuros segundo o último calendário de cada empresa na CVM.
+
+    `cache` ({link: {rotulo: 'AAAA-MM-DD'}}) evita baixar de novo PDFs já lidos.
+    """
+    from .modelo import Evento
+
+    ipe = ler_ipe(sorted({hoje.year, hoje.year - 1 if hoje.month <= 2 else hoje.year}))
+    eventos = []
+    for doc in calendarios_recentes(ipe, cnpjs):
+        if doc.link not in cache:
+            try:
+                cache[doc.link] = {k: v.isoformat() for k, v in datas_de_resultado(texto_pdf(doc.link)).items()}
+            except Exception as e:
+                log.warning("%s: não consegui ler o calendário da CVM (%s): %s", doc.ticker, doc.link, e)
+                continue
+        datas = {k: date.fromisoformat(v) for k, v in cache[doc.link].items()}
+        if not datas:
+            log.warning("%s: calendário da CVM sem datas de ITR/DFP reconhecidas: %s", doc.ticker, doc.link)
+        for q, dia in datas.items():
+            if dia >= hoje:
+                eventos.append(Evento(doc.ticker, nomes.get(doc.ticker, doc.ticker), f"Resultado {q}", dia))
+        log.info("%s: calendário CVM %s v%s -> %s", doc.ticker, doc.data_entrega, doc.versao,
+                 ", ".join(f"{q} {d:%d/%m}" for q, d in sorted(datas.items())))
+    return eventos
+
+
 def diagnostico(cnpjs: dict[str, str], hoje: date, detalhar: tuple[str, ...] = ("MGLU3",)) -> None:
     """Imprime o que a CVM tem: calendários recentes da cobertura e o texto dos detalhados."""
     ipe = ler_ipe([hoje.year])

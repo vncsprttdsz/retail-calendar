@@ -311,9 +311,12 @@ SP = ZoneInfo("America/Sao_Paulo")
 
 
 @pytest.fixture(autouse=True)
-def sem_yahoo(monkeypatch):
-    """Nenhum teste acessa a internet: o Yahoo responde 'sem data' salvo quando o teste troca."""
+def sem_internet(monkeypatch):
+    """Nenhum teste acessa a internet: Yahoo sem data e CVM sem documentos, salvo quando o teste troca."""
+    from calendario_b3 import cvm
+
     monkeypatch.setattr(exterior, "consultar_yahoo", lambda simbolo, tz: None)
+    monkeypatch.setattr(cvm, "ler_ipe", lambda anos: pd.DataFrame())
 
 
 def test_trimestre_reportado():
@@ -439,3 +442,74 @@ def test_telegram_envia_mensagem(monkeypatch):
     url, corpo = enviados[0]
     assert url.endswith("/bot123:abc/sendMessage") and corpo["chat_id"] == "42"
     assert corpo["text"].endswith("linha 1\nlinha 2")
+
+
+# --------------------------------------------------------------------------- CVM
+
+from calendario_b3 import cvm
+
+# Texto real (pypdf) do calendário da Magalu entregue à CVM em 29/07/2026, versão 3.
+CALENDARIO_MGLU = """CALENDÁRIO ANUAL DE EVENTOS CORPORATIVOS
+Denominação Social: MAGAZINE LUIZA S.A.
+Data de referência: 2026
+Datas programadas para divulgação de informações periódicas e eventuais
+Demonstrações Financeiras Anuais Completas e Demonstrações Financeiras
+Padronizadas – DFP relativas ao exercício social findo em 31/12/2025 12/03/2026
+Formulário de Referência, relativo ao exercício social em curso 29/05/2026
+Informe sobre o Código Brasileiro de Governança Corporativa - Companhias Abertas 29/07/2026
+Informações Trimestrais – ITR
+Referentes ao 1º trimestre 07/05/2026
+Referentes ao 2º trimestre 06/08/2026
+Referentes ao 3º trimestre 05/11/2026
+Assembleia Geral Ordinária
+Envio da Proposta da Administração 24/03/2026
+Apresentação Pública sobre Divulgação de Resultados
+Referentes ao exercício social 13/03/2026
+Referentes ao 1º trimestre 08/05/2026
+Referentes ao 2º trimestre 07/08/2026
+Referentes ao 3º trimestre 06/11/2026
+Alterações efetuadas:
+Data de divulgação do Código Brasileiro Governança Corporativa Companhias Abertas alterada de 31/07/2026 para 29/07/2026
+"""
+
+
+def test_cvm_le_calendario_real():
+    assert cvm.datas_de_resultado(CALENDARIO_MGLU) == {
+        "4Q25": date(2026, 3, 12),
+        "1Q26": date(2026, 5, 7),
+        "2Q26": date(2026, 8, 6),
+        "3Q26": date(2026, 11, 5),  # não pega 06/11, que é a apresentação pública (call)
+    }
+
+
+def _ipe(*linhas):
+    cols = ["CNPJ_Companhia", "Categoria", "Assunto", "Data_Referencia", "Data_Entrega", "Versao", "Link_Download"]
+    return pd.DataFrame([dict(zip(cols, l)) for l in linhas])
+
+
+def test_cvm_usa_ultima_reapresentacao(monkeypatch):
+    ipe = _ipe(
+        ("47.960.950/0001-21", "Calendário de Eventos Corporativos", "", "2026-12-31", "2026-07-29", "3", "v3"),
+        ("47.960.950/0001-21", "Calendário de Eventos Corporativos", "", "2026-12-31", "2026-10-07", "4", "v4"),
+        ("47.960.950/0001-21", "Fato Relevante", "x", "2026-10-07", "2026-10-07", "1", "fr"),
+        ("00.000.000/0001-00", "Calendário de Eventos Corporativos", "", "2026-12-31", "2026-10-07", "1", "outra"),
+    )
+    textos = {"v3": CALENDARIO_MGLU, "v4": CALENDARIO_MGLU.replace("3º trimestre 05/11/2026", "3º trimestre 09/11/2026")}
+    baixados = []
+    monkeypatch.setattr(cvm, "ler_ipe", lambda anos: ipe)
+    monkeypatch.setattr(cvm, "texto_pdf", lambda link: baixados.append(link) or textos[link])
+    cache = {}
+    evs = cvm.coletar({"MGLU3": "47.960.950/0001-21"}, {"MGLU3": "MAGAZ LUIZA"}, date(2026, 10, 8), cache)
+    assert [(e.ticker, e.evento, e.data) for e in evs] == [("MGLU3", "Resultado 3Q26", date(2026, 11, 9))]  # só futuros
+    assert baixados == ["v4"]
+    cvm.coletar({"MGLU3": "47.960.950/0001-21"}, {}, date(2026, 10, 8), cache)
+    assert baixados == ["v4"]  # segunda rodada usa o cache
+
+
+def test_cvm_fora_do_ar_nao_derruba(monkeypatch, tmp_path):
+    def quebrado(anos):
+        raise ConnectionError("cvm fora")
+
+    monkeypatch.setattr(cvm, "ler_ipe", quebrado)
+    cfg = {"cobertura": {"empresas": [{"ticker": "MGLU3", "cnpj": "47.960.950/0001-21"}]}}
+    assert cli._datas_cvm(cfg, [], date(2026, 10, 8), tmp_path / "c.json") == []

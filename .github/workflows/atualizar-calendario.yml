@@ -45,7 +45,7 @@ jobs:
       - name: Commit se houve mudança
         if: ${{ !inputs.inspecionar }}
         run: |
-          git add dados/eventos.json publico/calendario.ics
+          git add dados/ publico/calendario.ics
           if git diff --cached --quiet; then
             echo "Sem mudanças no calendário."
           else
