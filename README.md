@@ -64,12 +64,23 @@ Sem os secrets, as mudanças aparecem só no log do workflow. O token nunca é i
 | Prioridade | Fonte | O que traz |
 |---|---|---|
 | 1 | `manual` no `config.yaml` | correção pontual |
-| 2 | Calendário de Eventos Corporativos na **CVM** (dados abertos, IPE) | última versão entregue pela companhia; pega remarcações antes da B3 |
-| 3 | Planilha consolidada da **B3** | base para todas as empresas, inclusive datas já realizadas |
+| 2 | **Site de RI** da companhia (`ri` no config) | confere a data de divulgação; traz o **call** (data, horário e link do webcast) |
+| 3 | Calendário de Eventos Corporativos reapresentado (**Plantão de Notícias da B3**, no mesmo dia; **CVM** dados abertos, ~1 semana depois) | última versão entregue pela companhia; também a data do call (apresentação pública) |
+| 4 | Planilha consolidada da **B3** | base para todas as empresas, inclusive datas já realizadas |
 | — | **Yahoo Finance** | empresas listadas fora do Brasil (`exterior`) |
 
-Os dados abertos da CVM podem levar alguns dias para refletir um documento novo; se a
-empresa já anunciou a data e ela ainda não apareceu, use `manual`.
+Site de RI × CVM: quando divergem na data de divulgação, vale a informação mais recente —
+se a companhia reapresentou o calendário depois de o site passar a mostrar a data, vale a
+CVM (site desatualizado); senão, vale o site. Toda mudança vai para o Telegram.
+
+Sites de RI: os da MZ Group (maioria da cobertura) são lidos pela API de eventos da MZ; os da
+RIWeb (Magalu, RD), pelo bloco "Calendário de Eventos" da home. Links de inscrição em
+destaque na home (pop-up) são associados ao próximo call (até 21 dias). O link do webcast
+costuma aparecer poucos dias antes do call; quando aparece, o evento é atualizado e o
+Telegram avisa (`🔗`).
+
+No calendário: `LREN Resultado 3Q26` (dia inteiro) e `LREN Call 3Q26` (com horário quando
+informado; descrição com o link do webcast).
 
 Nenhum token é obrigatório: o workflow só lê fontes públicas e grava no próprio repo.
 

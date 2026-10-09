@@ -320,6 +320,9 @@ def sem_internet(monkeypatch):
     monkeypatch.setattr(exterior, "consultar_yahoo", lambda simbolo, tz: None)
     monkeypatch.setattr(cvm, "ler_ipe", lambda anos: pd.DataFrame())
     monkeypatch.setattr(noticias, "listar", lambda inicio, fim: [])
+    from calendario_b3 import ri as _ri
+
+    monkeypatch.setattr(_ri, "coletar", lambda empresas, hoje: ([], set()))
 
 
 def test_trimestre_reportado():
@@ -503,7 +506,10 @@ def test_cvm_usa_ultima_reapresentacao(monkeypatch):
     monkeypatch.setattr(cvm, "texto_pdf", lambda link: baixados.append(link) or textos[link])
     cache = {}
     evs = cvm.coletar({"MGLU3": "47.960.950/0001-21"}, {"MGLU3": "MAGAZ LUIZA"}, date(2026, 10, 8), cache)
-    assert [(e.ticker, e.evento, e.data) for e in evs] == [("MGLU3", "Resultado 3Q26", date(2026, 11, 9))]  # só futuros
+    assert [(e.ticker, e.evento, e.data) for e in evs] == [
+        ("MGLU3", "Resultado 3Q26", date(2026, 11, 9)),  # só futuros
+        ("MGLU3", "Call 3Q26", date(2026, 11, 6)),  # apresentação pública, do mesmo calendário
+    ]
     assert baixados == ["v4"]
     cvm.coletar({"MGLU3": "47.960.950/0001-21"}, {}, date(2026, 10, 8), cache)
     assert baixados == ["v4"]  # segunda rodada usa o cache
@@ -529,7 +535,8 @@ def test_cvm_ignora_data_fora_do_prazo(monkeypatch):
     ipe = _ipe(("59.418.806/0001-47", "Calendário de Eventos Corporativos", "", "2026-12-31", "2026-06-18", "3", "tf"))
     monkeypatch.setattr(cvm, "ler_ipe", lambda anos: ipe)
     monkeypatch.setattr(cvm, "texto_pdf", lambda link: CALENDARIO_MGLU.replace("3º trimestre 05/11/2026", "3º trimestre 26/11/2026"))
-    assert cvm.coletar({"TFCO4": "59.418.806/0001-47"}, {}, date(2026, 10, 8), {}) == []
+    evs = cvm.coletar({"TFCO4": "59.418.806/0001-47"}, {}, date(2026, 10, 8), {})
+    assert [e.evento for e in evs if e.evento.startswith("Resultado")] == []
 
 
 # Texto real do calendário da TFCO4 (CVM, 18/06/2026 v3): tem ITR em inglês e lista de calls.
@@ -622,7 +629,9 @@ def test_plantao_reapresentacao_prevalece_sobre_dados_abertos(monkeypatch):
               extras[0].link: CALENDARIO_MGLU.replace("05/11/2026", "11/11/2026")}
     monkeypatch.setattr(cvm, "texto_pdf", lambda link: textos[link])
     evs = cvm.coletar({"RIAA3": "08.402.943/0001-52"}, {}, date(2026, 10, 9), {}, extras)
-    assert [(e.ticker, e.evento, e.data) for e in evs] == [("RIAA3", "Resultado 3Q26", date(2026, 11, 11))]
+    assert [(e.ticker, e.evento, e.data) for e in evs if e.evento.startswith("Resultado")] == [
+        ("RIAA3", "Resultado 3Q26", date(2026, 11, 11))
+    ]
 
 
 # Texto real da reapresentação da RIAA3 (Plantão, 08/10/2026): data na linha de baixo.
@@ -667,3 +676,139 @@ def test_cvm_le_data_na_linha_de_baixo():
         "2Q26": date(2026, 8, 5),
         "3Q26": date(2026, 11, 9),  # não 10/11, que é o call
     }
+
+
+def test_cvm_le_data_do_call():
+    assert cvm.datas_de_call(CALENDARIO_MGLU) == {
+        "4Q25": date(2026, 3, 13), "1Q26": date(2026, 5, 8), "2Q26": date(2026, 8, 7), "3Q26": date(2026, 11, 6),
+    }
+    assert cvm.datas_de_call(CALENDARIO_TFCO) == {"3Q26": date(2026, 11, 13)}  # "Lista de Reuniões Públicas"
+    assert cvm.datas_de_call(CALENDARIO_RIAA_R) == {"3Q26": date(2026, 11, 10)}
+
+
+# --------------------------------------------------------------------------- sites de RI
+
+from calendario_b3 import ri
+
+# Trechos reais da API mzevents (future), 09/10/2026.
+MZ_SBFG = [
+    {"event_name": "Divulgação de Resultados 3T26", "event_date": "2026-11-09T12:00:00.000Z", "event_starttime": "",
+     "event_endtime": "", "external_link": None, "event_details": "", "advanced": ""},
+    {"event_name": "Call de Resultados 3T26", "event_date": "2026-11-10T12:00:00.000Z", "event_starttime": "",
+     "event_endtime": "", "external_link": "", "event_details": "", "advanced": ""},
+]
+MZ_OUTROS = [
+    {"event_name": "Período de Silêncio", "event_date": "2026-10-22T12:00:00.000Z", "event_starttime": ""},
+    {"event_name": "  Webcast 3T26", "event_date": "2026-11-13T12:00:00.000Z", "event_starttime": "10:00", "event_endtime": "11:00",
+     "external_link": "", "event_details": '<p>Inscreva-se: <a href="https://mzgroup.zoom.us/webinar/register/WN_abc">aqui</a></p>'},
+    {"event_name": "Divulgação de Resultados 3T2026", "event_date": "2026-11-05T12:00:00.000Z", "event_starttime": ""},
+    {"event_name": " Apresentação de Resultados 3T26", "event_date": "2026-11-05T12:00:00.000Z", "event_starttime": "11:00",
+     "event_endtime": "12:00", "external_link": "https://ten.com.br/evento/xyz"},
+]
+
+HOME_MGLU = """<div>Calendário de Eventos nov 09 Divulgação de Resultados 3T26 Após Fechamento do Mercado nov 10 Call
+Apresentação de Resultados 3T26 09:00 - 11:00 (Horário de Brasília) Ver todos os eventos Central de Resultados 2T26</div>
+<a href="https://ri.enfoque.com.br/RIWeb/Empresas/cotacao?token=1">cotação</a>"""
+HOME_RADL = """Calendário de eventos 03 nov Divulgação Resultados 3T26 Após Fechamento do Mercado 04 nov Call Resultados 3T26
+[PT+EN] 10:00 - 11:30 (Horário de Brasília) Ver todos os eventos Últimas Notícias"""
+
+
+def test_classificar_titulos_reais():
+    assert ri.classificar("Divulgação de Resultados 3T2026") == ("resultado", "3Q26")
+    assert ri.classificar("Videoconferencia dos Resultados do 3T26") == ("call", "3Q26")
+    assert ri.classificar(" Apresentação de Resultados 3T26") == ("call", "3Q26")
+    assert ri.classificar("Call Apresentação de Resultados 3T26") == ("call", "3Q26")
+    assert ri.classificar("Período de Silêncio") is None
+    assert ri.classificar("Assembleia Geral Ordinária 2026") is None
+
+
+def test_mz_resultado_e_call():
+    evs = ri.de_mz("SBFG3", MZ_SBFG) + ri.de_mz("X", MZ_OUTROS)
+    assert [(e.ticker, e.tipo, e.rotulo, e.dia, e.inicio, e.fim, e.link) for e in evs] == [
+        ("SBFG3", "resultado", "3Q26", date(2026, 11, 9), None, None, ""),
+        ("SBFG3", "call", "3Q26", date(2026, 11, 10), None, None, ""),
+        ("X", "call", "3Q26", date(2026, 11, 13), time(10), time(11), "https://mzgroup.zoom.us/webinar/register/WN_abc"),
+        ("X", "resultado", "3Q26", date(2026, 11, 5), None, None, ""),
+        ("X", "call", "3Q26", date(2026, 11, 5), time(11), time(12), "https://ten.com.br/evento/xyz"),
+    ]
+
+
+def test_riweb_magalu_e_rd():
+    hoje = date(2026, 10, 9)
+    mglu = ri.de_riweb("MGLU3", HOME_MGLU, hoje)
+    assert [(e.tipo, e.rotulo, e.dia, e.inicio, e.fim) for e in mglu] == [
+        ("resultado", "3Q26", date(2026, 11, 9), None, None),
+        ("call", "3Q26", date(2026, 11, 10), time(9), time(11)),
+    ]
+    radl = ri.de_riweb("RADL3", HOME_RADL, hoje)
+    assert [(e.tipo, e.dia, e.inicio, e.fim) for e in radl] == [
+        ("resultado", date(2026, 11, 3), None, None), ("call", date(2026, 11, 4), time(10), time(11, 30)),
+    ]
+    # Em dezembro, "fev 24" é do ano seguinte.
+    assert ri.de_riweb("X", "Calendário de Eventos fev 24 Divulgação de Resultados 4T26 Ver todos", date(2026, 12, 10))[0].dia == date(2027, 2, 24)
+
+
+def test_link_do_popup_vai_para_o_proximo_call(monkeypatch):
+    home = 'x <div class="modal"><a href="https://mzgroup.zoom.us/webinar/register/WN_APnoN5">Inscreva-se</a></div>' \
+           '<a href="https://www.youtube.com/user/canal">yt</a><img src="https://x/webcast.png">'
+    monkeypatch.setattr(ri, "_get", lambda url: type("R", (), {"text": home})())
+    monkeypatch.setattr(ri, "mz_id", lambda html: "id")
+    monkeypatch.setattr(ri, "mz_eventos", lambda fm, tipo: MZ_SBFG)
+    evs = ri.eventos_da_empresa({"ticker": "SBFG3", "ri": ["https://ri"]}, date(2026, 10, 30))
+    assert [e.link for e in evs if e.tipo == "call"] == ["https://mzgroup.zoom.us/webinar/register/WN_APnoN5"]
+    # Com o call ainda distante (> 21 dias), o link da home não é atribuído.
+    evs = ri.eventos_da_empresa({"ticker": "SBFG3", "ri": ["https://ri"]}, date(2026, 10, 9))
+    assert [e.link for e in evs if e.tipo == "call"] == [""]
+
+
+def _cfg_ri():
+    return {"cobertura": {"empresas": [{"ticker": "MGLU3", "nomes": ["MAGAZ LUIZA"], "ri": ["https://ri"]}]}}
+
+
+def test_ri_traz_call_com_horario_e_link(monkeypatch, tmp_path):
+    achados = [ri.EventoRI("MGLU3", "resultado", "3Q26", date(2026, 11, 9)),
+               ri.EventoRI("MGLU3", "call", "3Q26", date(2026, 11, 10), time(9), time(11), "https://mzgroup.zoom.us/webinar/register/WN_1")]
+    monkeypatch.setattr(ri, "coletar", lambda empresas, hoje: (achados, set()))
+    b3 = [Evento("MGLU3", "MAGAZ LUIZA", "Resultado 3Q26", date(2026, 11, 9))]
+    r = cli._aplicar_ri(_cfg_ri(), b3, [], date(2026, 10, 9), tmp_path / "e.json")
+    call = [e for e in r if e.evento == "Call 3Q26"][0]
+    assert (call.data, call.hora, call.extras["fim"], call.extras["link"]) == (date(2026, 11, 10), time(9), "11:00", "https://mzgroup.zoom.us/webinar/register/WN_1")
+    texto = ics.gerar(r, "Cal", "", "America/Sao_Paulo", 60)
+    assert "SUMMARY:MGLU Call 3Q26" in texto
+    assert "DTSTART:20261110T120000Z" in texto and "DTEND:20261110T140000Z" in texto  # 9h-11h Brasília
+    assert "DESCRIPTION:Webcast: https://mzgroup.zoom.us/webinar/register/WN_1" in texto
+
+
+def test_ri_diverge_vale_o_mais_recente(monkeypatch, tmp_path):
+    estado = tmp_path / "e.json"
+    hoje = date(2026, 10, 9)
+    ri_dia = [ri.EventoRI("MGLU3", "resultado", "3Q26", date(2026, 11, 12))]
+    monkeypatch.setattr(ri, "coletar", lambda empresas, hoje: (ri_dia, set()))
+    # B3 (sem data de entrega): o RI prevalece.
+    b3 = [Evento("MGLU3", "M", "Resultado 3Q26", date(2026, 11, 9))]
+    assert [e.data for e in cli._aplicar_ri(_cfg_ri(), b3, [], hoje, estado)] == [date(2026, 11, 12)]
+    # Reapresentação na CVM depois de o RI passar a mostrar 12/11: a CVM prevalece (RI desatualizado).
+    estado.write_text('{"MGLU3 resultado 3Q26": {"data": "2026-11-12", "desde": "2026-10-01 10:00:00"}}')
+    cvm_ev = [Evento("MGLU3", "M", "Resultado 3Q26", date(2026, 11, 9), extras={"fonte": "CVM", "entregue": "2026-10-07 19:49:14"})]
+    assert [e.data for e in cli._aplicar_ri(_cfg_ri(), cvm_ev, [], hoje, estado)] == [date(2026, 11, 9)]
+    # RI mudou depois da reapresentação: o RI prevalece.
+    estado.write_text('{"MGLU3 resultado 3Q26": {"data": "2026-11-12", "desde": "2026-10-08 12:00:00"}}')
+    assert [e.data for e in cli._aplicar_ri(_cfg_ri(), cvm_ev, [], hoje, estado)] == [date(2026, 11, 12)]
+
+
+def test_ri_fora_do_ar_mantem_call_conhecido(monkeypatch, tmp_path):
+    monkeypatch.setattr(ri, "coletar", lambda empresas, hoje: ([], {"MGLU3"}))
+    conhecido = Evento("MGLU3", "M", "Call 3Q26", date(2026, 11, 10), time(9), extras={"fonte": "RI", "link": "https://z"})
+    sem_hora = Evento("MGLU3", "M", "Call 3Q26", date(2026, 11, 10), extras={"fonte": "CVM"})
+    r = cli._aplicar_ri(_cfg_ri(), [sem_hora], [conhecido], date(2026, 10, 9), tmp_path / "e.json")
+    assert [(e.hora, e.extras.get("link")) for e in r] == [(time(9), "https://z")]
+
+
+def test_aviso_de_link_do_webcast():
+    hoje = date(2026, 10, 9)
+    antes = [Evento("LREN3", "R", "Call 3Q26", date(2026, 11, 6), time(10))]
+    depois = [Evento("LREN3", "R", "Call 3Q26", date(2026, 11, 6), time(10), extras={"link": "https://zoom.us/webinar/register/1"})]
+    assert notificar.diferencas(antes, depois, hoje) == ["🔗 LREN Call 3Q26 (06/11 10:00): https://zoom.us/webinar/register/1"]
+    # Resultado e call do mesmo trimestre são eventos distintos.
+    assert notificar.diferencas([], [Evento("LREN3", "R", "Resultado 3Q26", date(2026, 11, 5)), *depois], hoje) == [
+        "🆕 LREN Resultado 3Q26: 05/11", "🆕 LREN Call 3Q26: 06/11 10:00"]

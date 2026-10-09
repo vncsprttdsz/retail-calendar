@@ -88,6 +88,69 @@ def _datas_cvm(cfg: dict, b3: list, hoje, caminho_cache: Path) -> list:
     return eventos
 
 
+def _agora_iso() -> str:
+    return datetime.now(ZoneInfo("UTC")).strftime("%Y-%m-%d %H:%M:%S")
+
+
+def _aplicar_ri(cfg: dict, novos: list, antes: list, hoje, caminho_estado: Path) -> list:
+    """Data de divulgação conferida no site de RI e calls (horário, link) dos sites de RI.
+
+    Divergência na data de divulgação: vale a informação mais recente. O estado guarda desde
+    quando o RI mostra cada data; se a companhia reapresentou o calendário na CVM depois
+    disso, a CVM prevalece (site de RI desatualizado); senão, o RI prevalece.
+    """
+    from .modelo import Evento
+
+    empresas = (cfg.get("cobertura") or {}).get("empresas") or []
+    nomes = {str(i["ticker"]).upper(): (i.get("nomes") or [i["ticker"]])[0] for i in empresas}
+    try:
+        achados, falhas = ri.coletar(empresas, hoje)
+    except Exception as e:
+        log.warning("sites de RI indisponíveis nesta rodada (%s)", e)
+        return novos
+    estado = json.loads(caminho_estado.read_text(encoding="utf-8")) if caminho_estado.exists() else {}
+    agora = _agora_iso()
+    atuais = {ajustes.chave(e): e for e in novos}
+    correcoes, calls = [], {}
+    for r in achados:
+        if r.dia < hoje:
+            continue
+        if r.tipo == "call":
+            if cvm.dentro_do_prazo(r.rotulo, r.dia, folga=10):
+                calls.setdefault((r.ticker, r.rotulo), r)
+            continue
+        if not cvm.dentro_do_prazo(r.rotulo, r.dia):
+            log.warning("%s: data do RI fora do prazo legal, ignorada: %s %s", r.ticker, r.rotulo, r.dia)
+            continue
+        k = f"{r.ticker} resultado {r.rotulo}"
+        if estado.get(k, {}).get("data") != r.dia.isoformat():
+            estado[k] = {"data": r.dia.isoformat(), "desde": agora}
+        atual = atuais.get((r.ticker, "resultado", r.rotulo))
+        if atual and atual.data == r.dia:
+            continue
+        entregue = (atual.extras.get("entregue") or "") if atual else ""
+        if entregue and entregue > estado[k]["desde"]:
+            log.warning("%s %s: RI mostra %s, mas a CVM tem reapresentação mais nova (%s) com %s; vale a CVM",
+                        r.ticker, r.rotulo, r.dia, entregue, atual.data)
+            continue
+        log.info("%s %s: RI diverge (%s -> %s); vale o RI", r.ticker, r.rotulo, atual.data if atual else "-", r.dia)
+        correcoes.append(Evento(r.ticker, nomes.get(r.ticker, r.ticker), f"Resultado {r.rotulo}", r.dia, extras={"fonte": "RI"}))
+    for (t, q), r in calls.items():
+        extras = {"fonte": "RI"}
+        if r.fim:
+            extras["fim"] = r.fim.strftime("%H:%M")
+        if r.link:
+            extras["link"] = r.link
+        correcoes.append(Evento(t, nomes.get(t, t), f"Call {q}", r.dia, r.inicio, extras=extras))
+    # RI fora do ar: mantém o call já conhecido (com horário/link) em vez do da CVM, sem horário.
+    for e in antes:
+        if e.ticker in falhas and ajustes.tipo(e) == "call" and e.data >= hoje and e.extras.get("fonte") == "RI":
+            correcoes.append(e)
+    caminho_estado.parent.mkdir(parents=True, exist_ok=True)
+    caminho_estado.write_text(json.dumps(estado, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    return ajustes.substituir(novos, correcoes)
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--config", type=Path, default=RAIZ / "config.yaml")
@@ -136,7 +199,12 @@ def main(argv: list[str] | None = None) -> int:
         except Exception:
             traceback.print_exc(file=sys.stdout)
         try:
-            ri.diagnostico_mz((cfg.get("cobertura") or {}).get("empresas") or [])
+            hoje_i = datetime.now(ZoneInfo(cfg["calendario"]["fuso"])).date()
+            print("\n== Sites de RI (eventos de resultado e call)")
+            achados, falhas_ri = ri.coletar((cfg.get("cobertura") or {}).get("empresas") or [], hoje_i)
+            for r in achados:
+                print(f"  {r.ticker} {r.tipo:9} {r.rotulo} {r.dia:%d/%m} {r.inicio or ''}-{r.fim or ''} {r.link} | {r.titulo}")
+            print(f"  falhas: {sorted(falhas_ri)}")
         except Exception:
             traceback.print_exc(file=sys.stdout)
         try:
@@ -170,6 +238,10 @@ def main(argv: list[str] | None = None) -> int:
     # Calendário reapresentado na CVM chega antes da planilha consolidada da B3.
     novos = ajustes.substituir(novos, _datas_cvm(cfg, novos, hoje, args.historico.parent / "cvm_cache.json"))
 
+    # Sites de RI: conferem a data de divulgação e trazem o call (horário e link do webcast).
+    antes = historico.carregar(args.historico)
+    novos = _aplicar_ri(cfg, novos, antes, hoje, args.historico.parent / "ri_estado.json")
+
     # Datas manuais prevalecem sobre B3 e CVM.
     manuais = ajustes.manuais((cfg.get("cobertura") or {}).get("empresas"))
     for m in manuais:
@@ -179,7 +251,6 @@ def main(argv: list[str] | None = None) -> int:
     externos, falhas = exterior.coletar(cfg.get("exterior"), cfg_cal["fuso"])
     novos += externos
     tickers = {e.ticker for e in cobertura} | {str(i["ticker"]).upper() for i in cfg.get("exterior") or []}
-    antes = historico.carregar(args.historico)
     eventos = historico.mesclar(antes, novos, hoje, tickers, preservar=falhas)
     historico.salvar(args.historico, eventos)
     if antes:  # primeira execução não gera aviso de "tudo novo"

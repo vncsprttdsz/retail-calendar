@@ -16,10 +16,19 @@ def rotulo(e: Evento) -> str | None:
     return m[1] if m else None
 
 
+def tipo(e: Evento) -> str:
+    """'call' para 'Call 3Q26'; 'resultado' para o resto."""
+    return "call" if e.evento.lower().startswith("call") else "resultado"
+
+
+def chave(e: Evento) -> tuple[str, str, str | None]:
+    return e.ticker, tipo(e), rotulo(e)
+
+
 def substituir(eventos: list[Evento], correcoes: list[Evento]) -> list[Evento]:
-    """Cada correção substitui o evento de mesmo ticker e trimestre (ou entra como novo)."""
-    alvos = {(c.ticker, rotulo(c)) for c in correcoes}
-    mantidos = [e for e in eventos if (e.ticker, rotulo(e)) not in alvos]
+    """Cada correção substitui o evento de mesmo ticker, tipo e trimestre (ou entra como novo)."""
+    alvos = {chave(c) for c in correcoes}
+    mantidos = [e for e in eventos if chave(e) not in alvos]
     return mantidos + correcoes
 
 

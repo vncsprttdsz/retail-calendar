@@ -12,7 +12,7 @@ from datetime import date
 
 import requests
 
-from .ajustes import rotulo
+from .ajustes import chave as _chave_evento
 from .ics import titulo
 from .modelo import Evento, normalizar
 
@@ -23,8 +23,9 @@ def _quando(e: Evento) -> str:
     return f"{e.data:%d/%m}" + (f" {e.hora:%H:%M}" if e.hora else "")
 
 
-def _chave(e: Evento) -> tuple[str, str]:
-    return e.ticker, rotulo(e) or normalizar(e.evento)
+def _chave(e: Evento) -> tuple:
+    t, tp, q = _chave_evento(e)
+    return t, tp, q or normalizar(e.evento)
 
 
 def diferencas(antes: list[Evento], depois: list[Evento], hoje: date) -> list[str]:
@@ -39,6 +40,8 @@ def diferencas(antes: list[Evento], depois: list[Evento], hoje: date) -> list[st
                 linhas.append(f"📅 {titulo(novo)}: {_quando(velho)} → {_quando(novo)}")
             elif titulo(velho) != titulo(novo):
                 linhas.append(f"✅ {titulo(novo)}: {_quando(novo)} (antes: {titulo(velho)})")
+            elif novo.extras.get("link") and novo.extras.get("link") != velho.extras.get("link"):
+                linhas.append(f"🔗 {titulo(novo)} ({_quando(novo)}): {novo.extras['link']}")
         elif novo:
             linhas.append(f"🆕 {titulo(novo)}: {_quando(novo)}")
         else:

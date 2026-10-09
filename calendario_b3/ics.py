@@ -70,14 +70,19 @@ def gerar(eventos: list[Evento], nome: str, descricao: str, fuso: str, duracao_m
             ]
         else:
             inicio = datetime.combine(e.data, e.hora, tzinfo=tz)
+            fim = inicio + timedelta(minutes=duracao_minutos)
+            if e.extras.get("fim"):
+                h, m = map(int, e.extras["fim"].split(":"))
+                fim = max(fim.replace(hour=h, minute=m), inicio + timedelta(minutes=15)) if (h, m) > (e.hora.hour, e.hora.minute) else fim
             linhas += [
                 f"DTSTART:{_utc(inicio)}",
-                f"DTEND:{_utc(inicio + timedelta(minutes=duracao_minutos))}",
+                f"DTEND:{_utc(fim)}",
                 "TRANSP:TRANSPARENT",
                 "X-MICROSOFT-CDO-BUSYSTATUS:FREE",
             ]
         linhas += [
             f"SUMMARY:{_escapar(titulo(e))}",
+            *([f"DESCRIPTION:{_escapar('Webcast: ' + e.extras['link'])}", f"URL:{e.extras['link']}"] if e.extras.get("link") else []),
             "CATEGORIES:Resultados",
             "END:VEVENT",
         ]

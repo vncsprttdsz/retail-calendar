@@ -37,7 +37,9 @@ eventos:
 # NOME DE PREGÃO (ex.: "MAGAZ LUIZA", "CEA MODAS"): o primeiro nome de cada linha é ele.
 # Rode o workflow com "inspecionar" para ver a lista completa de nomes do arquivo.
 # cnpj: identifica a empresa nos documentos da CVM.
-# ri: site(s) de Relações com Investidores (data de divulgação e teleconferência).
+# ri: site(s) de Relações com Investidores: confere a data de divulgação e traz o call
+#     (data, horário e link do webcast). Sites MZ são lidos pela API de eventos da MZ;
+#     mz: id da companhia na MZ, quando o site não deixa descobrir (ex.: certificado inválido).
 # manual: data fixada à mão, prevalece sobre B3 e CVM (ex.: { 3Q26: "2026-11-09" } ou
 #         { 3Q26: "2026-11-09 18:00" }, horário de Brasília; sem horário = dia inteiro).
 cobertura:
@@ -61,7 +63,7 @@ cobertura:
     - { ticker: ASAI3, nomes: ["ASSAI", "Sendas Distribuidora"], cnpj: "06.057.223/0001-71",
         ri: ["https://ri.assai.com.br/"] }
     - { ticker: GMAT3, nomes: ["GRUPO MATEUS", "Mateus Supermercados"], cnpj: "24.990.777/0001-09",
-        ri: ["https://ri.grupomateus.com.br/"] }
+        ri: ["https://ri.grupomateus.com.br/", "https://ri.grupomateus.com.br/agenda-de-eventos/"] }
     # E-commerce
     - { ticker: MGLU3, nomes: ["MAGAZ LUIZA", "Magazine Luiza"], cnpj: "47.960.950/0001-21",
         ri: ["https://ri.magazineluiza.com.br/", "https://ri.magazineluiza.com.br/ListaAgenda/Calendario-de-Eventos-Corporativos?linguagem=pt"] }
@@ -84,7 +86,7 @@ cobertura:
     - { ticker: SMFT3, nomes: ["SMART FIT"], cnpj: "07.594.978/0001-78",
         ri: ["https://investor.smartfit.com.br/"] }
     - { ticker: VIVA3, nomes: ["VIVARA S.A.", "Vivara"], cnpj: "33.839.910/0001-11",
-        ri: ["https://ri.vivara.com.br/"] }
+        ri: ["https://ri.vivara.com.br/"], mz: "61a4df2d-a461-44d6-9128-da74058019db" }
 
 # Empresas listadas fora do Brasil (não estão no cronograma da B3). A próxima data de
 # resultado vem do Yahoo Finance; enquanto não for confirmada, o título leva "(estimado)".

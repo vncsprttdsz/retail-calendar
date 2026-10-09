@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 IPE_URL = "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/IPE/DADOS/ipe_cia_aberta_{ano}.zip"
 HEADERS = {"User-Agent": "Mozilla/5.0 (retail-calendar)"}
 # Sobe quando a leitura do PDF muda: entradas antigas do cache são relidas.
-VERSAO_PARSER = 3
+VERSAO_PARSER = 4
 
 
 @dataclass
@@ -115,6 +115,44 @@ def _data(s: str) -> date:
     return date(a, m, d)
 
 
+def _preparar(texto: str) -> str:
+    t = re.sub(r"[ \t\xa0]+", " ", texto)
+    # Versões mais novas do PDF quebram a linha antes da data ("...3º trimestre\n09/11/2026")
+    # e depois de "Data de referência:": junta de volta para ficar no formato de uma linha.
+    t = re.sub(r"[ ]*\n[ ]*(?=\d{2}/\d{2}/\d{4}\s*(?:\n|$))", " ", t)
+    return re.sub(r":[ ]*\n[ ]*", ": ", t)
+
+
+def datas_de_call(texto: str) -> dict[str, date]:
+    """Datas da apresentação pública (call) de resultados no calendário da CVM.
+
+        Apresentação Pública sobre Divulgação de Resultados
+        Referentes ao exercício social 13/03/2026      -> 4Q25
+        Referentes ao 3º trimestre 10/11/2026          -> 3Q26
+    ou, em outros modelos, "Lista de Reuniões Públicas com Analistas / Call de Resultados 3T26 13/11/2026".
+    """
+    t = _preparar(texto)
+    ref = re.search(r"Data de refer[êe]ncia:\s*(\d{4})", t, re.I)
+    linhas = [l.strip() for l in t.splitlines()]
+    saida: dict[str, date] = {}
+    for i, l in enumerate(linhas):
+        if re.match(r"Apresenta[çc][ãa]o P[úu]blica", l, re.I) and ref:
+            ano = int(ref[1])
+            for item in linhas[i + 1 :]:
+                m = re.match(r"Referentes? ao (?:([1-3])\s*[º°o]?\s*trimestre|exerc[íi]cio social)\D{0,40}?" + _DATA, item, re.I)
+                if not m:
+                    break
+                q = f"{m[1]}Q{ano % 100:02d}" if m[1] else f"4Q{(ano - 1) % 100:02d}"
+                saida.setdefault(q, _data(m[2]))
+        elif re.match(r"Lista de Reuni[õo]es P[úu]blicas", l, re.I):
+            for item in linhas[i + 1 :]:
+                m = re.search(r"\b([1-4])\s*[TQ]\s*(?:20)?(\d{2})\b.*?" + _DATA, item, re.I)
+                if not m:
+                    break
+                saida.setdefault(f"{m[1]}Q{m[2]}", _data(m[3]))
+    return saida
+
+
 def datas_de_resultado(texto: str) -> dict[str, date]:
     """Datas de ITR/DFP no texto do 'Calendário Anual de Eventos Corporativos' da CVM.
 
@@ -124,11 +162,7 @@ def datas_de_resultado(texto: str) -> dict[str, date]:
         Referentes ao 3º trimestre 05/11/2026
     -> {"4Q25": 12/03/2026, "3Q26": 05/11/2026}
     """
-    t = re.sub(r"[ \t\xa0]+", " ", texto)
-    # Versões mais novas do PDF quebram a linha antes da data ("...3º trimestre\n09/11/2026")
-    # e depois de "Data de referência:": junta de volta para ficar no formato de uma linha.
-    t = re.sub(r"[ ]*\n[ ]*(?=\d{2}/\d{2}/\d{4}\s*(?:\n|$))", " ", t)
-    t = re.sub(r":[ ]*\n[ ]*", ": ", t)
+    t = _preparar(texto)
     saida: dict[str, date] = {}
     m = re.search(r"Padronizadas\s*[–-]\s*DFP.{0,200}?findo em\s*\d{2}/\d{2}/(\d{4})\s*" + _DATA, t, re.S | re.I)
     if m:
@@ -150,16 +184,16 @@ def datas_de_resultado(texto: str) -> dict[str, date]:
     return saida
 
 
-def dentro_do_prazo(rotulo: str, dia: date) -> bool:
+def dentro_do_prazo(rotulo: str, dia: date, folga: int = 0) -> bool:
     """Prazo legal da CVM: ITR até 45 dias após o trimestre; DFP até 3 meses após o exercício.
 
     Uma data fora do prazo indica leitura errada do PDF (ou outro evento, como o call).
     """
     q, ano = int(rotulo[0]), 2000 + int(rotulo[2:])
     if q == 4:
-        return date(ano, 12, 31) < dia <= date(ano + 1, 4, 5)  # 31/03 + folga de fim de semana
+        return date(ano, 12, 31) < dia <= date(ano + 1, 4, 5) + timedelta(days=folga)  # 31/03 + fim de semana
     fim_tri = {1: date(ano, 3, 31), 2: date(ano, 6, 30), 3: date(ano, 9, 30)}[q]
-    return fim_tri < dia <= fim_tri + timedelta(days=47)
+    return fim_tri < dia <= fim_tri + timedelta(days=47 + folga)
 
 
 def calendarios_recentes(ipe: pd.DataFrame, cnpjs: dict[str, str]) -> list[DocCVM]:
@@ -188,33 +222,47 @@ def coletar(cnpjs: dict[str, str], nomes: dict[str, str], hoje: date, cache: dic
     for k in [k for k in cache if not k.startswith(f"v{VERSAO_PARSER} ")]:
         del cache[k]  # leitura de versão anterior do parser
     docs = sorted([*calendarios_recentes(ipe, cnpjs), *extras], key=lambda d: d.data_entrega)
-    vigentes: dict[tuple[str, str], date] = {}
+    vigentes: dict[tuple[str, str], tuple[date, str]] = {}  # (ticker, trimestre) -> (data, entregue em)
+    calls: dict[tuple[str, str], tuple[date, str]] = {}
     for doc in docs:
         chave = f"v{VERSAO_PARSER} {doc.link}"
         if chave not in cache:
             try:
-                lidas = datas_de_resultado(texto_pdf(doc.link))
+                texto = texto_pdf(doc.link)
+                lidas = datas_de_resultado(texto)
                 if not lidas:
                     raise ValueError("nenhuma data de ITR/DFP reconhecida")
                 cache[chave] = {k: v.isoformat() for k, v in lidas.items()}
+                cache[chave].update({f"call {k}": v.isoformat() for k, v in datas_de_call(texto).items()})
             except Exception as e:
                 log.warning("%s: não consegui ler o calendário da CVM (%s): %s", doc.ticker, doc.link, e)
                 continue
-        datas = {k: date.fromisoformat(v) for k, v in cache[chave].items()}
+        todas = {k: date.fromisoformat(v) for k, v in cache[chave].items()}
+        datas = {k: d for k, d in todas.items() if not k.startswith("call ")}
+        for k, d in todas.items():
+            q = k[len("call "):]
+            if k.startswith("call ") and dentro_do_prazo(q, d, folga=10):
+                calls[(doc.ticker, q)] = (d, doc.data_entrega)
         fora = {q: d for q, d in datas.items() if not dentro_do_prazo(q, d)}
         if fora:
             log.warning("%s: datas fora do prazo legal no calendário da CVM, ignoradas: %s (%s)", doc.ticker,
                         ", ".join(f"{q} {d:%d/%m/%Y}" for q, d in sorted(fora.items())), doc.link)
         for q, dia in datas.items():
             if q not in fora:
-                vigentes[(doc.ticker, q)] = dia
+                vigentes[(doc.ticker, q)] = (dia, doc.data_entrega)
         log.info("%s: calendário %s %s v%s -> %s", doc.ticker, doc.categoria, doc.data_entrega, doc.versao,
                  ", ".join(f"{q} {d:%d/%m}" for q, d in sorted(datas.items())))
-    return [
-        Evento(t, nomes.get(t, t), f"Resultado {q}", dia)
-        for (t, q), dia in sorted(vigentes.items())
+    eventos = [
+        Evento(t, nomes.get(t, t), f"Resultado {q}", dia, extras={"fonte": "CVM", "entregue": entregue})
+        for (t, q), (dia, entregue) in sorted(vigentes.items())
         if dia >= hoje
     ]
+    eventos += [
+        Evento(t, nomes.get(t, t), f"Call {q}", dia, extras={"fonte": "CVM", "entregue": entregue})
+        for (t, q), (dia, entregue) in sorted(calls.items())
+        if dia >= hoje
+    ]
+    return eventos
 
 
 def diagnostico(cnpjs: dict[str, str], hoje: date, detalhar: tuple[str, ...] = ()) -> None:

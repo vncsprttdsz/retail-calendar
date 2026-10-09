@@ -27,14 +27,16 @@ def mesclar(
     hoje: date,
     tickers: set[str],
     agora: datetime | None = None,
-    preservar: set[str] = frozenset(),
+    preservar: set = frozenset(),
 ) -> list[Evento]:
     """Eventos atuais da fonte + eventos passados do histórico.
 
     Eventos futuros que sumiram da fonte são descartados (remarcados/cancelados);
-    eventos de empresas que saíram da cobertura também. Tickers em `preservar`
-    (fonte fora do ar nesta rodada) mantêm também os eventos futuros do histórico.
+    eventos de empresas que saíram da cobertura também. Itens de `preservar` — ticker
+    ou (ticker, tipo) — tiveram a fonte fora do ar nesta rodada e mantêm também os
+    eventos futuros do histórico. Calls de hoje ficam (a agenda do RI tira o evento do dia).
     """
+    from .ajustes import tipo
     agora_iso = (agora or datetime.now(timezone.utc)).strftime("%Y-%m-%dT%H:%M:%SZ")
     por_chave = {e.chave: e for e in antigos}
     resultado: dict[str, Evento] = {}
@@ -43,6 +45,9 @@ def mesclar(
         e.visto_em = anterior.visto_em if anterior and anterior.visto_em else agora_iso
         resultado[e.chave] = e
     for e in antigos:
-        if e.chave not in resultado and e.ticker in tickers and (e.data < hoje or e.ticker in preservar):
+        if e.chave in resultado or e.ticker not in tickers:
+            continue
+        passado = e.data < hoje or (e.data == hoje and tipo(e) == "call")
+        if passado or e.ticker in preservar or (e.ticker, tipo(e)) in preservar:
             resultado[e.chave] = e
     return sorted(resultado.values(), key=lambda e: (e.data, e.ticker))
