@@ -107,3 +107,8 @@ def diagnostico(raizes: set[str], hoje: date, dias: int = 30) -> None:
         except Exception as e:
             lidas = f"falha: {e}"
         print(f"  {n.data_hora} | {n.titulo}\n      {links[:1]} -> {lidas}")
+        if links:
+            try:
+                print("      texto:\n" + texto_pdf(links[0])[:5000])
+            except Exception as e:
+                print(f"      texto: falha {e}")
