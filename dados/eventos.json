@@ -577,7 +577,10 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2025-12-09"
+    }
   },
   {
     "ticker": "CEAB3",
@@ -587,7 +590,10 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-03-20"
+    }
   },
   {
     "ticker": "MELI",
@@ -607,7 +613,23 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-02-13"
+    }
+  },
+  {
+    "ticker": "RADL3",
+    "empresa": "RAIADROGASIL",
+    "evento": "Call 3Q26",
+    "data": "2026-11-04",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2025-12-09"
+    }
   },
   {
     "ticker": "SMFT3",
@@ -617,7 +639,10 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2025-12-10"
+    }
   },
   {
     "ticker": "ASAI3",
@@ -627,7 +652,22 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-03-23"
+    }
+  },
+  {
+    "ticker": "CEAB3",
+    "empresa": "CEA MODAS",
+    "evento": "Call 3Q26",
+    "data": "2026-11-05",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI"
+    }
   },
   {
     "ticker": "LJQQ3",
@@ -637,7 +677,10 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-06-30"
+    }
   },
   {
     "ticker": "LREN3",
@@ -647,7 +690,22 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-03-02"
+    }
+  },
+  {
+    "ticker": "PGMN3",
+    "empresa": "PAGUE MENOS",
+    "evento": "Call 3Q26",
+    "data": "2026-11-05",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI"
+    }
   },
   {
     "ticker": "PNVL3",
@@ -657,7 +715,23 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-03-10"
+    }
+  },
+  {
+    "ticker": "SMFT3",
+    "empresa": "SMART FIT",
+    "evento": "Call 3Q26",
+    "data": "2026-11-05",
+    "hora": "11:00",
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI",
+      "fim": "12:00"
+    }
   },
   {
     "ticker": "VIVA3",
@@ -667,7 +741,70 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-05-29"
+    }
+  },
+  {
+    "ticker": "ASAI3",
+    "empresa": "ASSAI",
+    "evento": "Call 3Q26",
+    "data": "2026-11-06",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI"
+    }
+  },
+  {
+    "ticker": "LJQQ3",
+    "empresa": "QUERO-QUERO",
+    "evento": "Call 3Q26",
+    "data": "2026-11-06",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI"
+    }
+  },
+  {
+    "ticker": "LREN3",
+    "empresa": "LOJAS RENNER",
+    "evento": "Call 3Q26",
+    "data": "2026-11-06",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI"
+    }
+  },
+  {
+    "ticker": "PNVL3",
+    "empresa": "DIMED",
+    "evento": "Call 3Q26",
+    "data": "2026-11-06",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI"
+    }
+  },
+  {
+    "ticker": "VIVA3",
+    "empresa": "VIVARA S.A.",
+    "evento": "Call 3Q26",
+    "data": "2026-11-06",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI"
+    }
   },
   {
     "ticker": "MGLU3",
@@ -677,7 +814,10 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-08T19:22:14Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-10-07 19:49:14"
+    }
   },
   {
     "ticker": "RIAA3",
@@ -687,7 +827,10 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-09T02:47:33Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-10-08 08:00:19"
+    }
   },
   {
     "ticker": "SBFG3",
@@ -697,7 +840,48 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-07-30"
+    }
+  },
+  {
+    "ticker": "MGLU3",
+    "empresa": "MAGAZ LUIZA",
+    "evento": "Call 3Q26",
+    "data": "2026-11-10",
+    "hora": "09:00",
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI",
+      "fim": "11:00"
+    }
+  },
+  {
+    "ticker": "RIAA3",
+    "empresa": "RIACHUELO",
+    "evento": "Call 3Q26",
+    "data": "2026-11-10",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-10-08 08:00:19"
+    }
+  },
+  {
+    "ticker": "SBFG3",
+    "empresa": "GRUPO SBF",
+    "evento": "Call 3Q26",
+    "data": "2026-11-10",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI"
+    }
   },
   {
     "ticker": "VULC3",
@@ -707,7 +891,10 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-03-10"
+    }
   },
   {
     "ticker": "AZZA3",
@@ -717,7 +904,22 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-03-25"
+    }
+  },
+  {
+    "ticker": "VULC3",
+    "empresa": "VULCABRAS",
+    "evento": "Call 3Q26",
+    "data": "2026-11-11",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI"
+    }
   },
   {
     "ticker": "ALLD3",
@@ -727,7 +929,10 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-05-25"
+    }
   },
   {
     "ticker": "AUAU3",
@@ -737,7 +942,22 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-03-31"
+    }
+  },
+  {
+    "ticker": "AZZA3",
+    "empresa": "AZZAS 2154",
+    "evento": "Call 3Q26",
+    "data": "2026-11-12",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI"
+    }
   },
   {
     "ticker": "GMAT3",
@@ -747,7 +967,10 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-07-02"
+    }
   },
   {
     "ticker": "NATU3",
@@ -757,7 +980,10 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2025-12-04"
+    }
   },
   {
     "ticker": "TFCO4",
@@ -767,6 +993,70 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-08T19:27:44Z",
-    "extras": {}
+    "extras": {
+      "fonte": "CVM",
+      "entregue": "2026-06-18"
+    }
+  },
+  {
+    "ticker": "ALLD3",
+    "empresa": "ALLIED",
+    "evento": "Call 3Q26",
+    "data": "2026-11-13",
+    "hora": "10:00",
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI",
+      "fim": "11:00"
+    }
+  },
+  {
+    "ticker": "AUAU3",
+    "empresa": "PETZCOBASI",
+    "evento": "Call 3Q26",
+    "data": "2026-11-13",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI"
+    }
+  },
+  {
+    "ticker": "GMAT3",
+    "empresa": "GRUPO MATEUS",
+    "evento": "Call 3Q26",
+    "data": "2026-11-13",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI"
+    }
+  },
+  {
+    "ticker": "NATU3",
+    "empresa": "NATURA",
+    "evento": "Call 3Q26",
+    "data": "2026-11-13",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI"
+    }
+  },
+  {
+    "ticker": "TFCO4",
+    "empresa": "TRACK FIELD",
+    "evento": "Call 3Q26",
+    "data": "2026-11-13",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T08:15:03Z",
+    "extras": {
+      "fonte": "RI"
+    }
   }
 ]

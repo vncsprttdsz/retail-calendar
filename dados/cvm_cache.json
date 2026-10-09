@@ -1,218 +1,358 @@
 {
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1324904&numSequencia=849630&numVersao=2": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1324904&numSequencia=849630&numVersao=2": {
   "1Q25": "2025-05-12",
   "2Q25": "2025-08-14",
   "3Q25": "2025-11-13",
-  "4Q24": "2025-03-10"
+  "4Q24": "2025-03-10",
+  "call 1Q25": "2025-05-13",
+  "call 2Q25": "2025-08-15",
+  "call 3Q25": "2025-11-14",
+  "call 4Q24": "2025-03-11"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1348722&numSequencia=873448&numVersao=2": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1348722&numSequencia=873448&numVersao=2": {
   "1Q25": "2025-05-08",
   "2Q25": "2025-08-07",
   "3Q25": "2025-11-06",
-  "4Q24": "2025-02-20"
+  "4Q24": "2025-02-20",
+  "call 1Q25": "2025-05-09",
+  "call 2Q25": "2025-08-08",
+  "call 3Q25": "2025-11-07",
+  "call 4Q24": "2025-02-21"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1349485&numSequencia=874211&numVersao=3": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1349485&numSequencia=874211&numVersao=3": {
   "1Q25": "2025-05-06",
   "2Q25": "2025-08-05",
   "3Q25": "2025-11-04",
-  "4Q24": "2025-02-25"
+  "4Q24": "2025-02-25",
+  "call 1Q25": "2025-05-07",
+  "call 2Q25": "2025-08-06",
+  "call 3Q25": "2025-11-05",
+  "call 4Q24": "2025-02-26"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1350695&numSequencia=875421&numVersao=2": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1350695&numSequencia=875421&numVersao=2": {
   "1Q25": "2025-05-07",
   "2Q25": "2025-08-06",
   "3Q25": "2025-11-05",
-  "4Q24": "2025-03-19"
+  "4Q24": "2025-03-19",
+  "call 1Q25": "2025-05-08",
+  "call 2Q25": "2025-08-07",
+  "call 3Q25": "2025-11-06",
+  "call 4Q24": "2025-03-20"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1381422&numSequencia=906134&numVersao=2": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1381422&numSequencia=906134&numVersao=2": {
   "1Q25": "2025-05-08",
   "2Q25": "2025-08-07",
   "3Q25": "2025-11-06",
-  "4Q24": "2025-02-19"
+  "4Q24": "2025-02-19",
+  "call 1Q25": "2025-05-09",
+  "call 2Q25": "2025-08-08",
+  "call 3Q25": "2025-11-07",
+  "call 4Q24": "2025-02-20"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1391392&numSequencia=916104&numVersao=2": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1391392&numSequencia=916104&numVersao=2": {
   "1Q25": "2025-05-12",
   "2Q25": "2025-08-11",
   "3Q25": "2025-11-10",
-  "4Q24": "2025-03-17"
+  "4Q24": "2025-03-17",
+  "call 1Q25": "2025-05-13",
+  "call 2Q25": "2025-08-12",
+  "call 3Q25": "2025-11-11",
+  "call 4Q24": "2025-03-18"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1393239&numSequencia=917951&numVersao=3": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1393239&numSequencia=917951&numVersao=3": {
   "1Q25": "2025-05-05",
   "2Q25": "2025-08-04",
   "3Q25": "2025-11-03",
-  "4Q24": "2025-03-10"
+  "4Q24": "2025-03-10",
+  "call 1Q25": "2025-05-06",
+  "call 2Q25": "2025-08-05",
+  "call 3Q25": "2025-11-04",
+  "call 4Q24": "2025-03-11"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1394758&numSequencia=919470&numVersao=3": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1394758&numSequencia=919470&numVersao=3": {
   "1Q25": "2025-05-07",
   "2Q25": "2025-08-11",
   "3Q25": "2025-11-05",
-  "4Q24": "2025-02-26"
+  "4Q24": "2025-02-26",
+  "call 1Q25": "2025-05-08",
+  "call 2Q25": "2025-08-12",
+  "call 3Q25": "2025-11-06",
+  "call 4Q24": "2025-02-27"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1401719&numSequencia=926431&numVersao=7": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1401719&numSequencia=926431&numVersao=7": {
   "1Q25": "2025-05-07",
   "2Q25": "2025-08-07",
   "3Q25": "2025-11-10",
-  "4Q24": "2025-03-11"
+  "4Q24": "2025-03-11",
+  "call 1Q25": "2025-05-08",
+  "call 2Q25": "2025-08-08",
+  "call 3Q25": "2025-11-11",
+  "call 4Q24": "2025-03-12"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1418119&numSequencia=942831&numVersao=3": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1418119&numSequencia=942831&numVersao=3": {
   "1Q25": "2025-05-05",
   "2Q25": "2025-08-12",
   "3Q25": "2025-11-13",
-  "4Q24": "2025-02-24"
+  "4Q24": "2025-02-24",
+  "call 1Q25": "2025-05-06",
+  "call 2Q25": "2025-08-13",
+  "call 3Q25": "2025-11-14",
+  "call 4Q24": "2025-02-25"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1429502&numSequencia=954214&numVersao=6": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1429502&numSequencia=954214&numVersao=6": {
   "1Q25": "2025-05-06",
   "2Q25": "2025-08-14",
   "3Q25": "2025-10-30",
-  "4Q24": "2025-03-11"
+  "4Q24": "2025-03-11",
+  "call 1Q25": "2025-05-07",
+  "call 2Q25": "2025-08-15",
+  "call 3Q25": "2025-10-31",
+  "call 4Q24": "2025-03-12"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1430987&numSequencia=955699&numVersao=3": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1430987&numSequencia=955699&numVersao=3": {
   "1Q25": "2025-05-07",
   "2Q25": "2025-08-06",
   "3Q25": "2025-11-04",
-  "4Q24": "2025-02-26"
+  "4Q24": "2025-02-26",
+  "call 1Q25": "2025-05-08",
+  "call 2Q25": "2025-08-07",
+  "call 3Q25": "2025-11-05",
+  "call 4Q24": "2025-02-27"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1431665&numSequencia=956377&numVersao=4": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1431665&numSequencia=956377&numVersao=4": {
   "1Q25": "2025-05-07",
   "2Q25": "2025-08-07",
   "3Q25": "2025-11-05",
-  "4Q24": "2025-03-18"
+  "4Q24": "2025-03-18",
+  "call 1Q25": "2025-05-08",
+  "call 2Q25": "2025-08-08",
+  "call 3Q25": "2025-11-06",
+  "call 4Q24": "2025-03-19"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1434414&numSequencia=959126&numVersao=3": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1434414&numSequencia=959126&numVersao=3": {
   "1Q25": "2025-05-14",
   "2Q25": "2025-08-14",
   "3Q25": "2025-11-06",
-  "4Q24": "2025-03-27"
+  "4Q24": "2025-03-27",
+  "call 1Q25": "2025-05-15",
+  "call 2Q25": "2025-08-15",
+  "call 3Q25": "2025-11-07",
+  "call 4Q24": "2025-03-28"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1444638&numSequencia=969350&numVersao=2": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1444638&numSequencia=969350&numVersao=2": {
   "1Q25": "2025-05-14",
   "2Q25": "2025-08-13",
   "3Q25": "2025-11-13",
   "4Q24": "2025-03-26"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1452948&numSequencia=977660&numVersao=1": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1452948&numSequencia=977660&numVersao=1": {
   "1Q26": "2026-05-11",
   "2Q26": "2026-08-10",
   "3Q26": "2026-11-12",
-  "4Q25": "2026-03-16"
+  "4Q25": "2026-03-16",
+  "call 1Q26": "2026-05-12",
+  "call 2Q26": "2026-08-11",
+  "call 3Q26": "2026-11-13",
+  "call 4Q25": "2026-03-17"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1454431&numSequencia=979143&numVersao=1": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1454431&numSequencia=979143&numVersao=1": {
   "1Q26": "2026-05-05",
   "2Q26": "2026-08-04",
   "3Q26": "2026-11-03",
-  "4Q25": "2026-03-03"
+  "4Q25": "2026-03-03",
+  "call 1Q26": "2026-05-06",
+  "call 2Q26": "2026-08-05",
+  "call 3Q26": "2026-11-04",
+  "call 4Q25": "2026-03-04"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1454980&numSequencia=979692&numVersao=1": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1454980&numSequencia=979692&numVersao=1": {
   "1Q26": "2026-05-06",
   "2Q26": "2026-08-05",
   "3Q26": "2026-11-04",
-  "4Q25": "2026-02-11"
+  "4Q25": "2026-02-11",
+  "call 1Q26": "2026-05-07",
+  "call 2Q26": "2026-08-06",
+  "call 3Q26": "2026-11-05",
+  "call 4Q25": "2026-02-12"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1455189&numSequencia=979901&numVersao=1": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1455189&numSequencia=979901&numVersao=1": {
   "1Q26": "2026-05-06",
   "2Q26": "2026-08-05",
   "3Q26": "2026-11-04",
-  "4Q25": "2026-03-11"
+  "4Q25": "2026-03-11",
+  "call 1Q26": "2026-05-07",
+  "call 2Q26": "2026-08-06",
+  "call 3Q26": "2026-11-05",
+  "call 4Q25": "2026-03-12"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1477458&numSequencia=1002164&numVersao=3": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1477458&numSequencia=1002164&numVersao=3": {
   "1Q26": "2026-05-04",
   "2Q26": "2026-08-03",
   "3Q26": "2026-11-04",
-  "4Q25": "2026-02-27"
+  "4Q25": "2026-02-27",
+  "call 1Q26": "2026-05-05",
+  "call 2Q26": "2026-08-04",
+  "call 3Q26": "2026-11-05",
+  "call 4Q25": "2026-03-02"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1483767&numSequencia=1008473&numVersao=2": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1483767&numSequencia=1008473&numVersao=2": {
   "1Q26": "2026-05-07",
   "2Q26": "2026-08-06",
   "3Q26": "2026-11-05",
-  "4Q25": "2026-03-05"
+  "4Q25": "2026-03-05",
+  "call 1Q26": "2026-05-08",
+  "call 2Q26": "2026-08-07",
+  "call 3Q26": "2026-11-06",
+  "call 4Q25": "2026-03-06"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1487768&numSequencia=1012474&numVersao=2": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1487768&numSequencia=1012474&numVersao=2": {
   "1Q26": "2026-05-06",
   "2Q26": "2026-08-06",
   "3Q26": "2026-11-05",
-  "4Q25": "2026-03-19"
+  "4Q25": "2026-03-19",
+  "call 1Q26": "2026-05-07",
+  "call 2Q26": "2026-08-07",
+  "call 3Q26": "2026-11-06",
+  "call 4Q25": "2026-03-20"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1488198&numSequencia=1012904&numVersao=2": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1488198&numSequencia=1012904&numVersao=2": {
   "1Q26": "2026-05-05",
   "2Q26": "2026-08-04",
   "3Q26": "2026-11-10",
-  "4Q25": "2026-03-03"
+  "4Q25": "2026-03-03",
+  "call 1Q26": "2026-05-06",
+  "call 2Q26": "2026-08-05",
+  "call 3Q26": "2026-11-11",
+  "call 4Q25": "2026-03-04"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1493289&numSequencia=1017995&numVersao=3": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1493289&numSequencia=1017995&numVersao=3": {
   "1Q26": "2026-05-05",
   "2Q26": "2026-08-04",
   "3Q26": "2026-11-04",
-  "4Q25": "2026-02-24"
+  "4Q25": "2026-02-24",
+  "call 1Q26": "2026-05-06",
+  "call 2Q26": "2026-08-05",
+  "call 3Q26": "2026-11-05",
+  "call 4Q25": "2026-02-25"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1493976&numSequencia=1018682&numVersao=3": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1493976&numSequencia=1018682&numVersao=3": {
   "1Q26": "2026-04-27",
   "2Q26": "2026-08-06",
   "3Q26": "2026-11-05",
-  "4Q25": "2026-02-11"
+  "4Q25": "2026-02-11",
+  "call 1Q26": "2026-04-28",
+  "call 2Q26": "2026-08-07",
+  "call 3Q26": "2026-11-06",
+  "call 4Q25": "2026-02-12"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1495287&numSequencia=1019993&numVersao=3": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1495287&numSequencia=1019993&numVersao=3": {
   "1Q26": "2026-05-07",
   "2Q26": "2026-08-12",
   "3Q26": "2026-11-11",
-  "4Q25": "2026-03-11"
+  "4Q25": "2026-03-11",
+  "call 1Q26": "2026-05-08",
+  "call 2Q26": "2026-08-13",
+  "call 3Q26": "2026-11-12",
+  "call 4Q25": "2026-03-12"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1498696&numSequencia=1023402&numVersao=3": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1498696&numSequencia=1023402&numVersao=3": {
   "1Q26": "2026-05-07",
   "2Q26": "2026-08-13",
   "3Q26": "2026-11-12",
-  "4Q25": "2026-03-26"
+  "4Q25": "2026-03-26",
+  "call 1Q26": "2026-05-08",
+  "call 2Q26": "2026-08-14",
+  "call 3Q26": "2026-11-13",
+  "call 4Q25": "2026-03-27"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1526615&numSequencia=1051321&numVersao=3": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1526615&numSequencia=1051321&numVersao=3": {
   "1Q26": "2026-05-07",
   "2Q26": "2026-08-12",
   "3Q26": "2026-11-12",
-  "4Q25": "2026-03-25"
+  "4Q25": "2026-03-25",
+  "call 1Q26": "2026-05-08",
+  "call 2Q26": "2026-08-13",
+  "call 3Q26": "2026-11-13",
+  "call 4Q25": "2026-03-26"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1528904&numSequencia=1053610&numVersao=2": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1528904&numSequencia=1053610&numVersao=2": {
   "1Q26": "2026-05-07",
   "2Q26": "2026-08-05",
   "3Q26": "2026-11-05",
-  "4Q25": "2026-03-18"
+  "4Q25": "2026-03-18",
+  "call 1Q26": "2026-05-08",
+  "call 2Q26": "2026-08-06",
+  "call 3Q26": "2026-11-06",
+  "call 4Q25": "2026-03-19"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1535960&numSequencia=1060666&numVersao=3": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1535960&numSequencia=1060666&numVersao=3": {
   "1Q26": "2026-05-11",
   "2Q26": "2026-08-12",
   "3Q26": "2026-11-12",
-  "4Q25": "2026-03-09"
+  "4Q25": "2026-03-09",
+  "call 1Q26": "2026-05-12",
+  "call 2Q26": "2026-08-13",
+  "call 3Q26": "2026-11-13",
+  "call 4Q25": "2026-03-10"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1539781&numSequencia=1064487&numVersao=2": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1539781&numSequencia=1064487&numVersao=2": {
   "1Q26": "2026-05-07",
   "2Q26": "2026-08-06",
   "3Q26": "2026-11-05",
-  "4Q25": "2026-03-04"
+  "4Q25": "2026-03-04",
+  "call 1Q26": "2026-05-08",
+  "call 2Q26": "2026-08-07",
+  "call 3Q26": "2026-11-06",
+  "call 4Q25": "2026-03-05"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1541415&numSequencia=1066121&numVersao=5": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1541415&numSequencia=1066121&numVersao=5": {
   "1Q26": "2026-05-14",
   "2Q26": "2026-08-13",
   "3Q26": "2026-11-12",
-  "4Q25": "2026-03-18"
+  "4Q25": "2026-03-18",
+  "call 1Q26": "2026-05-15",
+  "call 2Q26": "2026-08-14",
+  "call 3Q26": "2026-11-13",
+  "call 4Q25": "2026-03-19"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1549501&numSequencia=1074207&numVersao=3": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1549501&numSequencia=1074207&numVersao=3": {
   "1Q26": "2026-05-07",
   "2Q26": "2026-08-06",
   "3Q26": "2026-11-05",
-  "4Q25": "2026-03-12"
+  "4Q25": "2026-03-12",
+  "call 1Q26": "2026-05-08",
+  "call 2Q26": "2026-08-07",
+  "call 3Q26": "2026-11-06",
+  "call 4Q25": "2026-03-13"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1549794&numSequencia=1074500&numVersao=2": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1549794&numSequencia=1074500&numVersao=2": {
   "1Q26": "2026-05-11",
   "2Q26": "2026-08-10",
   "3Q26": "2026-11-09",
-  "4Q25": "2026-03-09"
+  "4Q25": "2026-03-09",
+  "call 1Q26": "2026-05-12",
+  "call 2Q26": "2026-08-11",
+  "call 3Q26": "2026-11-10",
+  "call 4Q25": "2026-03-10"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1575254": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1575254": {
   "1Q26": "2026-05-07",
   "2Q26": "2026-08-06",
   "3Q26": "2026-11-09",
-  "4Q25": "2026-03-12"
+  "4Q25": "2026-03-12",
+  "call 1Q26": "2026-05-08",
+  "call 2Q26": "2026-08-07",
+  "call 3Q26": "2026-11-10",
+  "call 4Q25": "2026-03-13"
  },
- "v3 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1575266": {
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1575266": {
   "1Q26": "2026-05-06",
   "2Q26": "2026-08-05",
   "3Q26": "2026-11-09",
-  "4Q25": "2026-02-11"
+  "4Q25": "2026-02-11",
+  "call 1Q26": "2026-05-07",
+  "call 2Q26": "2026-08-06",
+  "call 3Q26": "2026-11-10",
+  "call 4Q25": "2026-02-12"
  }
 }
