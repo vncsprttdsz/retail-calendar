@@ -284,9 +284,13 @@ def diagnostico(cnpjs: dict[str, str], hoje: date, detalhar: tuple[str, ...] = (
         if not cal:
             print("      nenhum calendário em", anos)
         if not meus and nomes and not ipe.empty:  # CNPJ errado/vazio: candidatos pelo nome
-            padrao = "|".join(re.escape(n) for n in nomes.get(t, []) if len(n) >= 4)
+            # Nome de pregão "D1000VFARMA" -> também "D1000" e "VFARMA" soltos.
+            termos = {x for n in nomes.get(t, []) for x in [n, *re.findall(r"[A-Za-z]*\d+|[A-Za-z]{4,}", n)] if len(x) >= 4}
+            padrao = "|".join(re.escape(x) for x in sorted(termos))
+            print(f"      buscando por nome: {padrao}")
             if padrao:
-                achados = ipe[ipe["Nome_Companhia"].str.contains(padrao, case=False, na=False)]
+                achados = ipe[ipe["Nome_Companhia"].str.contains(padrao, case=False, na=False)
+                              & ~ipe["CNPJ_Companhia"].map(_so_digitos).isin({_so_digitos(c) for c in cnpjs.values() if c})]
                 for (cnpj, nome), g in achados.groupby(["CNPJ_Companhia", "Nome_Companhia"]):
                     print(f"      candidato: {cnpj} = {nome} ({len(g)} docs)")
     for t in detalhar:
