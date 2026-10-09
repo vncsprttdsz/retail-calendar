@@ -158,7 +158,8 @@ def coletar(cnpjs: dict[str, str], nomes: dict[str, str], hoje: date, cache: dic
     """
     from .modelo import Evento
 
-    ipe = ler_ipe(sorted({hoje.year, hoje.year - 1 if hoje.month <= 2 else hoje.year}))
+    # O calendário de um ano costuma ser entregue em dezembro do ano anterior: lê os dois arquivos.
+    ipe = ler_ipe([hoje.year - 1, hoje.year])
     for k in [k for k in cache if not k.startswith(f"v{VERSAO_PARSER} ")]:
         del cache[k]  # leitura de versão anterior do parser
     eventos = []
@@ -186,26 +187,29 @@ def coletar(cnpjs: dict[str, str], nomes: dict[str, str], hoje: date, cache: dic
 
 
 def diagnostico(cnpjs: dict[str, str], hoje: date, detalhar: tuple[str, ...] = ()) -> None:
-    """Imprime o que a CVM tem: calendários recentes da cobertura e o texto dos detalhados."""
-    ipe = ler_ipe([hoje.year])
-    print(f"\n== CVM IPE {hoje.year}: {len(ipe)} documentos; colunas: {list(ipe.columns)}")
+    """Imprime o que a CVM tem: atualização dos dados, nome por CNPJ e todos os calendários."""
+    anos = [hoje.year - 1, hoje.year]
+    ipe = ler_ipe(anos)
+    print(f"\n== CVM IPE {anos}: {len(ipe)} documentos; entrega mais recente nos dados: {ipe['Data_Entrega'].max()}")
     docs = documentos(ipe, cnpjs)
-    cats = sorted({d.categoria for d in docs})
-    print(f"  categorias da cobertura: {cats}")
-    cal = [d for d in docs if "calend" in d.categoria.lower()]
-    vistos = set()
-    for d in cal:
-        if d.ticker in vistos:
-            continue
-        vistos.add(d.ticker)
-        print(f"  {d.ticker}: calendário entregue {d.data_entrega} v{d.versao} ref {d.data_referencia} | {d.assunto[:60]}")
-    print(f"  sem calendário em {hoje.year}: {sorted(set(cnpjs) - vistos)}")
+    nomes = {}
+    if not ipe.empty:
+        df = ipe.assign(_c=ipe["CNPJ_Companhia"].map(_so_digitos))
+        nomes = df.drop_duplicates("_c", keep="last").set_index("_c")["Nome_Companhia"].to_dict()
+    for t, c in cnpjs.items():
+        meus = [d for d in docs if d.ticker == t]
+        cal = [d for d in meus if "calend" in d.categoria.lower()]
+        print(f"\n  {t} {c} = {nomes.get(_so_digitos(c), 'CNPJ SEM DOCUMENTOS NA CVM')} | {len(meus)} docs, último {meus[0].data_entrega if meus else '-'}")
+        for d in cal:
+            print(f"      calendário ref {d.data_referencia[:4]} entregue {d.data_entrega} v{d.versao}")
+        if not cal:
+            print("      nenhum calendário em", anos)
     for t in detalhar:
         recentes = [d for d in docs if d.ticker == t][:8]
         print(f"\n== {t}: últimos documentos IPE")
         for d in recentes:
             print(f"  {d.data_entrega} v{d.versao} | {d.categoria} | {d.assunto[:80]} | {d.link}")
-        doc = next((d for d in cal if d.ticker == t), None)
+        doc = next((d for d in docs if d.ticker == t and "calend" in d.categoria.lower()), None)
         if doc:
             try:
                 txt = texto_pdf(doc.link)
