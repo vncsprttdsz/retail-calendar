@@ -10,6 +10,10 @@ on:
         description: "Só mostrar como o arquivo da B3 foi interpretado (não altera o calendário)"
         type: boolean
         default: false
+      testar_aviso:
+        description: "Só mandar uma mensagem de teste no WhatsApp/Telegram (não altera o calendário)"
+        type: boolean
+        default: false
       detalhar:
         description: "Com inspecionar: tickers para imprimir o calendário da CVM (ex.: MGLU3,TFCO4)"
         type: string
@@ -36,13 +40,21 @@ jobs:
       - run: pip install -r requirements.txt
 
       - name: Inspecionar arquivo da B3
-        if: ${{ inputs.inspecionar }}
+        if: ${{ inputs.inspecionar && !inputs.testar_aviso }}
         env:
           DETALHAR: ${{ inputs.detalhar }}
         run: python -m calendario_b3 --inspecionar --detalhar "$DETALHAR"
 
+      - name: Testar aviso
+        if: ${{ inputs.testar_aviso }}
+        env:
+          CALLMEBOT_WHATSAPP: ${{ secrets.CALLMEBOT_WHATSAPP }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -m calendario_b3 --testar-aviso
+
       - name: Ler cronograma da B3 e gerar .ics
-        if: ${{ !inputs.inspecionar }}
+        if: ${{ !inputs.inspecionar && !inputs.testar_aviso }}
         env:
           CALLMEBOT_WHATSAPP: ${{ secrets.CALLMEBOT_WHATSAPP }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -50,7 +62,7 @@ jobs:
         run: python -m calendario_b3
 
       - name: Commit se houve mudança
-        if: ${{ !inputs.inspecionar }}
+        if: ${{ !inputs.inspecionar && !inputs.testar_aviso }}
         run: |
           git add dados/ publico/calendario.ics
           if git diff --cached --quiet; then

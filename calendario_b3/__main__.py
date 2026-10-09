@@ -205,8 +205,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--historico", type=Path, default=RAIZ / "dados" / "eventos.json")
     ap.add_argument("--inspecionar", action="store_true", help="só mostra a estrutura detectada")
     ap.add_argument("--detalhar", default="", help="com --inspecionar: tickers (vírgula) cujo calendário da CVM é impresso")
+    ap.add_argument("--testar-aviso", action="store_true", help="só manda uma mensagem de teste nos canais configurados")
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+    if args.testar_aviso:
+        ok = notificar.enviar(["🧪 Teste: os avisos de mudança de data do calendário de resultados vão chegar aqui."])
+        return 0 if ok else 1
 
     cfg = yaml.safe_load(args.config.read_text(encoding="utf-8"))
     cfg_cal, cfg_fonte, cfg_ev = cfg["calendario"], cfg["fonte"], cfg.get("eventos", {})
