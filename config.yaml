@@ -53,7 +53,7 @@ cobertura:
     - { ticker: ASAI3, nomes: ["ASSAI", "Sendas Distribuidora"], cnpj: "06.057.223/0001-71" }
     - { ticker: GMAT3, nomes: ["GRUPO MATEUS", "Mateus Supermercados"], cnpj: "24.990.777/0001-09" }
     # E-commerce
-    - { ticker: MGLU3, nomes: ["MAGAZ LUIZA", "Magazine Luiza"], cnpj: "47.960.950/0001-21", manual: { 3Q26: "2026-11-09" } }
+    - { ticker: MGLU3, nomes: ["MAGAZ LUIZA", "Magazine Luiza"], cnpj: "47.960.950/0001-21" }
     # Drugstores
     - { ticker: PGMN3, nomes: ["PAGUE MENOS"], cnpj: "06.626.253/0001-51" }
     - { ticker: PNVL3, nomes: ["DIMED", "Panvel"], cnpj: "92.665.611/0001-77" }

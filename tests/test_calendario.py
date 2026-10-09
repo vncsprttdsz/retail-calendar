@@ -623,3 +623,47 @@ def test_plantao_reapresentacao_prevalece_sobre_dados_abertos(monkeypatch):
     monkeypatch.setattr(cvm, "texto_pdf", lambda link: textos[link])
     evs = cvm.coletar({"RIAA3": "08.402.943/0001-52"}, {}, date(2026, 10, 9), {}, extras)
     assert [(e.ticker, e.evento, e.data) for e in evs] == [("RIAA3", "Resultado 3Q26", date(2026, 11, 11))]
+
+
+# Texto real da reapresentação da RIAA3 (Plantão, 08/10/2026): data na linha de baixo.
+CALENDARIO_RIAA_R = """CALENDÁRIO ANUAL DE EVENTOS CORPORATIVOS
+Denominação Social: 
+GUARARAPES CONFECCOES S.A.
+Data de referência: 
+2026
+Datas programadas para divulgação de informações periódicas e eventuais
+ 
+Demonstrações Financeiras Anuais Completas e Demonstrações Financeiras Padronizadas – DFP relativas ao exercício social findo em
+31/12/2025
+11/02/2026
+ 
+Formulário de Referência, relativo ao exercício social em curso
+29/05/2026
+ 
+Informações Trimestrais – ITR
+Referentes ao 1º trimestre
+06/05/2026
+Referentes ao 2º trimestre
+05/08/2026
+Referentes ao 3º trimestre
+09/11/2026
+ 
+Assembleia Geral Ordinária
+Envio da Proposta da Administração
+30/03/2026
+ 
+Apresentação Pública sobre Divulgação de Resultados
+Referentes ao 3º trimestre
+10/11/2026
+Alterações efetuadas:
+Data de divulgação do ITR (3º trimestre) alterada de 04/11/2026 para 09/11/2026
+"""
+
+
+def test_cvm_le_data_na_linha_de_baixo():
+    assert cvm.datas_de_resultado(CALENDARIO_RIAA_R) == {
+        "4Q25": date(2026, 2, 11),
+        "1Q26": date(2026, 5, 6),
+        "2Q26": date(2026, 8, 5),
+        "3Q26": date(2026, 11, 9),  # não 10/11, que é o call
+    }

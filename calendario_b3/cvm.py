@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 IPE_URL = "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/IPE/DADOS/ipe_cia_aberta_{ano}.zip"
 HEADERS = {"User-Agent": "Mozilla/5.0 (retail-calendar)"}
 # Sobe quando a leitura do PDF muda: entradas antigas do cache são relidas.
-VERSAO_PARSER = 2
+VERSAO_PARSER = 3
 
 
 @dataclass
@@ -119,6 +119,10 @@ def datas_de_resultado(texto: str) -> dict[str, date]:
     -> {"4Q25": 12/03/2026, "3Q26": 05/11/2026}
     """
     t = re.sub(r"[ \t\xa0]+", " ", texto)
+    # Versões mais novas do PDF quebram a linha antes da data ("...3º trimestre\n09/11/2026")
+    # e depois de "Data de referência:": junta de volta para ficar no formato de uma linha.
+    t = re.sub(r"[ ]*\n[ ]*(?=\d{2}/\d{2}/\d{4}\s*(?:\n|$))", " ", t)
+    t = re.sub(r":[ ]*\n[ ]*", ": ", t)
     saida: dict[str, date] = {}
     m = re.search(r"Padronizadas\s*[–-]\s*DFP.{0,200}?findo em\s*\d{2}/\d{2}/(\d{4})\s*" + _DATA, t, re.S | re.I)
     if m:
