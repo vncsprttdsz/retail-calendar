@@ -77,3 +77,27 @@ def diagnostico(empresas: list[dict]) -> None:
             modal = re.findall(r"<div[^>]*(?:modal|popup|pop-up|lightbox)[^>]*>", html, re.I)[:3]
             if modal:
                 print(f"     popup: {modal}")
+
+
+def diagnostico_mz(urls: list[str]) -> None:
+    """Como o site MZ chama a API de eventos (parâmetros, id da companhia)."""
+    for url in urls:
+        try:
+            r = requests.get(url, headers=HEADERS, timeout=40)
+        except Exception as e:
+            print(f"\n== MZ {url}: FALHA {e}")
+            continue
+        html = r.text
+        print(f"\n== MZ {url} (HTTP {r.status_code})")
+        for m in list(re.finditer(r"mzevents", html))[:3]:
+            print(f"   html: {html[max(0, m.start() - 700): m.end() + 900]!r}")
+        for k in sorted(set(re.findall(r"(?:company[_-]?(?:id|uuid|key)|customer[_-]?key|apiKey|mzCompany|companyId|empresa_id)[\"']?\s*[:=]\s*[\"'][^\"']{4,60}", html, re.I)))[:10]:
+            print(f"   chave: {k}")
+        scripts = [u for u in re.findall(r"<script[^>]*src=[\"']([^\"']+)", html) if "themes" in u or "mz" in u.lower()][:12]
+        for u in scripts:
+            try:
+                js = requests.get(requests.compat.urljoin(r.url, u), headers=HEADERS, timeout=40).text
+            except Exception:
+                continue
+            for m in list(re.finditer(r"mzevents|events\?|/events", js))[:2]:
+                print(f"   js {u.rsplit('/', 1)[-1][:40]}: {js[max(0, m.start() - 600): m.end() + 900]!r}")

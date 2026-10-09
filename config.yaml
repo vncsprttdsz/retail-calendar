@@ -56,7 +56,7 @@ cobertura:
     - { ticker: TFCO4, nomes: ["TRACK FIELD", "Track and Field"], cnpj: "59.418.806/0001-47",
         ri: ["https://www.tfco.com.br/ri/"] }
     - { ticker: VULC3, nomes: ["VULCABRAS"], cnpj: "50.926.955/0001-42",
-        ri: ["https://ri.vulcabras.com/"] }
+        ri: ["https://www.vulcabrasri.com/"] }
     # Food Retailers
     - { ticker: ASAI3, nomes: ["ASSAI", "Sendas Distribuidora"], cnpj: "06.057.223/0001-71",
         ri: ["https://ri.assai.com.br/"] }

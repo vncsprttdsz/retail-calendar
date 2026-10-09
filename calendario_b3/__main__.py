@@ -137,6 +137,8 @@ def main(argv: list[str] | None = None) -> int:
             traceback.print_exc(file=sys.stdout)
         try:
             ri.diagnostico((cfg.get("cobertura") or {}).get("empresas") or [])
+            ri.diagnostico_mz(["https://ri.azzas2154.com.br/", "https://ri.grupopanvel.com.br/",
+                               "https://ri.azzas2154.com.br/informacoes-aos-investidores/calendario-de-eventos/"])
         except Exception:
             traceback.print_exc(file=sys.stdout)
         try:
