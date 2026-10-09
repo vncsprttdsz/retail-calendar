@@ -945,3 +945,30 @@ def test_comunicado_sea():
         ("resultado", "2Q26", date(2026, 8, 11), None, ""),
         ("call", "2Q26", date(2026, 8, 11), time(8, 30), "https://events.q4inc.com/attendee/265654308"),
     ]
+
+
+def test_sea_api_de_noticias(monkeypatch):
+    # Trecho real de sea.com/api/invest/news (mais recentes primeiro; um link vem com "\r\n").
+    dados = {"data": [
+        {"title": "Sea Limited Reports Second Quarter 2026 Results", "publish_date": "2026/08/11",
+         "document_url": "https://cdn.sea.com/investor/2Q2026/wFBC39MbqnfLb3MGY6LP/2026.08.11%20Sea%20Second%20Quarter%202026%20Results.pdf"},
+        {"title": "Sea Limited to Report Second Quarter 2026 Results", "publish_date": "2026/07/28",
+         "document_url": "https://cdn.sea.com/investor/2Q2026/FBWWpVy43Auf1EnpVt6o/2026.07.28%20Sea%20Limited%20to%20Report%20Second%20Quarter%202026%20Results.pdf"},
+        {"title": "Sea Limited to Report First Quarter 2026 Results", "publish_date": "2026/04/28",
+         "document_url": "https://cdn.sea.com/investor/1Q2026/DpQXsm6JO7M8u8NysfCh/2026.04.28%20Sea%20Limited%20to%20Report%20First%20Quarter%202026%20Results.pdf\r\n"},
+    ]}
+    abertos = []
+
+    class Pagina:
+        def __init__(self, texto):
+            self.texto = texto
+
+        def extract_text(self):
+            return self.texto
+
+    monkeypatch.setattr(ri, "_get", lambda url: abertos.append(url) or type("R", (), {"content": b"%PDF"})())
+    import pypdf
+    monkeypatch.setattr(pypdf, "PdfReader", lambda f: type("P", (), {"pages": [Pagina(COMUNICADO_SEA)]})())
+    evs = ri.de_noticias_pdf("SE", dados)
+    assert len(abertos) == 1 and "2026.07.28" in abertos[0]
+    assert [(e.tipo, e.dia) for e in evs] == [("resultado", date(2026, 8, 11)), ("call", date(2026, 8, 11))]

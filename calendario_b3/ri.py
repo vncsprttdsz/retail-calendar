@@ -345,7 +345,7 @@ def de_comunicado(ticker: str, texto: str, fuso: str = "America/Sao_Paulo") -> l
     return saida
 
 
-def de_noticias_pdf(ticker: str, dados, fuso: str = "America/Sao_Paulo", limite: int = 3) -> list[EventoRI]:
+def de_noticias_pdf(ticker: str, dados, fuso: str = "America/Sao_Paulo", limite: int = 1) -> list[EventoRI]:
     """API de notícias em JSON (ex.: sea.com/api/invest/news): abre os PDFs "to Report ... Results"
     mais recentes e lê data de divulgação, call (horário em ET) e link do webcast."""
     import io
@@ -355,7 +355,9 @@ def de_noticias_pdf(ticker: str, dados, fuso: str = "America/Sao_Paulo", limite:
 
     bruto = json.dumps(dados)
     pdfs = [u.replace("\\/", "/") for u in re.findall(r"https?:[^\"\s]+?\.pdf", bruto)]
-    alvos = [u for u in dict.fromkeys(pdfs) if re.search(r"to(?:%20|[ _+-])Report", u, re.I)][:limite]
+    alvos = [u for u in dict.fromkeys(pdfs) if re.search(r"to(?:%20|[ _+-])Report", u, re.I)]
+    # Mais recente primeiro (o nome do arquivo começa com a data: "2026.07.28 Sea Limited to Report ...").
+    alvos = sorted(alvos, key=lambda u: re.search(r"(\d{4}\.\d{2}\.\d{2})", u)[1] if re.search(r"\d{4}\.\d{2}\.\d{2}", u) else "", reverse=True)[:limite]
     saida = []
     for url in alvos:
         r = _get(url.replace(" ", "%20"))
