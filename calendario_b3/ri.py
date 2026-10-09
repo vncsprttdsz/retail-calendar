@@ -61,6 +61,11 @@ def diagnostico(empresas: list[dict]) -> None:
             apis = sorted(set(re.findall(r"https?://[a-z0-9.-]*(?:api|mziq|apicatalog)[a-z0-9.-]*/[^\s\"'<>]{0,120}", html, re.I)))[:8]
             if apis:
                 print(f"     apis: {apis}")
+            q4 = sorted(set(re.findall(r"(?:apiKey|api_key|Event\.svc|GetEventList|/feed/[A-Za-z]+\.svc)[^\s\"'<>,;]{0,80}", html, re.I)))[:8]
+            if q4:
+                print(f"     feed: {q4}")
+            scripts = sorted(set(re.findall(r"<script[^>]+src=[\"']([^\"']+)", html, re.I)))[:12]
+            print(f"     scripts: {scripts}")
             webcasts = sorted(set(_WEBCAST.findall(html)))[:6]
             if webcasts:
                 print(f"     webcast: {webcasts}")
@@ -251,6 +256,42 @@ def _eventos_do_bloco(ticker: str, bloco: str, hoje: date) -> list[EventoRI]:
     return saida
 
 
+_MESES_EXTENSO = {
+    **{m: i + 1 for i, m in enumerate(["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho",
+                                        "agosto", "setembro", "outubro", "novembro", "dezembro"])},
+    **{m: i + 1 for i, m in enumerate(["january", "february", "march", "april", "may", "june", "july",
+                                        "august", "september", "october", "november", "december"])},
+    "marco": 3,
+}
+_RE_HORA_TEXTO = re.compile(
+    rf"(?:videoconfer[êe]ncia|teleconfer[êe]ncia|confer[êe]ncia|\bcall\b|webcast|conference call)[^.]{{0,60}}?"
+    rf"(?:(?P<d1>\d{{1,2}})\s+de\s+(?P<m1>{'|'.join(_MESES_EXTENSO)})|(?P<d2>\d{{1,2}})/(?P<m2>\d{{1,2}})(?:/\d{{2,4}})?"
+    rf"|(?P<m3>{'|'.join(_MESES_EXTENSO)})\s+(?P<d3>\d{{1,2}}))"
+    rf"(?:,?\s+(?:de\s+)?\d{{4}})?[^\d]{{0,25}}?(?P<h>\d{{1,2}})\s*(?:h\s*(?P<min_h>\d{{2}})?|:(?P<min>\d{{2}}))"
+    rf"(?:\s*(?P<ampm>[ap])\.?m\b)?",
+    re.I,
+)
+
+
+def horarios_no_texto(texto: str) -> dict[tuple[int, int], time]:
+    """Horário do call escrito por extenso na home, ex. "Videoconferência: 6 de novembro 10h (Brasil) /
+    8h (US-ET)" -> {(11, 6): 10:00}. Vale o primeiro horário após a data (Brasília nos sites daqui)."""
+    saida: dict[tuple[int, int], time] = {}
+    for m in _RE_HORA_TEXTO.finditer(texto or ""):
+        if m["d1"]:
+            dia, mes = int(m["d1"]), _MESES_EXTENSO[m["m1"].lower()]
+        elif m["d2"]:
+            dia, mes = int(m["d2"]), int(m["m2"])
+        else:
+            dia, mes = int(m["d3"]), _MESES_EXTENSO[m["m3"].lower()]
+        hora, minuto = int(m["h"]), int(m["min"] or m["min_h"] or 0)
+        if m["ampm"] and m["ampm"].lower() == "p" and hora < 12:
+            hora += 12
+        if 1 <= mes <= 12 and hora < 24 and minuto < 60:
+            saida.setdefault((mes, dia), time(hora, minuto))
+    return saida
+
+
 def _get(url: str) -> requests.Response:
     r = requests.get(url, headers=HEADERS, timeout=40)
     r.raise_for_status()
@@ -282,6 +323,11 @@ def eventos_da_empresa(item: dict, hoje: date) -> list[EventoRI]:
         raise ValueError("plataforma do site de RI não reconhecida")
     else:
         raise ConnectionError("site de RI inacessível")
+    # Horário do call só no texto da home (ex.: Renner: "Videoconferência: 6 de novembro 10h").
+    horas = horarios_no_texto(_texto(home))
+    for e in eventos:
+        if e.tipo == "call" and not e.inicio and (e.dia.month, e.dia.day) in horas:
+            e.inicio = horas[(e.dia.month, e.dia.day)]
     # Pop-up/destaque da home com o link de inscrição do call: vale para o próximo call (até 21 dias).
     calls = sorted((e for e in eventos if e.tipo == "call" and hoje <= e.dia <= hoje + timedelta(days=21)), key=lambda e: e.dia)
     links = links_de_call(home)

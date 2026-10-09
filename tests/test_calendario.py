@@ -819,3 +819,22 @@ def test_riweb_ignora_calendario_do_menu():
             "Fale com RI ... " + HOME_RADL)
     assert [(e.tipo, e.dia) for e in ri.de_riweb("RADL3", home, date(2026, 10, 9))] == [
         ("resultado", date(2026, 11, 3)), ("call", date(2026, 11, 4))]
+
+
+# Trecho real da home da Renner, 09/10/2026 (a API da MZ traz o call sem horário).
+HOME_LREN = ("Divulgação de Resultados 3T26 5 de novembro de 2026 após o fechamento do mercado "
+             "Videoconferência: 6 de novembro 10h (Brasil) / 8h (US-ET) Período de silêncio")
+
+
+def test_horario_do_call_no_texto_da_home(monkeypatch):
+    assert ri.horarios_no_texto(HOME_LREN) == {(11, 6): time(10)}
+    assert ri.horarios_no_texto("Teleconferência 3T26 em 06/11/2026, às 11h00 (Brasília)") == {(11, 6): time(11)}
+    assert ri.horarios_no_texto("Conferência 3T26: 12/11 às 9h30") == {(11, 12): time(9, 30)}
+    mz = [{"event_name": "Divulgação de Resultados 3T26", "event_date": "2026-11-05T12:00:00.000Z", "event_starttime": ""},
+          {"event_name": "Videoconferência de Resultados 3T26", "event_date": "2026-11-06T12:00:00.000Z", "event_starttime": ""}]
+    monkeypatch.setattr(ri, "_get", lambda url: type("R", (), {"text": f"<p>{HOME_LREN}</p>"})())
+    monkeypatch.setattr(ri, "mz_id", lambda html: "id")
+    monkeypatch.setattr(ri, "mz_eventos", lambda fm, tipo: mz)
+    evs = ri.eventos_da_empresa({"ticker": "LREN3", "ri": ["https://ri"]}, date(2026, 10, 9))
+    assert [(e.tipo, e.dia, e.inicio) for e in evs] == [
+        ("resultado", date(2026, 11, 5), None), ("call", date(2026, 11, 6), time(10))]

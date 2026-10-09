@@ -205,6 +205,7 @@ def main(argv: list[str] | None = None) -> int:
             for r in achados:
                 print(f"  {r.ticker} {r.tipo:9} {r.rotulo} {r.dia:%d/%m} {r.inicio or ''}-{r.fim or ''} {r.link} | {r.titulo}")
             print(f"  falhas: {sorted(falhas_ri)}")
+            ri.diagnostico([i for i in cfg.get("exterior") or [] if i.get("ri")])
         except Exception:
             traceback.print_exc(file=sys.stdout)
         try:
