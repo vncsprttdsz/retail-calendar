@@ -69,7 +69,12 @@ def _datas_cvm(cfg: dict, b3: list, hoje, caminho_cache: Path) -> list:
     nomes = {str(i["ticker"]).upper(): (i.get("nomes") or [i["ticker"]])[0] for i in empresas}
     try:
         cache = json.loads(caminho_cache.read_text(encoding="utf-8")) if caminho_cache.exists() else {}
-        eventos = cvm.coletar(_cnpjs(cfg), nomes, hoje, cache)
+        try:  # reapresentações do mesmo dia (os dados abertos da CVM atrasam ~1 semana)
+            extras = noticias.calendarios(list(_cnpjs(cfg)), hoje)
+        except Exception as e:
+            log.warning("Plantão de Notícias da B3 indisponível (%s); seguindo só com os dados abertos da CVM", e)
+            extras = []
+        eventos = cvm.coletar(_cnpjs(cfg), nomes, hoje, cache, extras)
     except Exception as e:
         log.warning("calendários da CVM indisponíveis nesta rodada (%s); usando só a B3", e)
         return []

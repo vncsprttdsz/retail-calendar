@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 
 URL = "https://sistemasweb.b3.com.br/PlantaoNoticias/Noticias/"
 HEADERS = {"User-Agent": "Mozilla/5.0 (retail-calendar)", "Accept": "application/json, text/html"}
-_RE_RAD = re.compile(r"https?://www\.rad\.cvm\.gov\.br/ENET/[A-Za-z]+\.aspx\?[^\s\"'<>]+", re.I)
+_RE_RAD = re.compile(r"https?://www\.rad\.cvm\.gov\.br/ENET\w*/[A-Za-z]+\.aspx\?[^\s\"'<>]+", re.I)
 
 
 @dataclass
@@ -65,30 +65,35 @@ def links_rad(noticia: Noticia) -> list[str]:
     return list(dict.fromkeys(l.replace("&amp;", "&") for l in achados))
 
 
-def diagnostico(raizes: set[str], hoje: date, dias: int = 10) -> None:
-    noticias = listar(hoje - timedelta(days=dias), hoje)
-    print(f"\n== Plantão de Notícias B3: {len(noticias)} notícias em {dias} dias")
-    if noticias:
-        print(f"  exemplo bruto: {noticias[0]}")
-    cobertura = [n for n in noticias if n.raiz in raizes]
-    print(f"  da cobertura: {len(cobertura)}")
-    for n in cobertura:
-        print(f"  {n.data_hora} | {n.titulo}")
-    for n in [n for n in cobertura if "calend" in n.titulo.lower()][:1]:
-        print(f"\n== {n.titulo} ({n.data_hora})\n  conteúdo: {n.conteudo[:1500]!r}")
+def calendarios(tickers: list[str], hoje: date, dias: int = 30):
+    """Calendários de Eventos Corporativos da cobertura publicados no Plantão nos últimos dias."""
+    from .cvm import DocCVM
+
+    por_raiz = {t[:4]: t for t in tickers}
+    docs = []
+    for n in listar(hoje - timedelta(days=dias - 1), hoje):  # o Plantão aceita até 30 dias
+        t = por_raiz.get(n.raiz)
+        if not t or "calendario de eventos" not in n.titulo.lower():
+            continue
+        links = links_rad(n)
+        if not links:
+            log.warning("%s: notícia de calendário sem link para o documento: %s", t, n.url)
+            continue
+        docs.append(DocCVM(t, "", "Plantão B3", n.titulo, "", n.data_hora, "R" if "(R)" in n.titulo else "", links[0]))
+    return docs
+
+
+def diagnostico(raizes: set[str], hoje: date, dias: int = 30) -> None:
+    from .cvm import datas_de_resultado, texto_pdf
+
+    noticias = listar(hoje - timedelta(days=dias - 1), hoje)
+    cal = [n for n in noticias if n.raiz in raizes and "calendario de eventos" in n.titulo.lower()]
+    print(f"\n== Plantão de Notícias B3: {len(noticias)} notícias em {dias} dias; calendários da cobertura: {len(cal)}")
+    for n in cal:
         try:
-            r = requests.get(n.url, headers=HEADERS, timeout=60)
-            print(f"  detalhe HTTP {r.status_code}; links RAD: {_RE_RAD.findall(r.text)}")
-            # A página de detalhe carrega o texto por JavaScript: mostra scripts e chamadas.
-            scripts = re.findall(r"<script[^>]*src=[\"']([^\"']+)", r.text)
-            print(f"  scripts: {scripts}")
-            for trecho in re.findall(r"(?:url|ajax|\$\.(?:get|post|getJSON))[^;]{0,300}", r.text, re.I)[:15]:
-                print(f"  js: {trecho!r}")
-            corpo = r.text[r.text.find("<body"):]
-            print(f"  corpo (sem head, 4000): {re.sub(chr(10) + '|' + chr(13), ' ', corpo)[:4000]!r}")
-            for src in [s for s in scripts if "plantao" in s.lower() or "noticia" in s.lower()][:3]:
-                u = src if src.startswith("http") else "https://sistemasweb.b3.com.br" + (src if src.startswith("/") else "/PlantaoNoticias/" + src.lstrip("./"))
-                js = requests.get(u, headers=HEADERS, timeout=60).text
-                print(f"  -- {u}: chamadas: {re.findall(r'Noticias/[A-Za-z]+', js)}")
+            links = links_rad(n)
+            datas = datas_de_resultado(texto_pdf(links[0])) if links else {}
+            lidas = ", ".join(f"{q} {d:%d/%m}" for q, d in sorted(datas.items())) or "nenhuma data lida"
         except Exception as e:
-            print(f"  falha no detalhe: {e}")
+            links, lidas = [], f"falha: {e}"
+        print(f"  {n.data_hora} | {n.titulo}\n      {links[:1]} -> {lidas}")

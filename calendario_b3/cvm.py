@@ -90,6 +90,13 @@ def texto_pdf(link: str) -> str:
         r.raise_for_status()
         if r.content.startswith(b"%PDF"):
             return "\n".join((p.extract_text() or "") for p in PdfReader(io.BytesIO(r.content)).pages)
+        # Página intermediária do RAD: segue o link do arquivo, se houver.
+        m = re.search(r"""(?:src|href)=["']([^"']*(?:Download|ExibirArquivo|\.pdf)[^"']*)["']""", r.text, re.I)
+        if m and m[1] != link:
+            seguinte = requests.compat.urljoin(r.url, m[1].replace("&amp;", "&"))
+            r2 = requests.get(seguinte, headers=HEADERS, timeout=90)
+            if r2.ok and r2.content.startswith(b"%PDF"):
+                return "\n".join((p.extract_text() or "") for p in PdfReader(io.BytesIO(r2.content)).pages)
         time.sleep(3 * (tentativa + 1))
     raise ValueError("a CVM devolveu HTML em vez do PDF")
 
@@ -156,10 +163,13 @@ def calendarios_recentes(ipe: pd.DataFrame, cnpjs: dict[str, str]) -> list[DocCV
     return saida
 
 
-def coletar(cnpjs: dict[str, str], nomes: dict[str, str], hoje: date, cache: dict) -> list:
-    """Eventos futuros segundo o último calendário de cada empresa na CVM.
+def coletar(cnpjs: dict[str, str], nomes: dict[str, str], hoje: date, cache: dict, extras: list[DocCVM] = ()) -> list:
+    """Eventos futuros segundo os calendários entregues à CVM.
 
-    `cache` ({link: {rotulo: 'AAAA-MM-DD'}}) evita baixar de novo PDFs já lidos.
+    Fontes: dados abertos (IPE, atrasam ~1 semana) e `extras` (ex.: Plantão de Notícias
+    da B3, no mesmo dia). Os documentos são aplicados do mais antigo para o mais novo:
+    a última entrega define a data de cada trimestre.
+    `cache` ({"vN link": {rotulo: 'AAAA-MM-DD'}}) evita baixar de novo PDFs já lidos.
     """
     from .modelo import Evento
 
@@ -167,8 +177,9 @@ def coletar(cnpjs: dict[str, str], nomes: dict[str, str], hoje: date, cache: dic
     ipe = ler_ipe([hoje.year - 1, hoje.year])
     for k in [k for k in cache if not k.startswith(f"v{VERSAO_PARSER} ")]:
         del cache[k]  # leitura de versão anterior do parser
-    eventos = []
-    for doc in calendarios_recentes(ipe, cnpjs):
+    docs = sorted([*calendarios_recentes(ipe, cnpjs), *extras], key=lambda d: d.data_entrega)
+    vigentes: dict[tuple[str, str], date] = {}
+    for doc in docs:
         chave = f"v{VERSAO_PARSER} {doc.link}"
         if chave not in cache:
             try:
@@ -185,11 +196,15 @@ def coletar(cnpjs: dict[str, str], nomes: dict[str, str], hoje: date, cache: dic
             log.warning("%s: datas fora do prazo legal no calendário da CVM, ignoradas: %s (%s)", doc.ticker,
                         ", ".join(f"{q} {d:%d/%m/%Y}" for q, d in sorted(fora.items())), doc.link)
         for q, dia in datas.items():
-            if dia >= hoje and q not in fora:
-                eventos.append(Evento(doc.ticker, nomes.get(doc.ticker, doc.ticker), f"Resultado {q}", dia))
-        log.info("%s: calendário CVM %s v%s -> %s", doc.ticker, doc.data_entrega, doc.versao,
+            if q not in fora:
+                vigentes[(doc.ticker, q)] = dia
+        log.info("%s: calendário %s %s v%s -> %s", doc.ticker, doc.categoria, doc.data_entrega, doc.versao,
                  ", ".join(f"{q} {d:%d/%m}" for q, d in sorted(datas.items())))
-    return eventos
+    return [
+        Evento(t, nomes.get(t, t), f"Resultado {q}", dia)
+        for (t, q), dia in sorted(vigentes.items())
+        if dia >= hoje
+    ]
 
 
 def diagnostico(cnpjs: dict[str, str], hoje: date, detalhar: tuple[str, ...] = ()) -> None:

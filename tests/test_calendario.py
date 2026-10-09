@@ -315,8 +315,11 @@ def sem_internet(monkeypatch):
     """Nenhum teste acessa a internet: Yahoo sem data e CVM sem documentos, salvo quando o teste troca."""
     from calendario_b3 import cvm
 
+    from calendario_b3 import noticias
+
     monkeypatch.setattr(exterior, "consultar_yahoo", lambda simbolo, tz: None)
     monkeypatch.setattr(cvm, "ler_ipe", lambda anos: pd.DataFrame())
+    monkeypatch.setattr(noticias, "listar", lambda inicio, fim: [])
 
 
 def test_trimestre_reportado():
@@ -580,3 +583,43 @@ def test_cvm_html_no_lugar_do_pdf_nao_entra_no_cache(monkeypatch):
     monkeypatch.setattr(cvm, "texto_pdf", lambda link: "texto sem datas")
     cvm.coletar({"MGLU3": "47.960.950/0001-21"}, {}, date(2026, 10, 8), cache)
     assert cache == {}
+
+
+
+# --------------------------------------------------------------------------- Plantão de Notícias
+
+from calendario_b3 import noticias
+
+# Trecho real da página de detalhe (Plantão de Notícias, 08/10/2026).
+DETALHE_RIAA = """<pre id="conteudoDetalhe" style="width: auto;white-space: break-spaces;">RIACHUELO (RIAA-NM) -
+Calendario de Eventos Corporativos - ate 31/12/26 (R)      https://www.rad.cvm.gov.br/ENETWEB/frmExibirArquivoIPEExterno.aspx?ID=1575266&amp;flnk
+(R) = Reapresentacao  (C) = Documento Cancelado  (N) = Norma / Notas</pre>"""
+
+
+def test_plantao_reapresentacao_prevalece_sobre_dados_abertos(monkeypatch):
+    riaa = noticias.Noticia("1", "18", "2026-10-08 08:00:19",
+                            "RIACHUELO (RIAA-NM) - Calendario de Eventos Corporativos - ate 31/12/26 (R)", "")
+    outra = noticias.Noticia("2", "18", "2026-10-06 17:34:36", "ASSAI (ASAI-NM) - Alienacao de Participacao Acionaria - 06/10/26", "")
+    assert riaa.raiz == "RIAA" and outra.raiz == "ASAI"
+
+    class Resp:
+        text = DETALHE_RIAA
+
+        def raise_for_status(self):
+            pass
+
+    monkeypatch.setattr(noticias, "listar", lambda inicio, fim: [riaa, outra])
+    monkeypatch.setattr(noticias.requests, "get", lambda url, **kw: Resp())
+    extras = noticias.calendarios(["RIAA3", "ASAI3"], date(2026, 10, 9))
+    assert [(d.ticker, d.link) for d in extras] == [
+        ("RIAA3", "https://www.rad.cvm.gov.br/ENETWEB/frmExibirArquivoIPEExterno.aspx?ID=1575266&flnk")
+    ]
+
+    # Dados abertos ainda com a versão de dez/2025 (3Q26 em 04/11); o Plantão traz a nova (11/11).
+    ipe = _ipe(("08.402.943/0001-52", "Calendário de Eventos Corporativos", "", "2026-12-31", "2025-12-09", "1", "v1"))
+    monkeypatch.setattr(cvm, "ler_ipe", lambda anos: ipe)
+    textos = {"v1": CALENDARIO_MGLU.replace("05/11/2026", "04/11/2026"),
+              extras[0].link: CALENDARIO_MGLU.replace("05/11/2026", "11/11/2026")}
+    monkeypatch.setattr(cvm, "texto_pdf", lambda link: textos[link])
+    evs = cvm.coletar({"RIAA3": "08.402.943/0001-52"}, {}, date(2026, 10, 9), {}, extras)
+    assert [(e.ticker, e.evento, e.data) for e in evs] == [("RIAA3", "Resultado 3Q26", date(2026, 11, 11))]
