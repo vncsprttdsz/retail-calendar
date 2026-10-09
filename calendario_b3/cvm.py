@@ -265,7 +265,7 @@ def coletar(cnpjs: dict[str, str], nomes: dict[str, str], hoje: date, cache: dic
     return eventos
 
 
-def diagnostico(cnpjs: dict[str, str], hoje: date, detalhar: tuple[str, ...] = ()) -> None:
+def diagnostico(cnpjs: dict[str, str], hoje: date, detalhar: tuple[str, ...] = (), nomes: dict | None = None) -> None:
     """Imprime o que a CVM tem: atualização dos dados, nome por CNPJ e todos os calendários."""
     anos = [hoje.year - 1, hoje.year]
     ipe = ler_ipe(anos)
@@ -283,6 +283,12 @@ def diagnostico(cnpjs: dict[str, str], hoje: date, detalhar: tuple[str, ...] = (
             print(f"      calendário ref {d.data_referencia[:4]} entregue {d.data_entrega} v{d.versao}")
         if not cal:
             print("      nenhum calendário em", anos)
+        if not meus and nomes and not ipe.empty:  # CNPJ errado/vazio: candidatos pelo nome
+            padrao = "|".join(re.escape(n) for n in nomes.get(t, []) if len(n) >= 4)
+            if padrao:
+                achados = ipe[ipe["Nome_Companhia"].str.contains(padrao, case=False, na=False)]
+                for (cnpj, nome), g in achados.groupby(["CNPJ_Companhia", "Nome_Companhia"]):
+                    print(f"      candidato: {cnpj} = {nome} ({len(g)} docs)")
     for t in detalhar:
         recentes = [d for d in docs if d.ticker == t][:8]
         print(f"\n== {t}: últimos documentos IPE")

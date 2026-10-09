@@ -245,20 +245,26 @@ def main(argv: list[str] | None = None) -> int:
         print(f"\n== {len(nomes)} empresas no arquivo:\n  " + " | ".join(nomes))
         try:
             detalhar = tuple(t.strip().upper() for t in args.detalhar.split(",") if t.strip())
-            cvm.diagnostico(_cnpjs(cfg), datetime.now(ZoneInfo(cfg["calendario"]["fuso"])).date(), detalhar)
+            nomes_cfg = {str(i["ticker"]).upper(): [*(i.get("nomes") or []), str(i["ticker"])[:4]]
+                         for i in (cfg.get("cobertura") or {}).get("empresas") or []}
+            cvm.diagnostico(_cnpjs(cfg), datetime.now(ZoneInfo(cfg["calendario"]["fuso"])).date(), detalhar, nomes_cfg)
         except Exception:
             traceback.print_exc(file=sys.stdout)
         try:
             hoje_i = datetime.now(ZoneInfo(cfg["calendario"]["fuso"])).date()
             print("\n== Sites de RI (eventos de resultado e call)")
-            achados, falhas_ri = ri.coletar((cfg.get("cobertura") or {}).get("empresas") or [], hoje_i)
+            achados, falhas_ri_br = ri.coletar((cfg.get("cobertura") or {}).get("empresas") or [], hoje_i)
             for r in achados:
                 print(f"  {r.ticker} {r.tipo:9} {r.rotulo} {r.dia:%d/%m} {r.inicio or ''}-{r.fim or ''} {r.link} | {r.titulo}")
-            print(f"  falhas: {sorted(falhas_ri)}")
+            print(f"  falhas: {sorted(falhas_ri_br)}")
             achados, falhas_ri = ri.coletar([i for i in cfg.get("exterior") or [] if i.get("ri")], hoje_i)
             for r in achados:
                 print(f"  {r.ticker} {r.tipo:9} {r.rotulo} {r.dia:%d/%m} {r.inicio or ''} {'provisória ' if r.provisorio else ''}{r.link} | {r.titulo}")
             print(f"  falhas (exterior): {sorted(falhas_ri)}")
+            # Sites que falharam ou foram pedidos em "detalhar": diagnóstico do HTML.
+            todos = ((cfg.get("cobertura") or {}).get("empresas") or []) + (cfg.get("exterior") or [])
+            alvo = (falhas_ri | set(falhas_ri_br) | set(detalhar)) - {"RIAA3"}
+            ri.diagnostico([i for i in todos if str(i["ticker"]).upper() in alvo and i.get("ri")])
         except Exception:
             traceback.print_exc(file=sys.stdout)
         try:

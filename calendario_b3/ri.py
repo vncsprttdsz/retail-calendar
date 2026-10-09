@@ -80,6 +80,10 @@ def diagnostico(empresas: list[dict]) -> None:
             agenda = sorted(set(re.findall(r"href=[\"']([^\"']*(?:calend|agenda|evento|event)[^\"']*)", html, re.I)))[:8]
             if agenda:
                 print(f"     links agenda: {agenda}")
+            hrefs = sorted(set(re.findall(r"href=[\"']([^\"'#]+)", html, re.I)))
+            print(f"     hrefs ({len(hrefs)}): {hrefs[:70]}")
+            for m in list(re.finditer(r"earnings|quarter|results|3Q26|Q3 ?20|November|nov\.? \d", html, re.I))[:12]:
+                print(f"     cru…{html[max(0, m.start() - 150): m.end() + 350]!r}")
             modal = re.findall(r"<div[^>]*(?:modal|popup|pop-up|lightbox)[^>]*>", html, re.I)[:3]
             if modal:
                 print(f"     popup: {modal}")

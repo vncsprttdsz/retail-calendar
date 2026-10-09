@@ -74,6 +74,10 @@ cobertura:
         ri: ["https://ri.grupopanvel.com.br/"] }
     - { ticker: RADL3, nomes: ["RAIADROGASIL", "RD Saude"], cnpj: "61.585.865/0001-51",
         ri: ["https://ri.rdsaude.com.br/"] }
+    - { ticker: PFRM3, nomes: ["PROFARMA", "Profarma Distribuidora"], cnpj: "45.453.214/0001-51",
+        ri: ["https://ri.profarma.com.br/"] }
+    - { ticker: DMVF3, nomes: ["D1000VFARMA", "D1000 Varejo Farma"], cnpj: "",
+        ri: ["https://ri.d1000.com.br/"] }
     # Other Segments
     - { ticker: ALLD3, nomes: ["ALLIED", "Allied Tecnologia"], cnpj: "20.247.322/0001-47",
         ri: ["https://ri.alliedbrasil.com.br/"] }
@@ -97,3 +101,5 @@ cobertura:
 exterior:
   - { ticker: MELI, yahoo: MELI, nome: MercadoLibre, manual: {},
       ri: ["https://investor.mercadolibre.com/news-and-events"] }
+  - { ticker: SE, yahoo: SE, nome: Sea Limited, manual: {},
+      ri: ["https://www.sea.com/investor/home"] }
