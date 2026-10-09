@@ -94,5 +94,4 @@ cobertura:
 #   manual: { 3Q26: "2026-11-04 18:00" }
 exterior:
   - { ticker: MELI, yahoo: MELI, nome: MercadoLibre, manual: {},
-      ri: ["https://investor.mercadolibre.com/", "https://investor.mercadolibre.com/events-and-presentations",
-           "https://investor.mercadolibre.com/news-and-events/events", "https://investor.mercadolibre.com/events"] }
+      ri: ["https://investor.mercadolibre.com/"] }

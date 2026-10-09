@@ -79,6 +79,17 @@ def diagnostico(empresas: list[dict]) -> None:
             agenda = sorted(set(re.findall(r"href=[\"']([^\"']*(?:calend|agenda|evento|event)[^\"']*)", html, re.I)))[:8]
             if agenda:
                 print(f"     links agenda: {agenda}")
+            if item.get("yahoo"):  # exterior: páginas sem plataforma conhecida, mostra o HTML cru
+                estados = re.findall(r"(?:window\.)?(__[A-Z_]+__|__PRELOADED_STATE__|__NEXT_DATA__)", html)
+                print(f"     estados: {sorted(set(estados))[:8]}")
+                hrefs = sorted(set(re.findall(r"href=[\"']([^\"'#]+)", html, re.I)))
+                print(f"     hrefs: {hrefs[:80]}")
+                vistos = 0
+                for m in re.finditer(r"earnings|conference call|webcast|third quarter|Q3 20|3Q26|event", html, re.I):
+                    if vistos >= 12:
+                        break
+                    vistos += 1
+                    print(f"     cru…{html[max(0, m.start() - 200): m.end() + 300]!r}")
             modal = re.findall(r"<div[^>]*(?:modal|popup|pop-up|lightbox)[^>]*>", html, re.I)[:3]
             if modal:
                 print(f"     popup: {modal}")
