@@ -610,16 +610,6 @@
     "extras": {}
   },
   {
-    "ticker": "RIAA3",
-    "empresa": "RIACHUELO",
-    "evento": "Resultado 3Q26",
-    "data": "2026-11-04",
-    "hora": null,
-    "periodo": "",
-    "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {}
-  },
-  {
     "ticker": "SMFT3",
     "empresa": "SMART FIT",
     "evento": "Resultado 3Q26",
@@ -687,6 +677,16 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-08T19:22:14Z",
+    "extras": {}
+  },
+  {
+    "ticker": "RIAA3",
+    "empresa": "RIACHUELO",
+    "evento": "Resultado 3Q26",
+    "data": "2026-11-09",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-09T02:47:33Z",
     "extras": {}
   },
   {
