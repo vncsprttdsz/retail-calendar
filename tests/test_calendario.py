@@ -838,3 +838,49 @@ def test_horario_do_call_no_texto_da_home(monkeypatch):
     evs = ri.eventos_da_empresa({"ticker": "LREN3", "ri": ["https://ri"]}, date(2026, 10, 9))
     assert [(e.tipo, e.dia, e.inicio) for e in evs] == [
         ("resultado", date(2026, 11, 5), None), ("call", date(2026, 11, 6), time(10))]
+
+
+# Trecho real do JSON embutido em investor.mercadolibre.com/news-and-events, 09/10/2026.
+MELI_EVENTOS = ('<script>window.x={"pastEvents":{"totalElements":0,"rows":[],"pageSize":10}},"upcomingEvents":{"rows":'
+                '[{"id":"9a48e910-d239-4ca3-a9e7-490c979f89b6","cells":[{"columnKey":"date","text":"2026-11-04T08:00:00"},'
+                '{"columnKey":"event","text":"Q3\'26 Results - Provisional date"},{"columnKey":"details","text":"Provisional date"},'
+                '{"columnKey":"addToCalendar","text":"ADD","url":"\\u002Fapi\\u002Fsites\\u002F5dbba919\\u002Fics"}]}],'
+                '"totalElements":1,"pageSize":10},"pressReleases":{}}</script>')
+
+
+def test_meli_agenda_do_site():
+    assert [(e.tipo, e.rotulo, e.dia, e.inicio, e.provisorio) for e in ri.de_upcoming("MELI", MELI_EVENTOS)] == [
+        ("resultado", "3Q26", date(2026, 11, 4), None, True)]
+    confirmado = MELI_EVENTOS.replace("Results - Provisional date", "Earnings Conference Call").replace(
+        '"text":"Provisional date"', '"text":"4:30 p.m. ET https://mercadolibre.zoom.us/webinar/register/WN_x"')
+    (call,) = ri.de_upcoming("MELI", confirmado)
+    # 04/11 já é horário de inverno nos EUA (ET = UTC-5): 16:30 ET = 18:30 em Brasília.
+    assert (call.tipo, call.dia, call.inicio, call.provisorio, call.link) == (
+        "call", date(2026, 11, 4), time(18, 30), False, "https://mercadolibre.zoom.us/webinar/register/WN_x")
+    assert ri.classificar("Q3 2026 Earnings Results") == ("resultado", "3Q26")
+
+
+def test_meli_site_de_ri_sobre_yahoo(monkeypatch):
+    from calendario_b3.__main__ import _aplicar_ri_exterior
+
+    cfg = {"exterior": [{"ticker": "MELI", "nome": "MercadoLibre", "ri": ["https://investor"]}]}
+    hoje = date(2026, 10, 9)
+    site = lambda provisorio, dia=date(2026, 11, 4): monkeypatch.setattr(ri, "coletar", lambda itens, h: (
+        [ri.EventoRI("MELI", "resultado", "3Q26", dia, provisorio=provisorio)], set()))
+    yahoo_ok = [Evento("MELI", "MercadoLibre", "Resultado 3Q26", date(2026, 11, 4), time(17))]
+    yahoo_est = [Evento("MELI", "MercadoLibre", "Resultado 3Q26 (estimado)", date(2026, 11, 5))]
+    # Site provisório, Yahoo confirmado: fica o Yahoo (com horário).
+    site(True)
+    evs, _ = _aplicar_ri_exterior(cfg, yahoo_ok, hoje)
+    assert [(e.evento, e.data, e.hora) for e in evs] == [("Resultado 3Q26", date(2026, 11, 4), time(17))]
+    # Site confirmado, Yahoo estimado: vale o site e sai o "(estimado)".
+    site(False)
+    evs, _ = _aplicar_ri_exterior(cfg, yahoo_est, hoje)
+    assert [(e.evento, e.data) for e in evs] == [("Resultado 3Q26", date(2026, 11, 4))]
+    # Os dois provisórios: data do site, ainda estimada.
+    site(True)
+    evs, _ = _aplicar_ri_exterior(cfg, yahoo_est, hoje)
+    assert [(e.evento, e.data) for e in evs] == [("Resultado 3Q26 (estimado)", date(2026, 11, 4))]
+    # Site fora do ar: o call já conhecido é preservado no histórico.
+    monkeypatch.setattr(ri, "coletar", lambda itens, h: ([], {"MELI"}))
+    assert _aplicar_ri_exterior(cfg, yahoo_ok, hoje) == (yahoo_ok, {("MELI", "call")})

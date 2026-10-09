@@ -27,6 +27,7 @@ _PLATAFORMAS = {
     "listaagenda": re.compile(r"ListaAgenda|show\.aspx\?idCanal", re.I),
     "wordpress": re.compile(r"wp-content|wp-json", re.I),
     "q4": re.compile(r"q4cdn|q4inc|q4web", re.I),
+    "upcoming": re.compile(r'"upcomingEvents"\s*:'),  # site próprio da MELI (JSON embutido)
 }
 _WEBCAST = re.compile(
     r"https?://[^\s\"'<>]*(?:zoom\.us|webcast|choruscall|on24|ten\.?meetings|mzgroup\.com/[^\s\"'<>]*event|"
@@ -79,17 +80,6 @@ def diagnostico(empresas: list[dict]) -> None:
             agenda = sorted(set(re.findall(r"href=[\"']([^\"']*(?:calend|agenda|evento|event)[^\"']*)", html, re.I)))[:8]
             if agenda:
                 print(f"     links agenda: {agenda}")
-            if item.get("yahoo"):  # exterior: páginas sem plataforma conhecida, mostra o HTML cru
-                estados = re.findall(r"(?:window\.)?(__[A-Z_]+__|__PRELOADED_STATE__|__NEXT_DATA__)", html)
-                print(f"     estados: {sorted(set(estados))[:8]}")
-                hrefs = sorted(set(re.findall(r"href=[\"']([^\"'#]+)", html, re.I)))
-                print(f"     hrefs: {hrefs[:80]}")
-                vistos = 0
-                for m in re.finditer(r"earnings|conference call|webcast|third quarter|Q3 20|3Q26|.date.:|November|2026-1[01]", html, re.I):
-                    if vistos >= 25:
-                        break
-                    vistos += 1
-                    print(f"     cru…{html[max(0, m.start() - 150): m.end() + 450]!r}")
             modal = re.findall(r"<div[^>]*(?:modal|popup|pop-up|lightbox)[^>]*>", html, re.I)[:3]
             if modal:
                 print(f"     popup: {modal}")
@@ -167,12 +157,14 @@ class EventoRI:
     fim: time | None = None
     link: str = ""
     titulo: str = field(default="", compare=False)
+    provisorio: bool = field(default=False, compare=False)  # "Provisional date" (MELI)
 
 
 _MESES = {m: i + 1 for i, m in enumerate(["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"])}
 _RE_TRI = re.compile(r"\b([1-4])\s*[TQ]\s*(?:20)?(\d{2})\b", re.I)
+_RE_TRI_EN = re.compile(r"\bQ([1-4])\s*['’]?\s*(?:20)?(\d{2})\b", re.I)  # "Q3'26", "Q3 2026"
 _RE_CALL = re.compile(r"\bcall\b|teleconfer|videoconfer|webcast|confer[êe]ncia|apresenta[çc][ãa]o|earnings call", re.I)
-_RE_DIVULGACAO = re.compile(r"divulga|resultado|release|earnings", re.I)
+_RE_DIVULGACAO = re.compile(r"divulga|resultado|results|release|earnings", re.I)
 _RE_IGNORAR = re.compile(r"sil[êe]ncio|assembleia|informe|formul[áa]rio|dividend|juros|jcp|proventos", re.I)
 _RE_HORAS = re.compile(r"(\d{1,2})[:h](\d{2})\s*(?:-|às|a|até|–)\s*(\d{1,2})[:h](\d{2})")
 # Links de inscrição/transmissão do call (não canais genéricos do YouTube nem imagens).
@@ -188,7 +180,7 @@ def classificar(titulo: str) -> tuple[str, str] | None:
     """'Videoconferência de Resultados 3T26' -> ('call', '3Q26'); eventos fora de resultado -> None."""
     if _RE_IGNORAR.search(titulo):
         return None
-    m = _RE_TRI.search(titulo)
+    m = _RE_TRI.search(titulo) or _RE_TRI_EN.search(titulo)
     if not m:
         return None
     rotulo = f"{m[1]}Q{m[2]}"
@@ -267,6 +259,52 @@ def _eventos_do_bloco(ticker: str, bloco: str, hoje: date) -> list[EventoRI]:
     return saida
 
 
+_RE_HORA_ET = re.compile(r"\b(\d{1,2})(?::(\d{2}))?\s*([ap])\.?\s?m\.?\s*\(?(?:ET|EST|EDT|Eastern)\b", re.I)
+
+
+def _hora_et(texto: str, dia: date, fuso: str) -> time | None:
+    """"4:30 p.m. ET" no dia `dia` -> horário em `fuso` (Brasília por padrão)."""
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+
+    m = _RE_HORA_ET.search(texto or "")
+    if not m:
+        return None
+    hora = int(m[1]) % 12 + (12 if m[3].lower() == "p" else 0)
+    et = datetime(dia.year, dia.month, dia.day, hora, int(m[2] or 0), tzinfo=ZoneInfo("America/New_York"))
+    return et.astimezone(ZoneInfo(fuso)).time()
+
+
+def de_upcoming(ticker: str, html: str, fuso: str = "America/Sao_Paulo") -> list[EventoRI]:
+    """Site de RI da MELI: a agenda vem como JSON na página /news-and-events:
+
+        "upcomingEvents":{"rows":[{"cells":[{"columnKey":"date","text":"2026-11-04T08:00:00"},
+          {"columnKey":"event","text":"Q3'26 Results - Provisional date"},{"columnKey":"details",...}]}]}
+    O horário do campo date não diz o fuso: só vale o escrito no texto com "ET" (ex.: "4:30 p.m. ET").
+    """
+    import json
+
+    m = re.search(r'"upcomingEvents"\s*:\s*', html)
+    if not m:
+        return []
+    dados, _ = json.JSONDecoder().raw_decode(html, m.end())
+    saida = []
+    for linha in dados.get("rows") or []:
+        celulas = {c.get("columnKey"): c for c in linha.get("cells") or []}
+        titulo = (celulas.get("event") or {}).get("text") or ""
+        detalhes = (celulas.get("details") or {}).get("text") or ""
+        cls = classificar(titulo)
+        data_txt = (celulas.get("date") or {}).get("text") or ""
+        if not cls or not re.match(r"\d{4}-\d{2}-\d{2}", data_txt):
+            continue
+        dia = date.fromisoformat(data_txt[:10])
+        provisorio = bool(re.search(r"provisional|tentative|estimated", f"{titulo} {detalhes}", re.I))
+        inicio = None if provisorio else _hora_et(f"{titulo} {detalhes}", dia, fuso)
+        achados = links_de_call(json.dumps(linha))
+        saida.append(EventoRI(ticker, cls[0], cls[1], dia, inicio, None, achados[0] if achados else "", titulo, provisorio))
+    return saida
+
+
 _MESES_EXTENSO = {
     **{m: i + 1 for i, m in enumerate(["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho",
                                         "agosto", "setembro", "outubro", "novembro", "dezembro"])},
@@ -330,6 +368,8 @@ def eventos_da_empresa(item: dict, hoje: date) -> list[EventoRI]:
         eventos = de_mz(ticker, mz_eventos(fm_id, "future"))
     elif home and _PLATAFORMAS["listaagenda"].search(home):
         eventos = de_riweb(ticker, home, hoje)
+    elif home and _PLATAFORMAS["upcoming"].search(home):
+        eventos = de_upcoming(ticker, home)
     elif home:
         raise ValueError("plataforma do site de RI não reconhecida")
     else:
@@ -361,7 +401,8 @@ def coletar(empresas: list[dict], hoje: date) -> tuple[list[EventoRI], set[str]]
             falhas.add(ticker)
             continue
         log.info("%s: RI -> %s", ticker, ", ".join(
-            f"{e.tipo} {e.rotulo} {e.dia:%d/%m}{' ' + e.inicio.strftime('%H:%M') if e.inicio else ''}{' +link' if e.link else ''}"
+            f"{e.tipo} {e.rotulo} {e.dia:%d/%m}{' ' + e.inicio.strftime('%H:%M') if e.inicio else ''}"
+            f"{' +link' if e.link else ''}{' (provisória)' if e.provisorio else ''}"
             for e in achados) or "nenhum evento de resultado")
         eventos += achados
     return eventos, falhas

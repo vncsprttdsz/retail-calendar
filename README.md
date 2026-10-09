@@ -37,7 +37,10 @@ https://raw.githubusercontent.com/vncsprttdsz/retail-calendar/main/publico/calen
    Quando a empresa anunciar a data (MELI avisa ~1 semana antes), dá para fixá-la em
    `manual`, que prevalece sobre o Yahoo: `manual: { 3Q26: "2026-11-04 18:00" }`
    (horário de Brasília; sem horário = dia inteiro). Se o Yahoo estiver fora do ar,
-   o evento já conhecido é mantido.
+   o evento já conhecido é mantido. Com `ri` (página de eventos do site de RI, ex.:
+   `https://investor.mercadolibre.com/news-and-events`), a data do site prevalece sobre a do
+   Yahoo, salvo quando o site ainda a marca como provisória e o Yahoo já a confirmou; o call
+   entra como evento próprio (`MELI Call 3Q26`), com horário quando o site o informa em ET.
 
 5. **Data corrigida à mão** (empresas da B3): `manual` na empresa, ex.:
    `- { ticker: MGLU3, ..., manual: { 3Q26: "2026-11-09" } }`. Prevalece sobre B3 e CVM.
@@ -67,7 +70,7 @@ Sem os secrets, as mudanças aparecem só no log do workflow. O token nunca é i
 | 2 | **Site de RI** da companhia (`ri` no config) | confere a data de divulgação; traz o **call** (data, horário e link do webcast) |
 | 3 | Calendário de Eventos Corporativos reapresentado (**Plantão de Notícias da B3**, no mesmo dia; **CVM** dados abertos, ~1 semana depois) | última versão entregue pela companhia; também a data do call (apresentação pública) |
 | 4 | Planilha consolidada da **B3** | base para todas as empresas, inclusive datas já realizadas |
-| — | **Yahoo Finance** | empresas listadas fora do Brasil (`exterior`) |
+| — | **Site de RI** + **Yahoo Finance** | empresas listadas fora do Brasil (`exterior`) |
 
 Site de RI × CVM: quando divergem na data de divulgação, vale a informação mais recente —
 se a companhia reapresentou o calendário depois de o site passar a mostrar a data, vale a

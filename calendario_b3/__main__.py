@@ -151,6 +151,52 @@ def _aplicar_ri(cfg: dict, novos: list, antes: list, hoje, caminho_estado: Path)
     return ajustes.substituir(novos, correcoes)
 
 
+def _aplicar_ri_exterior(cfg: dict, externos: list, hoje) -> tuple[list, set]:
+    """Site de RI das empresas do exterior (ex.: MELI) sobre o Yahoo.
+
+    Data de divulgação: o site prevalece, salvo quando ele ainda diz "provisória" e o Yahoo já
+    tem data confirmada. Data manual prevalece sobre os dois. Calls entram com data (e horário,
+    quando o texto informa em ET). Retorna os eventos e o que preservar se o site falhou.
+    """
+    from .modelo import Evento
+
+    itens = [i for i in cfg.get("exterior") or [] if i.get("ri")]
+    if not itens:
+        return externos, set()
+    nomes = {str(i["ticker"]).upper(): i.get("nome") or i["ticker"] for i in itens}
+    manuais = {(str(i["ticker"]).upper(), str(q).upper()) for i in itens for q in (i.get("manual") or {})}
+    try:
+        achados, falhas = ri.coletar(itens, hoje)
+    except Exception as e:
+        log.warning("sites de RI do exterior indisponíveis nesta rodada (%s)", e)
+        return externos, {(str(i["ticker"]).upper(), "call") for i in itens}
+    atuais = {ajustes.chave(e): e for e in externos}
+    correcoes = []
+    for r in achados:
+        if r.dia < hoje or (r.ticker, r.rotulo) in manuais:
+            continue
+        nome = nomes.get(r.ticker, r.ticker)
+        if r.tipo == "call":
+            extras = {"fonte": "RI", **({"link": r.link} if r.link else {})}
+            sufixo = " (estimado)" if r.provisorio else ""
+            correcoes.append(Evento(r.ticker, nome, f"Call {r.rotulo}{sufixo}", r.dia, r.inicio, extras=extras))
+            continue
+        atual = atuais.get((r.ticker, "resultado", r.rotulo))
+        yahoo_confirmado = atual is not None and "(estimado)" not in atual.evento
+        if r.provisorio and yahoo_confirmado:
+            if atual.data != r.dia:
+                log.warning("%s %s: site de RI diz %s (provisória), Yahoo confirma %s; vale o Yahoo",
+                            r.ticker, r.rotulo, r.dia, atual.data)
+            continue
+        hora = atual.hora if atual is not None and atual.data == r.dia and yahoo_confirmado else None
+        if atual is None or atual.data != r.dia or (not r.provisorio and not yahoo_confirmado):
+            log.info("%s %s: site de RI -> %s%s (Yahoo: %s)", r.ticker, r.rotulo, r.dia,
+                     " provisória" if r.provisorio else "", atual.data if atual else "-")
+        titulo = f"Resultado {r.rotulo}" + (" (estimado)" if r.provisorio else "")
+        correcoes.append(Evento(r.ticker, nome, titulo, r.dia, hora, extras={"fonte": "RI"}))
+    return ajustes.substituir(externos, correcoes), {(t, "call") for t in falhas}
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--config", type=Path, default=RAIZ / "config.yaml")
@@ -205,7 +251,10 @@ def main(argv: list[str] | None = None) -> int:
             for r in achados:
                 print(f"  {r.ticker} {r.tipo:9} {r.rotulo} {r.dia:%d/%m} {r.inicio or ''}-{r.fim or ''} {r.link} | {r.titulo}")
             print(f"  falhas: {sorted(falhas_ri)}")
-            ri.diagnostico([i for i in cfg.get("exterior") or [] if i.get("ri")])
+            achados, falhas_ri = ri.coletar([i for i in cfg.get("exterior") or [] if i.get("ri")], hoje_i)
+            for r in achados:
+                print(f"  {r.ticker} {r.tipo:9} {r.rotulo} {r.dia:%d/%m} {r.inicio or ''} {'provisória ' if r.provisorio else ''}{r.link} | {r.titulo}")
+            print(f"  falhas (exterior): {sorted(falhas_ri)}")
         except Exception:
             traceback.print_exc(file=sys.stdout)
         try:
@@ -250,6 +299,8 @@ def main(argv: list[str] | None = None) -> int:
     novos = ajustes.substituir(novos, manuais)
 
     externos, falhas = exterior.coletar(cfg.get("exterior"), cfg_cal["fuso"])
+    externos, falhas_ri = _aplicar_ri_exterior(cfg, externos, hoje)
+    falhas = set(falhas) | falhas_ri
     novos += externos
     tickers = {e.ticker for e in cobertura} | {str(i["ticker"]).upper() for i in cfg.get("exterior") or []}
     eventos = historico.mesclar(antes, novos, hoje, tickers, preservar=falhas)
