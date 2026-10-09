@@ -74,7 +74,9 @@ se a companhia reapresentou o calendário depois de o site passar a mostrar a da
 CVM (site desatualizado); senão, vale o site. Toda mudança vai para o Telegram.
 
 Sites de RI: os da MZ Group (maioria da cobertura) são lidos pela API de eventos da MZ; os da
-RIWeb (Magalu, RD), pelo bloco "Calendário de Eventos" da home. Links de inscrição em
+RIWeb (Magalu, RD), pelo bloco "Calendário de Eventos" da home. Quando a agenda traz o call
+sem horário, o horário escrito no texto da home é usado (ex.: Renner: "Videoconferência:
+6 de novembro 10h (Brasil)"). Links de inscrição em
 destaque na home (pop-up) são associados ao próximo call (até 21 dias). O link do webcast
 costuma aparecer poucos dias antes do call; quando aparece, o evento é atualizado e o
 Telegram avisa (`🔗`).
