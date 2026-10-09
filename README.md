@@ -68,6 +68,9 @@ gratuito para uso pessoal e só manda mensagem para quem autorizou o próprio n�
    Para incluir ou tirar alguém, edite o secret (*Update*). Não é possível mandar para um grupo
    de WhatsApp: cada pessoa recebe a mensagem no próprio número.
 
+Para conferir: *Actions → Atualizar calendário de resultados → Run workflow* marcando
+**testar_aviso** (manda só uma mensagem 🧪, sem mexer no calendário).
+
 Sem o secret, as mudanças aparecem só no log do workflow. Telefones e apikeys nunca são
 impressos no log (o repositório é público). O Telegram continua disponível como alternativa:
 secrets `TELEGRAM_BOT_TOKEN` e `TELEGRAM_CHAT_ID` (bot criado no @BotFather).
