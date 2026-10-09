@@ -80,9 +80,9 @@ def _datas_cvm(cfg: dict, b3: list, hoje, caminho_cache: Path) -> list:
         return []
     caminho_cache.parent.mkdir(parents=True, exist_ok=True)
     caminho_cache.write_text(json.dumps(cache, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
-    por_chave = {(e.ticker, ajustes.rotulo(e)): e for e in b3}
+    por_chave = {ajustes.chave(e): e for e in b3}
     for e in eventos:
-        anterior = por_chave.get((e.ticker, ajustes.rotulo(e)))
+        anterior = por_chave.get(ajustes.chave(e))
         if anterior and anterior.data != e.data:
             log.info("CVM diverge da B3: %s %s B3 %s -> CVM %s", e.ticker, e.evento, anterior.data, e.data)
     return eventos

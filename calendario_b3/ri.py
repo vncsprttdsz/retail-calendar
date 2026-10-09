@@ -220,12 +220,17 @@ def de_riweb(ticker: str, html: str, hoje: date) -> list[EventoRI]:
     (ou "03 nov ..."). O ano não aparece: é o da próxima ocorrência da data.
     """
     texto = _texto(html)
-    inicio = re.search(r"Calend[áa]rio de Eventos", texto, re.I)
-    if not inicio:
-        return []
-    bloco = texto[inicio.end(): inicio.end() + 3000]
-    fim = re.search(r"Ver todos", bloco, re.I)
-    bloco = bloco[: fim.start()] if fim else bloco
+    # "Calendário de Eventos" também aparece no menu: usa a primeira ocorrência com eventos.
+    for inicio in re.finditer(r"Calend[áa]rio de Eventos", texto, re.I):
+        bloco = texto[inicio.end(): inicio.end() + 3000]
+        fim = re.search(r"Ver todos", bloco, re.I)
+        eventos = _eventos_do_bloco(ticker, bloco[: fim.start()] if fim else bloco, hoje)
+        if eventos:
+            return eventos
+    return []
+
+
+def _eventos_do_bloco(ticker: str, bloco: str, hoje: date) -> list[EventoRI]:
     meses = "|".join(_MESES)
     marca = re.compile(rf"\b(?:(\d{{1,2}})\s+({meses})|({meses})\s+(\d{{1,2}}))\b", re.I)
     pos = list(marca.finditer(bloco))

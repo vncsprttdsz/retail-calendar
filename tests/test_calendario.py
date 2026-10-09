@@ -812,3 +812,10 @@ def test_aviso_de_link_do_webcast():
     # Resultado e call do mesmo trimestre são eventos distintos.
     assert notificar.diferencas([], [Evento("LREN3", "R", "Resultado 3Q26", date(2026, 11, 5)), *depois], hoje) == [
         "🆕 LREN Resultado 3Q26: 05/11", "🆕 LREN Call 3Q26: 06/11 10:00"]
+
+
+def test_riweb_ignora_calendario_do_menu():
+    home = ("Menu: Central de Resultados Calendário de Eventos Cobertura de Analistas Ver todos "
+            "Fale com RI ... " + HOME_RADL)
+    assert [(e.tipo, e.dia) for e in ri.de_riweb("RADL3", home, date(2026, 10, 9))] == [
+        ("resultado", date(2026, 11, 3)), ("call", date(2026, 11, 4))]
