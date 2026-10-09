@@ -46,21 +46,31 @@ https://raw.githubusercontent.com/vncsprttdsz/retail-calendar/main/publico/calen
    `- { ticker: MGLU3, ..., manual: { 3Q26: "2026-11-09" } }`. Prevalece sobre B3 e CVM.
    Remova quando a fonte oficial já trouxer a data nova.
 
-### Avisos no Telegram (opcional)
+### Avisos no WhatsApp (opcional)
 
-A cada mudança de data (remarcação, confirmação de data estimada, evento novo ou removido)
-o workflow manda uma mensagem, ex.: `📅 MGLU Resultado 3Q26: 05/11 → 09/11`.
+A cada mudança de data (remarcação, confirmação de data estimada, evento novo ou removido,
+link do webcast publicado) o workflow manda uma mensagem, ex.: `📅 MGLU Resultado 3Q26: 05/11 → 09/11`.
+O envio usa o [CallMeBot](https://www.callmebot.com/blog/free-api-whatsapp-messages/), que é
+gratuito para uso pessoal e só manda mensagem para quem autorizou o próprio número. Por isso,
+**cada pessoa do time faz a ativação uma vez** e manda para você o número e o apikey dela:
 
-1. No Telegram, fale com **@BotFather** → `/newbot` → escolha nome e usuário. Ele responde com o
-   **token** do bot (algo como `123456:ABC-...`).
-2. Abra a conversa com o seu bot e mande qualquer mensagem (ex.: "oi").
-3. No navegador, abra `https://api.telegram.org/bot<TOKEN>/getUpdates` e copie o número em
-   `"chat":{"id": ...}` — é o **chat id**. (Para avisar um grupo: adicione o bot ao grupo,
-   mande uma mensagem lá e use o id do grupo, que começa com `-`.)
-4. No GitHub: *Settings → Secrets and variables → Actions → New repository secret*:
-   `TELEGRAM_BOT_TOKEN` e `TELEGRAM_CHAT_ID`.
+1. Salve nos contatos do celular o número do CallMeBot indicado na página acima (ele muda de
+   tempos em tempos; use o que estiver lá).
+2. Mande para esse contato, pelo WhatsApp, a mensagem `I allow callmebot to send me messages`.
+3. A resposta traz o **apikey** (um número). Guarde junto com o seu telefone com DDI e DDD.
+4. No GitHub: *Settings → Secrets and variables → Actions → New repository secret*, nome
+   `CALLMEBOT_WHATSAPP`, valor com um `telefone:apikey` por pessoa, separados por vírgula:
 
-Sem os secrets, as mudanças aparecem só no log do workflow. O token nunca é impresso no log.
+   ```
+   +5511999999999:123456, +5521988888888:654321
+   ```
+
+   Para incluir ou tirar alguém, edite o secret (*Update*). Não é possível mandar para um grupo
+   de WhatsApp: cada pessoa recebe a mensagem no próprio número.
+
+Sem o secret, as mudanças aparecem só no log do workflow. Telefones e apikeys nunca são
+impressos no log (o repositório é público). O Telegram continua disponível como alternativa:
+secrets `TELEGRAM_BOT_TOKEN` e `TELEGRAM_CHAT_ID` (bot criado no @BotFather).
 
 ## De onde vêm as datas
 
@@ -74,7 +84,7 @@ Sem os secrets, as mudanças aparecem só no log do workflow. O token nunca é i
 
 Site de RI × CVM: quando divergem na data de divulgação, vale a informação mais recente —
 se a companhia reapresentou o calendário depois de o site passar a mostrar a data, vale a
-CVM (site desatualizado); senão, vale o site. Toda mudança vai para o Telegram.
+CVM (site desatualizado); senão, vale o site. Toda mudança vai para o WhatsApp.
 
 Sites de RI: os da MZ Group (maioria da cobertura) são lidos pela API de eventos da MZ; os da
 RIWeb (Magalu, RD), pelo bloco "Calendário de Eventos" da home. Quando a agenda traz o call
@@ -82,7 +92,7 @@ sem horário, o horário escrito no texto da home é usado (ex.: Renner: "Videoc
 6 de novembro 10h (Brasil)"). Links de inscrição em
 destaque na home (pop-up) são associados ao próximo call (até 21 dias). O link do webcast
 costuma aparecer poucos dias antes do call; quando aparece, o evento é atualizado e o
-Telegram avisa (`🔗`).
+WhatsApp avisa (`🔗`).
 
 No calendário: `LREN Resultado 3Q26` (dia inteiro) e `LREN Call 3Q26` (com horário quando
 informado; descrição com o link do webcast).

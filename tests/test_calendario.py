@@ -884,3 +884,42 @@ def test_meli_site_de_ri_sobre_yahoo(monkeypatch):
     # Site fora do ar: o call já conhecido é preservado no histórico.
     monkeypatch.setattr(ri, "coletar", lambda itens, h: ([], {"MELI"}))
     assert _aplicar_ri_exterior(cfg, yahoo_ok, hoje) == (yahoo_ok, {("MELI", "call")})
+
+
+def test_whatsapp_callmebot(monkeypatch, caplog):
+    import requests as rq
+
+    assert notificar.destinatarios_whatsapp(" +55 (11) 99999-9999:123456,\n5521988887777 : 654321; lixo") == [
+        ("+5511999999999", "123456"), ("+5521988887777", "654321")]
+    monkeypatch.delenv("TELEGRAM_BOT_TOKEN", raising=False)
+    monkeypatch.setenv("CALLMEBOT_WHATSAPP", "+5511999999999:111111, +5521988887777:222222")
+    enviados = []
+
+    class Resp:
+        status_code, text = 200, "<p>Message queued. You will receive it in a few seconds.</p>"
+
+    monkeypatch.setattr(notificar.requests, "get", lambda url, params, timeout: enviados.append(params) or Resp())
+    assert notificar.enviar(["📅 MGLU Resultado 3Q26: 05/11 → 09/11"], pausa=0) is True
+    assert [p["phone"] for p in enviados] == ["+5511999999999", "+5521988887777"]
+    assert enviados[0]["text"] == "*Calendário de resultados*\n\n📅 MGLU Resultado 3Q26: 05/11 → 09/11"
+
+    # Falha: nem telefone nem apikey aparecem no log (repositório público).
+    def falha(url, params, timeout):
+        raise rq.ConnectionError(f"Max retries exceeded with url: /whatsapp.php?phone=%2B5511999999999&apikey={params['apikey']}")
+
+    monkeypatch.setattr(notificar.requests, "get", falha)
+    caplog.clear()
+    assert notificar.enviar(["linha"], pausa=0) is False
+    assert "111111" not in caplog.text and "5511999999999" not in caplog.text and "falha ao enviar" in caplog.text
+
+    class Invalida:
+        status_code, text = 200, "APIKey is invalid. Please check it."
+
+    monkeypatch.setattr(notificar.requests, "get", lambda url, params, timeout: Invalida())
+    assert notificar.enviar(["linha"], pausa=0) is False
+
+
+def test_whatsapp_quebra_mensagem_longa():
+    blocos = notificar._blocos("\n".join(f"linha {i:03d} " + "x" * 90 for i in range(40)), 1500)
+    assert len(blocos) > 1 and all(len(b) <= 1500 for b in blocos)
+    assert "\n".join(blocos).count("linha") == 40
