@@ -612,7 +612,7 @@ def test_plantao_reapresentacao_prevalece_sobre_dados_abertos(monkeypatch):
     monkeypatch.setattr(noticias.requests, "get", lambda url, **kw: Resp())
     extras = noticias.calendarios(["RIAA3", "ASAI3"], date(2026, 10, 9))
     assert [(d.ticker, d.link) for d in extras] == [
-        ("RIAA3", "https://www.rad.cvm.gov.br/ENETWEB/frmExibirArquivoIPEExterno.aspx?ID=1575266&flnk")
+        ("RIAA3", "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1575266")
     ]
 
     # Dados abertos ainda com a versão de dez/2025 (3Q26 em 04/11); o Plantão traz a nova (11/11).
