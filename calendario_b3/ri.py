@@ -85,11 +85,11 @@ def diagnostico(empresas: list[dict]) -> None:
                 hrefs = sorted(set(re.findall(r"href=[\"']([^\"'#]+)", html, re.I)))
                 print(f"     hrefs: {hrefs[:80]}")
                 vistos = 0
-                for m in re.finditer(r"earnings|conference call|webcast|third quarter|Q3 20|3Q26|event", html, re.I):
-                    if vistos >= 12:
+                for m in re.finditer(r"earnings|conference call|webcast|third quarter|Q3 20|3Q26|\\"date|November|2026-1[01]", html, re.I):
+                    if vistos >= 25:
                         break
                     vistos += 1
-                    print(f"     cru…{html[max(0, m.start() - 200): m.end() + 300]!r}")
+                    print(f"     cru…{html[max(0, m.start() - 150): m.end() + 450]!r}")
             modal = re.findall(r"<div[^>]*(?:modal|popup|pop-up|lightbox)[^>]*>", html, re.I)[:3]
             if modal:
                 print(f"     popup: {modal}")
