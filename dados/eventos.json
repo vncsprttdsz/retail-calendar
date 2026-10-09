@@ -623,12 +623,12 @@
     "empresa": "RAIADROGASIL",
     "evento": "Call 3Q26",
     "data": "2026-11-04",
-    "hora": null,
+    "hora": "10:00",
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
-      "fonte": "CVM",
-      "entregue": "2025-12-09"
+      "fonte": "RI",
+      "fim": "11:30"
     }
   },
   {
