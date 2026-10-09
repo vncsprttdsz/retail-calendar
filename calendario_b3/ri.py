@@ -527,6 +527,8 @@ def sondar(urls: list[str], padrao: str = r"to Report|Quarter 20\d\d|conference 
             print("\n".join((pg.extract_text() or "") for pg in PdfReader(io.BytesIO(r.content)).pages)[:5000])
             continue
         html = r.text
+        if len(html) < 20000 or html.lstrip()[:1] in "{[":  # resposta curta/JSON: mostra o conteúdo
+            print(f"   conteúdo: {html[:6000]}")
         pdfs = sorted(set(re.findall(r"[^\s\"'<>()]+\.pdf", html)))[:30]
         apis = sorted(set(re.findall(r"https?://[^\s\"'<>]*(?:api|json|graphql)[^\s\"'<>]*", html, re.I)))[:20]
         print(f"   pdfs: {pdfs}")
