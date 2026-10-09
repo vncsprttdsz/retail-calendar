@@ -85,8 +85,14 @@ def texto_pdf(link: str) -> str:
 
     # O RAD às vezes devolve a página HTML do ENET em vez do PDF: tenta de novo e, se
     # persistir, falha (não pode virar "calendário sem datas" no cache).
+    m = re.search(r"numProtocolo=(\d+)", link)
+    alternativo = (
+        "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1"
+        f"&numProtocolo={m[1]}" if m else link
+    )
     for tentativa in range(3):
-        r = requests.get(link, headers=HEADERS, timeout=90)
+        # 1ª tentativa no link original; depois, só com o protocolo (mais estável no RAD).
+        r = requests.get(link if tentativa == 0 else alternativo, headers=HEADERS, timeout=90)
         r.raise_for_status()
         if r.content.startswith(b"%PDF"):
             return "\n".join((p.extract_text() or "") for p in PdfReader(io.BytesIO(r.content)).pages)
