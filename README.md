@@ -40,7 +40,9 @@ https://raw.githubusercontent.com/vncsprttdsz/retail-calendar/main/publico/calen
    o evento já conhecido é mantido. Com `ri` (página de eventos do site de RI, ex.:
    `https://investor.mercadolibre.com/news-and-events`), a data do site prevalece sobre a do
    Yahoo, salvo quando o site ainda a marca como provisória e o Yahoo já a confirmou; o call
-   entra como evento próprio (`MELI Call 3Q26`), com horário quando o site o informa em ET.
+   entra como evento próprio (`MELI Call 3Q26`). Quando a MELI publica o comunicado "MercadoLibre, Inc.
+   to Report ... Financial Results" (PDF na mesma página, ~1 semana antes), ele prevalece: data,
+   horário do call (ET, convertido para Brasília) e link do webcast.
    Sea (SE): o script lê a API de notícias do RI e abre o comunicado "Sea Limited to Report ...
    Results" (PDF), que traz a data, o horário do call em ET (convertido para Brasília) e o link do webcast.
 

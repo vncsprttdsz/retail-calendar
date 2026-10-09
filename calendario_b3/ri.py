@@ -328,42 +328,68 @@ def de_comunicado(ticker: str, texto: str, fuso: str = "America/Sao_Paulo") -> l
         Webcast link: https://events.q4inc.com/attendee/265654308
     """
     texto = re.sub(r"\s+", " ", texto or "")
-    m = re.search(r"to Report (First|Second|Third|Fourth) Quarter (20\d\d) Results", texto, re.I)
+    m = re.search(r"to Report (First|Second|Third|Fourth) Quarter (?:and Full Year )?(20\d\d) (?:Financial )?Results", texto, re.I)
     if not m:
         return []
     rotulo = f"{_ORDINAIS[m[1].lower()]}Q{m[2][2:]}"
     saida = []
-    div = re.search(r"results? (?:\w+ ){0,3}(?:before|after|prior to) the U\.?S\.? market (?:opens|closes|open|close)\s+on " + _DATA_EN, texto, re.I)
+    div = (re.search(r"results? (?:\w+ ){0,3}(?:before|after|prior to) the U\.?S\.? market (?:opens|closes|open|close)\s+on " + _DATA_EN, texto, re.I)
+           # MELI: "intends to release financial results for its second fiscal quarter ending June 30, 2026, on August 5, 2026"
+           or re.search(r"release (?:its )?(?:financial )?results [^.]{0,120}?,? on " + _DATA_EN, texto, re.I))
     if div:
         saida.append(EventoRI(ticker, "resultado", rotulo, _data_en(div[1]), titulo=m[0]))
+    meses = r"(?:January|February|March|April|May|June|July|August|September|October|November|December)"
     call = re.search(r"Date and time:\s*(.{0,80}?)\bon " + _DATA_EN, texto, re.I)
     if call:
-        dia = _data_en(call[2])
-        link = re.search(r"(?:Webcast|Registration) link:\s*(https?://\S+)", texto, re.I)
-        saida.append(EventoRI(ticker, "call", rotulo, dia, _hora_et(call[1], dia, fuso), None,
-                              link[1].rstrip(".,;") if link else "", f"Conference call {m[1]} Quarter {m[2]}"))
+        dia, hora_txt = _data_en(call[2]), call[1]
+    else:  # MELI: "conference call and audio webcast, on August 5, at 5:00 p.m. Eastern Time"
+        call = re.search(rf"(?:conference call|webcast)[^.]{{0,80}}?\bon ({meses}\s+\d{{1,2}})(?:,\s*(\d{{4}}))?,? at (.{{0,40}}?(?:Eastern|ET)\b)", texto, re.I)
+        dia = _data_en(f"{call[1]}, {call[2] or m[2]}") if call else None
+        hora_txt = call[3] if call else ""
+    if call:
+        link = (re.search(r"(?:Webcast|Registration) link:\s*(https?://\S+)", texto, re.I)
+                or re.search(r"webcast[^.]{0,120}?link at (https?://\S+)", texto, re.I))
+        saida.append(EventoRI(ticker, "call", rotulo, dia, _hora_et(hora_txt, dia, fuso), None,
+                              link[1].rstrip(".,;)") if link else "", f"Conference call {m[1]} Quarter {m[2]}"))
     return saida
 
 
-def de_noticias_pdf(ticker: str, dados, fuso: str = "America/Sao_Paulo", limite: int = 1) -> list[EventoRI]:
-    """API de notícias em JSON (ex.: sea.com/api/invest/news): abre os PDFs "to Report ... Results"
-    mais recentes e lê data de divulgação, call (horário em ET) e link do webcast."""
+def _ordem_comunicado(url: str) -> str:
+    """Chave para achar o comunicado mais recente: data no nome ("2026.07.28 ...") ou o trimestre
+    ("MELI_to_Report_Second_Quarter_2026_...")."""
+    nome = url.replace("%20", " ").replace("_", " ")
+    d = re.search(r"(\d{4})\.(\d{2})\.(\d{2})", nome)
+    if d:
+        return f"{d[1]}{d[2]}{d[3]}"
+    q = re.search(r"(First|Second|Third|Fourth) Quarter (?:and Full Year )?(\d{4})", nome, re.I)
+    return f"{q[2]}{_ORDINAIS[q[1].lower()] * 3:02d}99" if q else ""
+
+
+def comunicados_pdf(bruto: str) -> list[str]:
+    """Links de PDF "to Report ... Results" no texto (HTML ou JSON), do mais recente ao mais antigo."""
+    pdfs = [u.replace("\\u002F", "/").replace("\\/", "/") for u in re.findall(r"https?:[^\"\s<>]+?\.pdf", bruto)]
+    alvos = [u for u in dict.fromkeys(pdfs) if re.search(r"to(?:%20|[ _+-])Report", u, re.I)]
+    return sorted(alvos, key=_ordem_comunicado, reverse=True)
+
+
+def eventos_de_comunicado(ticker: str, bruto: str, fuso: str = "America/Sao_Paulo") -> list[EventoRI]:
+    """Abre o comunicado "to Report ... Results" mais recente citado em `bruto` e lê os eventos."""
     import io
-    import json
 
     from pypdf import PdfReader
 
-    bruto = json.dumps(dados)
-    pdfs = [u.replace("\\/", "/") for u in re.findall(r"https?:[^\"\s]+?\.pdf", bruto)]
-    alvos = [u for u in dict.fromkeys(pdfs) if re.search(r"to(?:%20|[ _+-])Report", u, re.I)]
-    # Mais recente primeiro (o nome do arquivo começa com a data: "2026.07.28 Sea Limited to Report ...").
-    alvos = sorted(alvos, key=lambda u: re.search(r"(\d{4}\.\d{2}\.\d{2})", u)[1] if re.search(r"\d{4}\.\d{2}\.\d{2}", u) else "", reverse=True)[:limite]
-    saida = []
-    for url in alvos:
+    for url in comunicados_pdf(bruto)[:1]:
         r = _get(url.replace(" ", "%20"))
         texto = "\n".join((pg.extract_text() or "") for pg in PdfReader(io.BytesIO(r.content)).pages)
-        saida += de_comunicado(ticker, texto, fuso)
-    return saida
+        return de_comunicado(ticker, texto, fuso)
+    return []
+
+
+def de_noticias_pdf(ticker: str, dados, fuso: str = "America/Sao_Paulo") -> list[EventoRI]:
+    """API de notícias em JSON (ex.: sea.com/api/invest/news) com os PDFs dos comunicados."""
+    import json
+
+    return eventos_de_comunicado(ticker, json.dumps(dados), fuso)
 
 
 _MESES_EXTENSO = {
@@ -430,7 +456,15 @@ def eventos_da_empresa(item: dict, hoje: date) -> list[EventoRI]:
     elif home and _PLATAFORMAS["listaagenda"].search(home):
         eventos = de_riweb(ticker, home, hoje)
     elif home and _PLATAFORMAS["upcoming"].search(home):
+        # MELI: agenda (às vezes "provisional") + comunicado "to Report ... Results" (data, call e link).
         eventos = de_upcoming(ticker, home)
+        try:
+            do_comunicado = eventos_de_comunicado(ticker, home)
+        except Exception as e:
+            log.info("%s: comunicado do RI não lido (%s)", ticker, type(e).__name__)
+            do_comunicado = []
+        chaves = {(e.tipo, e.rotulo) for e in do_comunicado}
+        eventos = do_comunicado + [e for e in eventos if (e.tipo, e.rotulo) not in chaves]
     elif home and home.lstrip()[:1] in "{[":  # API de notícias com PDFs (ex.: Sea)
         import json
 

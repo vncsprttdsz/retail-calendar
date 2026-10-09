@@ -972,3 +972,45 @@ def test_sea_api_de_noticias(monkeypatch):
     evs = ri.de_noticias_pdf("SE", dados)
     assert len(abertos) == 1 and "2026.07.28" in abertos[0]
     assert [(e.tipo, e.dia) for e in evs] == [("resultado", date(2026, 8, 11)), ("call", date(2026, 8, 11))]
+
+
+# Texto real do PDF "MercadoLibre, Inc. to Report Second Quarter 2026 Financial Results" (29/07/2026).
+COMUNICADO_MELI = """MercadoLibre, Inc. to Report Second Quarter 2026 Financial Results
+MONTEVIDEO, Uruguay; July 29, 2026; (GLOBE NEWSWIRE) -- MercadoLibre, Inc. (Nasdaq: MELI)
+( http://www.mercadolibre.com ) announces that it intends to release financial results for its second
+fiscal quarter ending June 30, 2026, on August 5, 2026. The Company will host its earnings results
+video conference, as well as a conference call and audio webcast, on August 5, at 5:00 p.m. Eastern
+Time. In order to access our video webcast and the live audio, investors, analysts and the market in
+general may access the following link at https://event.choruscall.com/hmediaframe/webcast.html?webcastid=xr1sGkCu
+to attend the live event. To participate in our conference call Q&A, investors, analysts and the market
+in general may access the following link https://hdr.choruscall.com/?$Y2FsbHR5cGU9MiZyPXRydWUmaW5mbz1jb21wYW55LXBob25l
+"""
+
+
+def test_comunicado_meli():
+    evs = ri.de_comunicado("MELI", COMUNICADO_MELI)
+    # Agosto: ET = UTC-4, então 17:00 ET = 18:00 em Brasília.
+    assert [(e.tipo, e.rotulo, e.dia, e.inicio, e.link) for e in evs] == [
+        ("resultado", "2Q26", date(2026, 8, 5), None, ""),
+        ("call", "2Q26", date(2026, 8, 5), time(18), "https://event.choruscall.com/hmediaframe/webcast.html?webcastid=xr1sGkCu"),
+    ]
+    # Página de eventos da MELI: o comunicado mais recente é escolhido pelo trimestre no nome do arquivo.
+    base = "https:\\u002F\\u002Fhttp2.mlstatic.com\\u002Fstorage\\u002Fx\\u002F"
+    html = (f'"url":"{base}MELI_to_Report_First_Quarter_2026_Financial_Results.pdf"'
+            f'"url":"{base}MELI_to_Report_Second_Quarter_2026_Financial_Results.docx.pdf"'
+            f'"url":"{base}mercadolibre-inc-report-fourth-quarter-2025-financial-results.pdf"')
+    assert ri.comunicados_pdf(html) == [
+        "https://http2.mlstatic.com/storage/x/MELI_to_Report_Second_Quarter_2026_Financial_Results.docx.pdf",
+        "https://http2.mlstatic.com/storage/x/MELI_to_Report_First_Quarter_2026_Financial_Results.pdf",
+    ]
+
+
+def test_meli_comunicado_prevalece_sobre_agenda_provisoria(monkeypatch):
+    html = MELI_EVENTOS + '"url":"https://h/MELI_to_Report_Third_Quarter_2026_Financial_Results.pdf"'
+    texto = COMUNICADO_MELI.replace("Second Quarter", "Third Quarter").replace("August 5", "November 4")
+    monkeypatch.setattr(ri, "_get", lambda url: type("R", (), {"text": html, "content": b"%PDF"})())
+    monkeypatch.setattr(ri, "eventos_de_comunicado", lambda t, bruto, fuso="America/Sao_Paulo": ri.de_comunicado(t, texto))
+    evs = ri.eventos_da_empresa({"ticker": "MELI", "ri": ["https://investor"]}, date(2026, 10, 9))
+    # Novembro: ET = UTC-5, então 17:00 ET = 19:00 em Brasília.
+    assert [(e.tipo, e.rotulo, e.dia, e.inicio, e.provisorio) for e in evs] == [
+        ("resultado", "3Q26", date(2026, 11, 4), None, False), ("call", "3Q26", date(2026, 11, 4), time(19), False)]
