@@ -79,25 +79,57 @@ def diagnostico(empresas: list[dict]) -> None:
                 print(f"     popup: {modal}")
 
 
-def diagnostico_mz(urls: list[str]) -> None:
-    """Como o site MZ chama a API de eventos (parâmetros, id da companhia)."""
-    for url in urls:
-        try:
-            r = requests.get(url, headers=HEADERS, timeout=40)
-        except Exception as e:
-            print(f"\n== MZ {url}: FALHA {e}")
+MZ_EVENTOS = "https://api.mziq.com/mzevents/events"
+_UUID = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+
+
+def mz_id(html: str) -> str | None:
+    """Id da companhia na MZ: `fmId`, `COMPANIES[0].id` ou o usado nos links do file manager."""
+    for padrao in (
+        rf"fmId\s*=\s*[\"']({_UUID})",
+        rf"COMPANIES\s*=\s*\[\s*\{{[^}}]*?[\"']?id[\"']?\s*:\s*[\"']({_UUID})",
+        rf"mzfilemanager/v2/d/({_UUID})/",
+    ):
+        m = re.search(padrao, html, re.I)
+        if m:
+            return m[1]
+    return None
+
+
+def mz_eventos(fm_id: str, tipo: str = "future", lang: str = "pt-br"):
+    r = requests.get(f"{MZ_EVENTOS}/{tipo}/{fm_id}/{lang}", headers=HEADERS, timeout=40)
+    r.raise_for_status()
+    return r.json()
+
+
+def diagnostico_mz(empresas: list[dict]) -> None:
+    """Para cada site MZ: id da companhia e o que a API de eventos devolve."""
+    import json
+
+    detalhados = 0
+    for item in empresas:
+        urls = item.get("ri") or []
+        if not urls:
             continue
-        html = r.text
-        print(f"\n== MZ {url} (HTTP {r.status_code})")
-        for m in list(re.finditer(r"mzevents", html))[:3]:
-            print(f"   html: {html[max(0, m.start() - 700): m.end() + 900]!r}")
-        for k in sorted(set(re.findall(r"(?:company[_-]?(?:id|uuid|key)|customer[_-]?key|apiKey|mzCompany|companyId|empresa_id)[\"']?\s*[:=]\s*[\"'][^\"']{4,60}", html, re.I)))[:10]:
-            print(f"   chave: {k}")
-        scripts = [u for u in re.findall(r"<script[^>]*src=[\"']([^\"']+)", html) if "themes" in u or "mz" in u.lower()][:12]
-        for u in scripts:
+        try:
+            r = requests.get(urls[0], headers=HEADERS, timeout=40)
+            html = r.text
+        except Exception as e:
+            print(f"\n== MZ {item['ticker']}: site FALHA {type(e).__name__}")
+            continue
+        fm = mz_id(html)
+        literal = re.findall(rf"(?:fmId|COMPANIES)[^;]{{0,200}}", html)[:2]
+        print(f"\n== MZ {item['ticker']} fmId={fm} declarações={literal}")
+        if not fm:
+            continue
+        for tipo in ("future", "calendar"):
             try:
-                js = requests.get(requests.compat.urljoin(r.url, u), headers=HEADERS, timeout=40).text
-            except Exception:
+                dados = mz_eventos(fm, tipo)
+            except Exception as e:
+                print(f"   {tipo}: FALHA {e}")
                 continue
-            for m in list(re.finditer(r"mzevents|events\?|/events", js))[:2]:
-                print(f"   js {u.rsplit('/', 1)[-1][:40]}: {js[max(0, m.start() - 600): m.end() + 900]!r}")
+            texto = json.dumps(dados, ensure_ascii=False)
+            print(f"   {tipo}: {type(dados).__name__} {len(texto)} chars")
+            if detalhados < 3 or tipo == "future":
+                print(f"   {texto[:2500 if detalhados < 3 else 900]}")
+        detalhados += 1
