@@ -74,12 +74,21 @@ def diagnostico(raizes: set[str], hoje: date, dias: int = 10) -> None:
     print(f"  da cobertura: {len(cobertura)}")
     for n in cobertura:
         print(f"  {n.data_hora} | {n.titulo}")
-    for n in [n for n in cobertura if "calend" in n.titulo.lower()][:3]:
+    for n in [n for n in cobertura if "calend" in n.titulo.lower()][:1]:
         print(f"\n== {n.titulo} ({n.data_hora})\n  conteúdo: {n.conteudo[:1500]!r}")
         try:
             r = requests.get(n.url, headers=HEADERS, timeout=60)
             print(f"  detalhe HTTP {r.status_code}; links RAD: {_RE_RAD.findall(r.text)}")
-            trecho = re.sub(r"\s+", " ", r.text)[:2000]
-            print(f"  detalhe (trecho): {trecho!r}")
+            # A página de detalhe carrega o texto por JavaScript: mostra scripts e chamadas.
+            scripts = re.findall(r"<script[^>]*src=[\"']([^\"']+)", r.text)
+            print(f"  scripts: {scripts}")
+            for trecho in re.findall(r"(?:url|ajax|\$\.(?:get|post|getJSON))[^;]{0,300}", r.text, re.I)[:15]:
+                print(f"  js: {trecho!r}")
+            corpo = r.text[r.text.find("<body"):]
+            print(f"  corpo (sem head, 4000): {re.sub(chr(10) + '|' + chr(13), ' ', corpo)[:4000]!r}")
+            for src in [s for s in scripts if "plantao" in s.lower() or "noticia" in s.lower()][:3]:
+                u = src if src.startswith("http") else "https://sistemasweb.b3.com.br" + (src if src.startswith("/") else "/PlantaoNoticias/" + src.lstrip("./"))
+                js = requests.get(u, headers=HEADERS, timeout=60).text
+                print(f"  -- {u}: chamadas: {re.findall(r'Noticias/[A-Za-z]+', js)}")
         except Exception as e:
             print(f"  falha no detalhe: {e}")
