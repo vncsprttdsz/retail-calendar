@@ -77,7 +77,7 @@ cobertura:
     - { ticker: PFRM3, nomes: ["PROFARMA", "Profarma Distribuidora"], cnpj: "45.453.214/0001-51",
         ri: ["https://ri.profarma.com.br/"] }
     - { ticker: DMVF3, nomes: ["D1000VFARMA", "D1000 Varejo Farma"], cnpj: "",
-        ri: ["https://ri.reded1000.com.br/", "https://www.reded1000.com.br/ri/", "https://ri.d1000.com.br/"] }
+        ri: ["https://ri.reded1000.com.br/"] }
     # Other Segments
     - { ticker: ALLD3, nomes: ["ALLIED", "Allied Tecnologia"], cnpj: "20.247.322/0001-47",
         ri: ["https://ri.alliedbrasil.com.br/"] }
@@ -101,5 +101,5 @@ cobertura:
 exterior:
   - { ticker: MELI, yahoo: MELI, nome: MercadoLibre, manual: {},
       ri: ["https://investor.mercadolibre.com/news-and-events"] }
-  - { ticker: SE, yahoo: SE, nome: Sea Limited, manual: {},
-      ri: ["https://www.sea.com/investor/newsroom", "https://www.sea.com/investor/quarterlyresults"] }
+  # Sea: o site de RI (sea.com/investor) carrega as notícias via JavaScript; a data vem do Yahoo.
+  - { ticker: SE, yahoo: SE, nome: Sea Limited, manual: {} }

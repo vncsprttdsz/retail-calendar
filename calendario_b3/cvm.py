@@ -265,7 +265,7 @@ def coletar(cnpjs: dict[str, str], nomes: dict[str, str], hoje: date, cache: dic
     return eventos
 
 
-def diagnostico(cnpjs: dict[str, str], hoje: date, detalhar: tuple[str, ...] = (), nomes: dict | None = None) -> None:
+def diagnostico(cnpjs: dict[str, str], hoje: date, detalhar: tuple[str, ...] = (), busca: dict | None = None) -> None:
     """Imprime o que a CVM tem: atualização dos dados, nome por CNPJ e todos os calendários."""
     anos = [hoje.year - 1, hoje.year]
     ipe = ler_ipe(anos)
@@ -283,9 +283,9 @@ def diagnostico(cnpjs: dict[str, str], hoje: date, detalhar: tuple[str, ...] = (
             print(f"      calendário ref {d.data_referencia[:4]} entregue {d.data_entrega} v{d.versao}")
         if not cal:
             print("      nenhum calendário em", anos)
-        if not meus and nomes and not ipe.empty:  # CNPJ errado/vazio: candidatos pelo nome
+        if not meus and busca and not ipe.empty:  # CNPJ errado/vazio: candidatos pelo nome
             # Nome de pregão "D1000VFARMA" -> também "D1000" e "VFARMA" soltos.
-            termos = {x for n in nomes.get(t, []) for x in [n, *re.findall(r"[A-Za-z]*\d+|[A-Za-z]{4,}", n)] if len(x) >= 4}
+            termos = {x for n in busca.get(t, []) for x in [n, *re.findall(r"[A-Za-z]*\d+|[A-Za-z]{4,}", n)] if len(x) >= 4}
             padrao = "|".join(re.escape(x) for x in sorted(termos))
             print(f"      buscando por nome: {padrao}")
             if padrao:
