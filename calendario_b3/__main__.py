@@ -20,7 +20,7 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 import yaml
 
-from . import ajustes, cvm, exterior, fonte, historico, ics, noticias, notificar, parser
+from . import ajustes, cvm, exterior, fonte, historico, ics, noticias, notificar, parser, ri
 from .filtros import carregar_cobertura, empresa_da_linha, filtrar
 from .modelo import LinhaFonte
 
@@ -133,6 +133,10 @@ def main(argv: list[str] | None = None) -> int:
         try:
             detalhar = tuple(t.strip().upper() for t in args.detalhar.split(",") if t.strip())
             cvm.diagnostico(_cnpjs(cfg), datetime.now(ZoneInfo(cfg["calendario"]["fuso"])).date(), detalhar)
+        except Exception:
+            traceback.print_exc(file=sys.stdout)
+        try:
+            ri.diagnostico((cfg.get("cobertura") or {}).get("empresas") or [])
         except Exception:
             traceback.print_exc(file=sys.stdout)
         try:

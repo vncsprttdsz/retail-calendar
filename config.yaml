@@ -37,34 +37,54 @@ eventos:
 # NOME DE PREGÃO (ex.: "MAGAZ LUIZA", "CEA MODAS"): o primeiro nome de cada linha é ele.
 # Rode o workflow com "inspecionar" para ver a lista completa de nomes do arquivo.
 # cnpj: identifica a empresa nos documentos da CVM.
+# ri: site(s) de Relações com Investidores (data de divulgação e teleconferência).
 # manual: data fixada à mão, prevalece sobre B3 e CVM (ex.: { 3Q26: "2026-11-09" } ou
 #         { 3Q26: "2026-11-09 18:00" }, horário de Brasília; sem horário = dia inteiro).
 cobertura:
   empresas:
     # Apparel
-    - { ticker: AZZA3, nomes: ["AZZAS 2154", "Azzas", "Arezzo"], cnpj: "16.590.234/0001-76" }
-    - { ticker: CEAB3, nomes: ["CEA MODAS", "C&A Modas"], cnpj: "45.242.914/0001-05" }
-    - { ticker: RIAA3, nomes: ["RIACHUELO", "Guararapes"], cnpj: "08.402.943/0001-52" }
-    - { ticker: SBFG3, nomes: ["GRUPO SBF"], cnpj: "13.217.485/0001-11" }
-    - { ticker: LREN3, nomes: ["LOJAS RENNER", "Renner"], cnpj: "92.754.738/0001-62" }
-    - { ticker: TFCO4, nomes: ["TRACK FIELD", "Track and Field"], cnpj: "59.418.806/0001-47" }
-    - { ticker: VULC3, nomes: ["VULCABRAS"], cnpj: "50.926.955/0001-42" }
+    - { ticker: AZZA3, nomes: ["AZZAS 2154", "Azzas", "Arezzo"], cnpj: "16.590.234/0001-76",
+        ri: ["https://ri.azzas2154.com.br/"] }
+    - { ticker: CEAB3, nomes: ["CEA MODAS", "C&A Modas"], cnpj: "45.242.914/0001-05",
+        ri: ["https://ri.cea.com.br/"] }
+    - { ticker: RIAA3, nomes: ["RIACHUELO", "Guararapes"], cnpj: "08.402.943/0001-52",
+        ri: ["https://ri.riachuelo.com.br/"] }
+    - { ticker: SBFG3, nomes: ["GRUPO SBF"], cnpj: "13.217.485/0001-11",
+        ri: ["https://ri.gruposbf.com.br/"] }
+    - { ticker: LREN3, nomes: ["LOJAS RENNER", "Renner"], cnpj: "92.754.738/0001-62",
+        ri: ["https://ri.lojasrenner.com.br/"] }
+    - { ticker: TFCO4, nomes: ["TRACK FIELD", "Track and Field"], cnpj: "59.418.806/0001-47",
+        ri: ["https://www.tfco.com.br/ri/"] }
+    - { ticker: VULC3, nomes: ["VULCABRAS"], cnpj: "50.926.955/0001-42",
+        ri: ["https://ri.vulcabras.com/"] }
     # Food Retailers
-    - { ticker: ASAI3, nomes: ["ASSAI", "Sendas Distribuidora"], cnpj: "06.057.223/0001-71" }
-    - { ticker: GMAT3, nomes: ["GRUPO MATEUS", "Mateus Supermercados"], cnpj: "24.990.777/0001-09" }
+    - { ticker: ASAI3, nomes: ["ASSAI", "Sendas Distribuidora"], cnpj: "06.057.223/0001-71",
+        ri: ["https://ri.assai.com.br/"] }
+    - { ticker: GMAT3, nomes: ["GRUPO MATEUS", "Mateus Supermercados"], cnpj: "24.990.777/0001-09",
+        ri: ["https://ri.grupomateus.com.br/"] }
     # E-commerce
-    - { ticker: MGLU3, nomes: ["MAGAZ LUIZA", "Magazine Luiza"], cnpj: "47.960.950/0001-21" }
+    - { ticker: MGLU3, nomes: ["MAGAZ LUIZA", "Magazine Luiza"], cnpj: "47.960.950/0001-21",
+        ri: ["https://ri.magazineluiza.com.br/", "https://ri.magazineluiza.com.br/ListaAgenda/Calendario-de-Eventos-Corporativos?linguagem=pt"] }
     # Drugstores
-    - { ticker: PGMN3, nomes: ["PAGUE MENOS"], cnpj: "06.626.253/0001-51" }
-    - { ticker: PNVL3, nomes: ["DIMED", "Panvel"], cnpj: "92.665.611/0001-77" }
-    - { ticker: RADL3, nomes: ["RAIADROGASIL", "RD Saude"], cnpj: "61.585.865/0001-51" }
+    - { ticker: PGMN3, nomes: ["PAGUE MENOS"], cnpj: "06.626.253/0001-51",
+        ri: ["https://ri.paguemenos.com.br/"] }
+    - { ticker: PNVL3, nomes: ["DIMED", "Panvel"], cnpj: "92.665.611/0001-77",
+        ri: ["https://ri.grupopanvel.com.br/"] }
+    - { ticker: RADL3, nomes: ["RAIADROGASIL", "RD Saude"], cnpj: "61.585.865/0001-51",
+        ri: ["https://ri.rdsaude.com.br/"] }
     # Other Segments
-    - { ticker: ALLD3, nomes: ["ALLIED", "Allied Tecnologia"], cnpj: "20.247.322/0001-47" }
-    - { ticker: LJQQ3, nomes: ["QUERO-QUERO", "Lojas Quero Quero"], cnpj: "96.418.264/0218-02" }
-    - { ticker: NATU3, nomes: ["NATURA", "Natura Cosmeticos"], cnpj: "71.673.990/0001-77" }
-    - { ticker: AUAU3, nomes: ["PETZCOBASI", "Petz", "Cobasi"], cnpj: "53.153.938/0001-08" }
-    - { ticker: SMFT3, nomes: ["SMART FIT"], cnpj: "07.594.978/0001-78" }
-    - { ticker: VIVA3, nomes: ["VIVARA S.A.", "Vivara"], cnpj: "33.839.910/0001-11" }
+    - { ticker: ALLD3, nomes: ["ALLIED", "Allied Tecnologia"], cnpj: "20.247.322/0001-47",
+        ri: ["https://ri.alliedbrasil.com.br/"] }
+    - { ticker: LJQQ3, nomes: ["QUERO-QUERO", "Lojas Quero Quero"], cnpj: "96.418.264/0218-02",
+        ri: ["https://ri.quero-quero.com.br/"] }
+    - { ticker: NATU3, nomes: ["NATURA", "Natura Cosmeticos"], cnpj: "71.673.990/0001-77",
+        ri: ["https://ri.natura.com.br/"] }
+    - { ticker: AUAU3, nomes: ["PETZCOBASI", "Petz", "Cobasi"], cnpj: "53.153.938/0001-08",
+        ri: ["https://ri.petzcobasi.com.br/"] }
+    - { ticker: SMFT3, nomes: ["SMART FIT"], cnpj: "07.594.978/0001-78",
+        ri: ["https://investor.smartfit.com.br/"] }
+    - { ticker: VIVA3, nomes: ["VIVARA S.A.", "Vivara"], cnpj: "33.839.910/0001-11",
+        ri: ["https://ri.vivara.com.br/"] }
 
 # Empresas listadas fora do Brasil (não estão no cronograma da B3). A próxima data de
 # resultado vem do Yahoo Finance; enquanto não for confirmada, o título leva "(estimado)".
