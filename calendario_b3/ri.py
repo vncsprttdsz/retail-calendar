@@ -85,7 +85,7 @@ def diagnostico(empresas: list[dict]) -> None:
                 hrefs = sorted(set(re.findall(r"href=[\"']([^\"'#]+)", html, re.I)))
                 print(f"     hrefs: {hrefs[:80]}")
                 vistos = 0
-                for m in re.finditer(r"earnings|conference call|webcast|third quarter|Q3 20|3Q26|\\"date|November|2026-1[01]", html, re.I):
+                for m in re.finditer(r"earnings|conference call|webcast|third quarter|Q3 20|3Q26|.date.:|November|2026-1[01]", html, re.I):
                     if vistos >= 25:
                         break
                     vistos += 1
