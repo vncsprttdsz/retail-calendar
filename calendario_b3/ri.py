@@ -263,7 +263,8 @@ def _eventos_do_bloco(ticker: str, bloco: str, hoje: date) -> list[EventoRI]:
     return saida
 
 
-_RE_HORA_ET = re.compile(r"\b(\d{1,2})(?::(\d{2}))?\s*([ap])\.?\s?m\.?\s*\(?(?:ET|EST|EDT|Eastern)\b", re.I)
+_RE_HORA_ET = re.compile(
+    r"\b(\d{1,2})(?::(\d{2}))?\s*([ap])\.?\s?m\.?\s*\(?(?:U\.?\s?S\.?\s*)?(?:ET|EST|EDT|Eastern)\b", re.I)
 
 
 def _hora_et(texto: str, dia: date, fuso: str) -> time | None:
@@ -306,6 +307,60 @@ def de_upcoming(ticker: str, html: str, fuso: str = "America/Sao_Paulo") -> list
         inicio = None if provisorio else _hora_et(f"{titulo} {detalhes}", dia, fuso)
         achados = links_de_call(json.dumps(linha))
         saida.append(EventoRI(ticker, cls[0], cls[1], dia, inicio, None, achados[0] if achados else "", titulo, provisorio))
+    return saida
+
+
+_ORDINAIS = {"first": 1, "second": 2, "third": 3, "fourth": 4}
+_DATA_EN = r"((?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s*\d{4})"
+
+
+def _data_en(txt: str) -> date:
+    from datetime import datetime
+
+    return datetime.strptime(re.sub(r"\s+", " ", txt.replace(",", ", ")).replace(" ,", ","), "%B %d, %Y").date()
+
+
+def de_comunicado(ticker: str, texto: str, fuso: str = "America/Sao_Paulo") -> list[EventoRI]:
+    """Comunicado "X to Report Second Quarter 2026 Results" (ex.: Sea):
+
+        ... plans to announce its second quarter 2026 results before the U.S. market opens on
+        August 11, 2026 ... Date and time: 7:30 AM U.S. Eastern Time on August 11, 2026
+        Webcast link: https://events.q4inc.com/attendee/265654308
+    """
+    texto = re.sub(r"\s+", " ", texto or "")
+    m = re.search(r"to Report (First|Second|Third|Fourth) Quarter (20\d\d) Results", texto, re.I)
+    if not m:
+        return []
+    rotulo = f"{_ORDINAIS[m[1].lower()]}Q{m[2][2:]}"
+    saida = []
+    div = re.search(r"results? (?:\w+ ){0,3}(?:before|after|prior to) the U\.?S\.? market (?:opens|closes|open|close)\s+on " + _DATA_EN, texto, re.I)
+    if div:
+        saida.append(EventoRI(ticker, "resultado", rotulo, _data_en(div[1]), titulo=m[0]))
+    call = re.search(r"Date and time:\s*(.{0,80}?)\bon " + _DATA_EN, texto, re.I)
+    if call:
+        dia = _data_en(call[2])
+        link = re.search(r"(?:Webcast|Registration) link:\s*(https?://\S+)", texto, re.I)
+        saida.append(EventoRI(ticker, "call", rotulo, dia, _hora_et(call[1], dia, fuso), None,
+                              link[1].rstrip(".,;") if link else "", f"Conference call {m[1]} Quarter {m[2]}"))
+    return saida
+
+
+def de_noticias_pdf(ticker: str, dados, fuso: str = "America/Sao_Paulo", limite: int = 3) -> list[EventoRI]:
+    """API de notícias em JSON (ex.: sea.com/api/invest/news): abre os PDFs "to Report ... Results"
+    mais recentes e lê data de divulgação, call (horário em ET) e link do webcast."""
+    import io
+    import json
+
+    from pypdf import PdfReader
+
+    bruto = json.dumps(dados)
+    pdfs = [u.replace("\\/", "/") for u in re.findall(r"https?:[^\"\s]+?\.pdf", bruto)]
+    alvos = [u for u in dict.fromkeys(pdfs) if re.search(r"to(?:%20|[ _+-])Report", u, re.I)][:limite]
+    saida = []
+    for url in alvos:
+        r = _get(url.replace(" ", "%20"))
+        texto = "\n".join((pg.extract_text() or "") for pg in PdfReader(io.BytesIO(r.content)).pages)
+        saida += de_comunicado(ticker, texto, fuso)
     return saida
 
 
@@ -374,6 +429,10 @@ def eventos_da_empresa(item: dict, hoje: date) -> list[EventoRI]:
         eventos = de_riweb(ticker, home, hoje)
     elif home and _PLATAFORMAS["upcoming"].search(home):
         eventos = de_upcoming(ticker, home)
+    elif home and home.lstrip()[:1] in "{[":  # API de notícias com PDFs (ex.: Sea)
+        import json
+
+        eventos = de_noticias_pdf(ticker, json.loads(home))
     elif home:
         raise ValueError("plataforma do site de RI não reconhecida")
     else:

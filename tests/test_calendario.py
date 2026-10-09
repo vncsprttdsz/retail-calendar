@@ -923,3 +923,25 @@ def test_whatsapp_quebra_mensagem_longa():
     blocos = notificar._blocos("\n".join(f"linha {i:03d} " + "x" * 90 for i in range(40)), 1500)
     assert len(blocos) > 1 and all(len(b) <= 1500 for b in blocos)
     assert "\n".join(blocos).count("linha") == 40
+
+
+# Texto real do PDF "Sea Limited to Report Second Quarter 2026 Results" (28/07/2026).
+COMUNICADO_SEA = """Sea Limited to Report Second Quarter 2026 Results
+Singapore, July 28, 2026 – Sea Limited (NYSE: SE) (“Sea” or the “Company”) plans to announce
+its second quarter 2026 results before the U.S. market opens on August 11, 2026, U.S. Eastern
+Time.
+The Company’s management will host a conference call to discuss the second quarter 2026 results.
+Details of the webcast are as follows:
+Date and time: 7:30 AM U.S. Eastern Time on August 11, 2026
+7:30 PM Singapore / Hong Kong Time on August 11, 2026
+Webcast link: https://events.q4inc.com/attendee/265654308
+"""
+
+
+def test_comunicado_sea():
+    evs = ri.de_comunicado("SE", COMUNICADO_SEA)
+    # Agosto: ET = UTC-4, então 7:30 ET = 08:30 em Brasília.
+    assert [(e.tipo, e.rotulo, e.dia, e.inicio, e.link) for e in evs] == [
+        ("resultado", "2Q26", date(2026, 8, 11), None, ""),
+        ("call", "2Q26", date(2026, 8, 11), time(8, 30), "https://events.q4inc.com/attendee/265654308"),
+    ]
