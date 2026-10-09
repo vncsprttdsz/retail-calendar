@@ -76,7 +76,7 @@ cobertura:
         ri: ["https://ri.rdsaude.com.br/"] }
     - { ticker: PFRM3, nomes: ["PROFARMA", "Profarma Distribuidora"], cnpj: "45.453.214/0001-51",
         ri: ["https://ri.profarma.com.br/"] }
-    - { ticker: DMVF3, nomes: ["D1000VFARMA", "D1000 Varejo Farma"], cnpj: "",
+    - { ticker: DMVF3, nomes: ["D1000VFARMA", "D1000 Varejo Farma"], cnpj: "12.108.897/0001-50",
         ri: ["https://ri.reded1000.com.br/"] }
     # Other Segments
     - { ticker: ALLD3, nomes: ["ALLIED", "Allied Tecnologia"], cnpj: "20.247.322/0001-47",
