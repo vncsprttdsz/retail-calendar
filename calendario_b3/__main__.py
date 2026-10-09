@@ -206,8 +206,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--inspecionar", action="store_true", help="só mostra a estrutura detectada")
     ap.add_argument("--detalhar", default="", help="com --inspecionar: tickers (vírgula) cujo calendário da CVM é impresso")
     ap.add_argument("--testar-aviso", action="store_true", help="só manda uma mensagem de teste nos canais configurados")
+    ap.add_argument("--sondar", default="", help="URLs (vírgula) para diagnóstico: texto de PDF, links e APIs de HTML")
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+    if args.sondar:
+        ri.sondar([u.strip() for u in args.sondar.split(",") if u.strip()])
+        return 0
     if args.testar_aviso:
         ok = notificar.enviar(["🧪 Teste: os avisos de mudança de data do calendário de resultados vão chegar aqui."])
         return 0 if ok else 1

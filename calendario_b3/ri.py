@@ -410,3 +410,39 @@ def coletar(empresas: list[dict], hoje: date) -> tuple[list[EventoRI], set[str]]
             for e in achados) or "nenhum evento de resultado")
         eventos += achados
     return eventos, falhas
+
+
+def sondar(urls: list[str], padrao: str = r"to Report|Quarter 20\d\d|conference call|cdn\.sea\.com|investor/[1-4]Q20") -> None:
+    """Diagnóstico de URLs avulsas: PDF vira texto; HTML mostra PDFs, APIs, trechos e as URLs
+    citadas no JavaScript da página (sites Next.js carregam o conteúdo por API)."""
+    from urllib.parse import urljoin
+
+    for url in urls:
+        try:
+            r = requests.get(url, headers=HEADERS, timeout=60)
+        except Exception as e:
+            print(f"\n== {url}: FALHA {type(e).__name__}: {str(e)[:150]}")
+            continue
+        tipo = r.headers.get("content-type", "")
+        print(f"\n== {url} -> HTTP {r.status_code} {tipo} {len(r.content)}b")
+        if "pdf" in tipo or r.content[:4] == b"%PDF":
+            import io
+            from pypdf import PdfReader
+
+            print("\n".join((pg.extract_text() or "") for pg in PdfReader(io.BytesIO(r.content)).pages)[:5000])
+            continue
+        html = r.text
+        pdfs = sorted(set(re.findall(r"[^\s\"'<>()]+\.pdf", html)))[:30]
+        apis = sorted(set(re.findall(r"https?://[^\s\"'<>]*(?:api|json|graphql)[^\s\"'<>]*", html, re.I)))[:20]
+        print(f"   pdfs: {pdfs}")
+        print(f"   apis: {apis}")
+        for m in list(re.finditer(padrao, html, re.I))[:10]:
+            print(f"   …{html[max(0, m.start() - 200): m.end() + 300]!r}")
+        for src in re.findall(r"<script[^>]+src=[\"']([^\"']*(?:page|app)[^\"']*)", html, re.I)[:6]:
+            try:
+                js = requests.get(urljoin(url, src), headers=HEADERS, timeout=60).text
+            except Exception:
+                continue
+            citadas = sorted(set(re.findall(r"[\"'`](https?://[^\"'`\s]{6,200}|/(?:api|v\d)[^\"'`\s]{2,200})[\"'`]", js)))
+            if citadas:
+                print(f"   js {src}: {citadas[:40]}")

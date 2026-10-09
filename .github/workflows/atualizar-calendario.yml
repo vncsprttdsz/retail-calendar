@@ -14,6 +14,10 @@ on:
         description: "Só mandar uma mensagem de teste no WhatsApp/Telegram (não altera o calendário)"
         type: boolean
         default: false
+      sondar:
+        description: "Só diagnosticar estas URLs (vírgula): texto de PDF, links e APIs de páginas"
+        type: string
+        default: ""
       detalhar:
         description: "Com inspecionar: tickers para imprimir o calendário da CVM (ex.: MGLU3,TFCO4)"
         type: string
@@ -40,13 +44,19 @@ jobs:
       - run: pip install -r requirements.txt
 
       - name: Inspecionar arquivo da B3
-        if: ${{ inputs.inspecionar && !inputs.testar_aviso }}
+        if: ${{ inputs.inspecionar && !inputs.testar_aviso && !inputs.sondar }}
         env:
           DETALHAR: ${{ inputs.detalhar }}
         run: python -m calendario_b3 --inspecionar --detalhar "$DETALHAR"
 
+      - name: Sondar URLs
+        if: ${{ inputs.sondar }}
+        env:
+          SONDAR: ${{ inputs.sondar }}
+        run: python -m calendario_b3 --sondar "$SONDAR"
+
       - name: Testar aviso
-        if: ${{ inputs.testar_aviso }}
+        if: ${{ inputs.testar_aviso && !inputs.sondar }}
         env:
           CALLMEBOT_WHATSAPP: ${{ secrets.CALLMEBOT_WHATSAPP }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -54,7 +64,7 @@ jobs:
         run: python -m calendario_b3 --testar-aviso
 
       - name: Ler cronograma da B3 e gerar .ics
-        if: ${{ !inputs.inspecionar && !inputs.testar_aviso }}
+        if: ${{ !inputs.inspecionar && !inputs.testar_aviso && !inputs.sondar }}
         env:
           CALLMEBOT_WHATSAPP: ${{ secrets.CALLMEBOT_WHATSAPP }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -62,7 +72,7 @@ jobs:
         run: python -m calendario_b3
 
       - name: Commit se houve mudança
-        if: ${{ !inputs.inspecionar && !inputs.testar_aviso }}
+        if: ${{ !inputs.inspecionar && !inputs.testar_aviso && !inputs.sondar }}
         run: |
           git add dados/ publico/calendario.ics
           if git diff --cached --quiet; then
