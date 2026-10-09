@@ -89,11 +89,41 @@ def diagnostico(raizes: set[str], hoje: date, dias: int = 30) -> None:
     noticias = listar(hoje - timedelta(days=dias - 1), hoje)
     cal = [n for n in noticias if n.raiz in raizes and "calendario de eventos" in n.titulo.lower()]
     print(f"\n== Plantão de Notícias B3: {len(noticias)} notícias em {dias} dias; calendários da cobertura: {len(cal)}")
-    for n in cal:
+    for i, n in enumerate(cal):
+        links = []
         try:
             links = links_rad(n)
             datas = datas_de_resultado(texto_pdf(links[0])) if links else {}
             lidas = ", ".join(f"{q} {d:%d/%m}" for q, d in sorted(datas.items())) or "nenhuma data lida"
         except Exception as e:
-            links, lidas = [], f"falha: {e}"
+            lidas = f"falha: {e}"
         print(f"  {n.data_hora} | {n.titulo}\n      {links[:1]} -> {lidas}")
+        if i == 0 and links:
+            _investigar_link(links[0])
+
+
+def _investigar_link(link: str) -> None:
+    """Mostra o que o RAD devolve para o link do Plantão e testa variantes de download direto."""
+    r = requests.get(link, headers=HEADERS, timeout=60)
+    print(f"\n  -- {link}: HTTP {r.status_code}, {r.headers.get('Content-Type')}, {len(r.content)} bytes, final {r.url}")
+    t = r.text
+    for padrao in (r"<iframe[^>]*>", r"<frame[^>]*>", r"<form[^>]*>", r"<embed[^>]*>", r"<object[^>]*>",
+                   r"<input[^>]*type=.hidden[^>]*>", r"window\.open\([^)]*\)", r"location[^;]{0,200}",
+                   r"[A-Za-z]+\.aspx\?[^\"'<>\s]{0,200}"):
+        achados = list(dict.fromkeys(re.findall(padrao, t, re.I)))[:8]
+        if achados:
+            print(f"     {padrao}: {achados}")
+    m = re.search(r"ID=(\d+)", link)
+    if not m:
+        return
+    pid = int(m[1])
+    base = "https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1"
+    variantes = [f"{base}&numProtocolo={pid}"] + [
+        f"{base}&numProtocolo={pid}&numSequencia={pid - 475294}&numVersao={v}" for v in (1, 2, 3, 4, 5)
+    ]
+    for u in variantes:
+        try:
+            rv = requests.get(u, headers=HEADERS, timeout=60)
+            print(f"     {u[len(base):]} -> HTTP {rv.status_code} {'PDF' if rv.content.startswith(b'%PDF') else 'não-PDF'} {len(rv.content)} bytes")
+        except Exception as e:
+            print(f"     {u[len(base):]} -> {e}")
