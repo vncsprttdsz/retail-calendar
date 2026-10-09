@@ -10,6 +10,7 @@ from __future__ import annotations
 import io
 import logging
 import re
+import time
 import zipfile
 from dataclasses import dataclass
 from datetime import date, timedelta
@@ -82,11 +83,15 @@ def documentos(ipe: pd.DataFrame, cnpjs: dict[str, str], categoria: str | None =
 def texto_pdf(link: str) -> str:
     from pypdf import PdfReader
 
-    r = requests.get(link, headers=HEADERS, timeout=90)
-    r.raise_for_status()
-    if not r.content.startswith(b"%PDF"):
-        return r.content[:4000].decode("utf-8", errors="replace")
-    return "\n".join((p.extract_text() or "") for p in PdfReader(io.BytesIO(r.content)).pages)
+    # O RAD às vezes devolve a página HTML do ENET em vez do PDF: tenta de novo e, se
+    # persistir, falha (não pode virar "calendário sem datas" no cache).
+    for tentativa in range(3):
+        r = requests.get(link, headers=HEADERS, timeout=90)
+        r.raise_for_status()
+        if r.content.startswith(b"%PDF"):
+            return "\n".join((p.extract_text() or "") for p in PdfReader(io.BytesIO(r.content)).pages)
+        time.sleep(3 * (tentativa + 1))
+    raise ValueError("a CVM devolveu HTML em vez do PDF")
 
 
 _DATA = r"(\d{2}/\d{2}/\d{4})"
@@ -167,13 +172,14 @@ def coletar(cnpjs: dict[str, str], nomes: dict[str, str], hoje: date, cache: dic
         chave = f"v{VERSAO_PARSER} {doc.link}"
         if chave not in cache:
             try:
-                cache[chave] = {k: v.isoformat() for k, v in datas_de_resultado(texto_pdf(doc.link)).items()}
+                lidas = datas_de_resultado(texto_pdf(doc.link))
+                if not lidas:
+                    raise ValueError("nenhuma data de ITR/DFP reconhecida")
+                cache[chave] = {k: v.isoformat() for k, v in lidas.items()}
             except Exception as e:
                 log.warning("%s: não consegui ler o calendário da CVM (%s): %s", doc.ticker, doc.link, e)
                 continue
         datas = {k: date.fromisoformat(v) for k, v in cache[chave].items()}
-        if not datas:
-            log.warning("%s: calendário da CVM sem datas de ITR/DFP reconhecidas: %s", doc.ticker, doc.link)
         fora = {q: d for q, d in datas.items() if not dentro_do_prazo(q, d)}
         if fora:
             log.warning("%s: datas fora do prazo legal no calendário da CVM, ignoradas: %s (%s)", doc.ticker,
@@ -215,4 +221,4 @@ def diagnostico(cnpjs: dict[str, str], hoje: date, detalhar: tuple[str, ...] = (
                 txt = texto_pdf(doc.link)
                 print(f"\n== {t}: texto do calendário {doc.data_entrega} v{doc.versao} ({len(txt)} caracteres)\n{txt[:6000]}")
             except Exception as e:
-                print(f"  falha ao ler o PDF: {e}")
+                print(f"  falha ao ler o PDF ({doc.link}): {e}")

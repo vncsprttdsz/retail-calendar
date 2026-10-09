@@ -564,3 +564,19 @@ def test_cvm_ignora_itr_em_ingles():
         "2Q26": date(2026, 8, 12),
         "3Q26": date(2026, 11, 12),
     }
+
+
+def test_cvm_html_no_lugar_do_pdf_nao_entra_no_cache(monkeypatch):
+    ipe = _ipe(("47.960.950/0001-21", "Calendário de Eventos Corporativos", "", "2026-12-31", "2026-07-29", "3", "v3"))
+    monkeypatch.setattr(cvm, "ler_ipe", lambda anos: ipe)
+
+    def html(link):
+        raise ValueError("a CVM devolveu HTML em vez do PDF")
+
+    monkeypatch.setattr(cvm, "texto_pdf", html)
+    cache = {}
+    assert cvm.coletar({"MGLU3": "47.960.950/0001-21"}, {}, date(2026, 10, 8), cache) == []
+    assert cache == {}  # na próxima rodada tenta de novo
+    monkeypatch.setattr(cvm, "texto_pdf", lambda link: "texto sem datas")
+    cvm.coletar({"MGLU3": "47.960.950/0001-21"}, {}, date(2026, 10, 8), cache)
+    assert cache == {}
