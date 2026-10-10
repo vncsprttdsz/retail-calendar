@@ -875,8 +875,7 @@
     "periodo": "",
     "visto_em": "2026-10-08T19:22:14Z",
     "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-10-07 19:49:14"
+      "fonte": "RI"
     }
   },
   {
@@ -888,8 +887,7 @@
     "periodo": "",
     "visto_em": "2026-10-09T02:47:33Z",
     "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-10-08 08:00:19"
+      "fonte": "RI"
     }
   },
   {
@@ -1038,7 +1036,7 @@
     "visto_em": "2026-10-09T10:11:32Z",
     "extras": {
       "fonte": "CVM",
-      "entregue": "2026-09-23 16:56:35"
+      "entregue": "2026-09-23"
     }
   },
   {
@@ -1077,7 +1075,7 @@
     "visto_em": "2026-10-09T10:11:32Z",
     "extras": {
       "fonte": "CVM",
-      "entregue": "2026-09-15 18:54:09"
+      "entregue": "2026-09-15"
     }
   },
   {
