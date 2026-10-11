@@ -415,7 +415,27 @@
   "call 3Q26": "2026-11-10",
   "call 4Q25": "2026-03-13"
  },
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1575254&numSequencia=1099960&numVersao=4": {
+  "1Q26": "2026-05-07",
+  "2Q26": "2026-08-06",
+  "3Q26": "2026-11-09",
+  "4Q25": "2026-03-12",
+  "call 1Q26": "2026-05-08",
+  "call 2Q26": "2026-08-07",
+  "call 3Q26": "2026-11-10",
+  "call 4Q25": "2026-03-13"
+ },
  "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1575266": {
+  "1Q26": "2026-05-06",
+  "2Q26": "2026-08-05",
+  "3Q26": "2026-11-09",
+  "4Q25": "2026-02-11",
+  "call 1Q26": "2026-05-07",
+  "call 2Q26": "2026-08-06",
+  "call 3Q26": "2026-11-10",
+  "call 4Q25": "2026-02-12"
+ },
+ "v4 https://www.rad.cvm.gov.br/ENET/frmDownloadDocumento.aspx?Tela=ext&descTipo=IPE&CodigoInstituicao=1&numProtocolo=1575266&numSequencia=1099972&numVersao=2": {
   "1Q26": "2026-05-06",
   "2Q26": "2026-08-05",
   "3Q26": "2026-11-09",
