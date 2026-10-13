@@ -1062,3 +1062,13 @@ def test_popup_em_imagem_lido_por_ocr(monkeypatch):
                                                "Teleconferência de Resultados 05/11 às 11h00 (Brasília)")
     evs = ri.eventos_da_empresa({"ticker": "CEAB3", "ri": ["https://ri"]}, date(2026, 10, 13))
     assert [(e.tipo, e.dia, e.inicio) for e in evs] == [("resultado", date(2026, 11, 4), None), ("call", date(2026, 11, 5), time(11))]
+
+
+def test_ocr_real_cea_e_panvel():
+    # Texto real do OCR (tesseract) dos pop-ups em imagem, 13/10/2026.
+    cea = ("Resultados 3126 04 de novembro de 2026 Após o fechamento do mercado Videoconferência 05 de novembro de 2026 "
+           "11:00 (BRT) | 09:00 (NY) | 14:00 (LON) Periodo de Siléncio 15 de outubro a 04 de novembro ")
+    panvel = ("Participe da teleconferência do Grupo Panvel (B3: PNVL3) referente aos resultados do 3726: 06 de novembro "
+              "de 2026 (sexta-feira) 9:30 (Horário de Brasília - BRT) 8:30 (Us EDT) Para acompanhar, clique aqui.")
+    assert ri.horarios_no_texto(cea) == {(11, 5): time(11)}
+    assert ri.horarios_no_texto(panvel) == {(11, 6): time(9, 30)}
