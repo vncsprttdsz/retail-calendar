@@ -839,7 +839,8 @@
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
-      "fonte": "RI"
+      "fonte": "RI",
+      "link": "https://www.mzgroup.com/"
     }
   },
   {
@@ -936,11 +937,12 @@
     "empresa": "GRUPO SBF",
     "evento": "Call 3Q26",
     "data": "2026-11-10",
-    "hora": null,
+    "hora": "11:00",
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
-      "fonte": "RI"
+      "fonte": "RI",
+      "link": "https://mzgroup.zoom.us/webinar/register/WN_2hTIaG29S7yFDIKVCSRnZw#/registration"
     }
   },
   {
