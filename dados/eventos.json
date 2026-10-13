@@ -722,7 +722,7 @@
     "empresa": "CEA MODAS",
     "evento": "Call 3Q26",
     "data": "2026-11-05",
-    "hora": null,
+    "hora": "11:00",
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
@@ -839,8 +839,7 @@
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
-      "fonte": "RI",
-      "link": "https://www.mzgroup.com/"
+      "fonte": "RI"
     }
   },
   {
@@ -848,7 +847,7 @@
     "empresa": "DIMED",
     "evento": "Call 3Q26",
     "data": "2026-11-06",
-    "hora": null,
+    "hora": "09:30",
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
