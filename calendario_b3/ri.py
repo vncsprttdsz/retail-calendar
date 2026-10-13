@@ -400,7 +400,7 @@ _MESES_EXTENSO = {
     "marco": 3,
 }
 _RE_HORA_TEXTO = re.compile(
-    rf"(?:videoconfer[êe]ncia|teleconfer[êe]ncia|confer[êe]ncia|\bcall\b|webcast|conference call)[^.]{{0,60}}?"
+    rf"(?:videoconfer[êe]ncia|teleconfer[êe]ncia|confer[êe]ncia|\bcall\b|webcast|conference call)[^.]{{0,120}}?"
     rf"(?:(?P<d1>\d{{1,2}})\s+de\s+(?P<m1>{'|'.join(_MESES_EXTENSO)})|(?P<d2>\d{{1,2}})/(?P<m2>\d{{1,2}})(?:/\d{{2,4}})?"
     rf"|(?P<m3>{'|'.join(_MESES_EXTENSO)})\s+(?P<d3>\d{{1,2}}))"
     rf"(?:,?\s+(?:de\s+)?\d{{4}})?[^\d]{{0,25}}?(?P<h>\d{{1,2}})\s*(?:h\s*(?P<min_h>\d{{2}})?|:(?P<min>\d{{2}}))"
@@ -473,16 +473,20 @@ def eventos_da_empresa(item: dict, hoje: date) -> list[EventoRI]:
         raise ValueError("plataforma do site de RI não reconhecida")
     else:
         raise ConnectionError("site de RI inacessível")
-    # Horário do call só no texto da home (ex.: Renner: "Videoconferência: 6 de novembro 10h").
+    # Horário do call só no texto da home (ex.: Renner: "Videoconferência: 6 de novembro 10h";
+    # SBFG: pop-up "VIDEOCONFERÊNCIA ... Terça-feira, 10 de Novembro de 2026 11h (Brasília)").
     horas = horarios_no_texto(_texto(home))
     for e in eventos:
         if e.tipo == "call" and not e.inicio and (e.dia.month, e.dia.day) in horas:
             e.inicio = horas[(e.dia.month, e.dia.day)]
-    # Pop-up/destaque da home com o link de inscrição do call: vale para o próximo call (até 21 dias).
-    calls = sorted((e for e in eventos if e.tipo == "call" and hoje <= e.dia <= hoje + timedelta(days=21)), key=lambda e: e.dia)
+    # Pop-up/destaque da home com o link de inscrição: vale para o call cuja data a home cita junto
+    # do horário; sem essa referência, só para o próximo call (até 21 dias).
+    futuros = sorted((e for e in eventos if e.tipo == "call" and e.dia >= hoje), key=lambda e: e.dia)
+    citados = [e for e in futuros if (e.dia.month, e.dia.day) in horas]
+    alvo = citados[0] if citados else next((e for e in futuros if e.dia <= hoje + timedelta(days=21)), None)
     links = links_de_call(home)
-    if calls and not calls[0].link and links:
-        calls[0].link = links[0]
+    if alvo and not alvo.link and links:
+        alvo.link = links[0]
     return eventos
 
 

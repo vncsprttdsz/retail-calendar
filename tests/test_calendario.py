@@ -1014,3 +1014,28 @@ def test_meli_comunicado_prevalece_sobre_agenda_provisoria(monkeypatch):
     # Novembro: ET = UTC-5, então 17:00 ET = 19:00 em Brasília.
     assert [(e.tipo, e.rotulo, e.dia, e.inicio, e.provisorio) for e in evs] == [
         ("resultado", "3Q26", date(2026, 11, 4), None, False), ("call", "3Q26", date(2026, 11, 4), time(19), False)]
+
+
+# Trecho real do pop-up da home do Grupo SBF (13/10/2026); a agenda da MZ traz o call sem horário.
+POPUP_SBFG = """<div id="popup"><div class="box-msg"><div class="info"><i class="close">x</i>
+<header><h2>DIVULGAÇÃO DE RESULTADOS 3T26</h2></header><main>
+<p><strong>Segunda-feira, 09 de Novembro de 2026</strong><br />
+Após o fechamento do mercado.</p><h2></h2><p>&nbsp;</p>
+<h2><span style="font-family: Mona Sans;font-weight: 600">VIDEOCONFERÊNCIA EM PORTUGUÊS</span></h2>
+<p>(Com tradução simultânea para o inglês)</p>
+<p><strong>Terça-feira, 10 de Novembro de 2026<br />
+</strong>11h (Brasília) / 09h (NY) / 14h (Londres)</p>
+<p><a href="https://mzgroup.zoom.us/webinar/register/WN_2hTIaG29S7yFDIKVCSRnZw#/registration" target="_blank" rel="noopener">Clique aqui</a> para acessar a videoconferência.</p>
+<main></div></div></div>"""
+
+
+def test_popup_sbfg_horario_e_link(monkeypatch):
+    monkeypatch.setattr(ri, "_get", lambda url: type("R", (), {"text": POPUP_SBFG})())
+    monkeypatch.setattr(ri, "mz_id", lambda html: "id")
+    monkeypatch.setattr(ri, "mz_eventos", lambda fm, tipo: MZ_SBFG)
+    # 28 dias antes do call: o link vale porque o pop-up cita a data do call.
+    evs = ri.eventos_da_empresa({"ticker": "SBFG3", "ri": ["https://ri"]}, date(2026, 10, 13))
+    assert [(e.tipo, e.dia, e.inicio, e.link) for e in evs] == [
+        ("resultado", date(2026, 11, 9), None, ""),
+        ("call", date(2026, 11, 10), time(11), "https://mzgroup.zoom.us/webinar/register/WN_2hTIaG29S7yFDIKVCSRnZw#/registration"),
+    ]
