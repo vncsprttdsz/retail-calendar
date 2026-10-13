@@ -173,7 +173,7 @@ _RE_IGNORAR = re.compile(r"sil[êe]ncio|assembleia|informe|formul[áa]rio|divide
 _RE_HORAS = re.compile(r"(\d{1,2})[:h](\d{2})\s*(?:-|às|a|até|–)\s*(\d{1,2})[:h](\d{2})")
 # Links de inscrição/transmissão do call (não canais genéricos do YouTube nem imagens).
 _RE_LINK_CALL = re.compile(
-    r"https?://[^\s\"'<>]*(?:zoom\.us/(?:webinar|j/|w/|s/)|mzgroup\.com|webcast|choruscall|on24\.com|"
+    r"https?://[^\s\"'<>]*(?:zoom\.us/(?:webinar|j/|w/|s/)|mzgroup\.com/[^\s\"'<>]*(?:event|webcast|webinar|regist)|webcast|choruscall|on24\.com|"
     r"tenmeetings|ten\.com\.br|teams\.microsoft\.com/l/meetup|webinar|streamyard|vimeo\.com/event|"
     r"youtube\.com/live/|riweb\.com\.br/[^\s\"'<>]*(?:evento|webcast))[^\s\"'<>]*",
     re.I,
@@ -428,6 +428,38 @@ def horarios_no_texto(texto: str) -> dict[tuple[int, int], time]:
     return saida
 
 
+def imagens_de_popup(html: str) -> list[str]:
+    """Imagens dentro de pop-up/modal com cara de agenda de resultados (ex.: C&A "Agenda_3T26_PT_3.png")."""
+    achadas = []
+    for m in re.finditer(r"<div[^>]*(?:popup|pop-up|modal|lightbox|banner)[^>]*>", html or "", re.I):
+        trecho = html[m.start(): m.start() + 3000]
+        for src in re.findall(r"<img[^>]+src=[\"']([^\"']+\.(?:png|jpe?g|webp))", trecho, re.I):
+            if re.search(r"agenda|resultado|result|call|confer|webcast|[1-4]T\d\d|[1-4]Q\d\d|earnings", src, re.I):
+                achadas.append(src.replace("&amp;", "&"))
+    return list(dict.fromkeys(achadas))[:3]
+
+
+def ocr(url: str) -> str:
+    """Texto de uma imagem via tesseract (instalado no workflow). Sem tesseract, devolve ""."""
+    import shutil
+    import subprocess
+    import tempfile
+
+    if not shutil.which("tesseract"):
+        log.info("tesseract não instalado; imagem %s não lida", url)
+        return ""
+    try:
+        conteudo = _get(url).content
+        with tempfile.NamedTemporaryFile(suffix=".img") as f:
+            f.write(conteudo)
+            f.flush()
+            r = subprocess.run(["tesseract", f.name, "-", "-l", "por+eng"], capture_output=True, text=True, timeout=60)
+        return re.sub(r"\s+", " ", r.stdout)
+    except Exception as e:
+        log.info("OCR falhou em %s (%s)", url, type(e).__name__)
+        return ""
+
+
 def _get(url: str) -> requests.Response:
     r = requests.get(url, headers=HEADERS, timeout=40)
     r.raise_for_status()
@@ -476,6 +508,10 @@ def eventos_da_empresa(item: dict, hoje: date) -> list[EventoRI]:
     # Horário do call só no texto da home (ex.: Renner: "Videoconferência: 6 de novembro 10h";
     # SBFG: pop-up "VIDEOCONFERÊNCIA ... Terça-feira, 10 de Novembro de 2026 11h (Brasília)").
     horas = horarios_no_texto(_texto(home))
+    if any(e.tipo == "call" and not e.inicio and e.dia >= hoje for e in eventos):
+        # C&A: o pop-up é uma imagem ("Agenda_3T26_PT.png"); o texto vem por OCR.
+        for img in imagens_de_popup(home):
+            horas = {**horarios_no_texto(ocr(img)), **horas}
     for e in eventos:
         if e.tipo == "call" and not e.inicio and (e.dia.month, e.dia.day) in horas:
             e.inicio = horas[(e.dia.month, e.dia.day)]
@@ -540,6 +576,8 @@ def sondar(urls: list[str], padrao: str = r"to Report|Quarter 20\d\d|conference 
         print(f"   apis: {apis}")
         for m in list(re.finditer(padrao, html, re.I))[:10]:
             print(f"   …{html[max(0, m.start() - 200): m.end() + 300]!r}")
+        for img in imagens_de_popup(html):
+            print(f"   ocr {img}: {ocr(img)[:2000]!r}")
         fm = mz_id(html)
         if fm:  # site MZ: mostra também a agenda da API (campos completos)
             import json

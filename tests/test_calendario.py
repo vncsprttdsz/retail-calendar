@@ -1039,3 +1039,26 @@ def test_popup_sbfg_horario_e_link(monkeypatch):
         ("resultado", date(2026, 11, 9), None, ""),
         ("call", date(2026, 11, 10), time(11), "https://mzgroup.zoom.us/webinar/register/WN_2hTIaG29S7yFDIKVCSRnZw#/registration"),
     ]
+
+
+def test_link_generico_da_mz_nao_e_do_call():
+    # Rodapé "Powered by MZ" (Renner) não é link do call; o Zoom da MZ é.
+    assert ri.links_de_call('<a href="https://www.mzgroup.com/">MZ</a>') == []
+    assert ri.links_de_call('<a href="https://mzgroup.zoom.us/webinar/register/WN_x">x</a>') == ["https://mzgroup.zoom.us/webinar/register/WN_x"]
+
+
+def test_popup_em_imagem_lido_por_ocr(monkeypatch):
+    # Pop-up real da C&A (13/10/2026): só uma imagem; o texto do OCR abaixo é ilustrativo.
+    home = ('<div id="popup-img" class="popup" role="dialog"><div class="content-info">'
+            '<img src="https://cdn-sites-assets.mziq.com/wp-content/uploads/sites/329/2024/04/Agenda_3T26_PT_3.png" alt="">'
+            '</div></div><img src="https://x/logo.png">')
+    assert ri.imagens_de_popup(home) == ["https://cdn-sites-assets.mziq.com/wp-content/uploads/sites/329/2024/04/Agenda_3T26_PT_3.png"]
+    mz = [{"event_name": "Divulgação de Resultados 3T26", "event_date": "2026-11-04T12:00:00.000Z", "event_starttime": ""},
+          {"event_name": "Teleconferência de Resultados 3T26", "event_date": "2026-11-05T12:00:00.000Z", "event_starttime": ""}]
+    monkeypatch.setattr(ri, "_get", lambda url: type("R", (), {"text": home})())
+    monkeypatch.setattr(ri, "mz_id", lambda html: "id")
+    monkeypatch.setattr(ri, "mz_eventos", lambda fm, tipo: mz)
+    monkeypatch.setattr(ri, "ocr", lambda url: "AGENDA 3T26 Divulgação de Resultados 04/11 após o fechamento "
+                                               "Teleconferência de Resultados 05/11 às 11h00 (Brasília)")
+    evs = ri.eventos_da_empresa({"ticker": "CEAB3", "ri": ["https://ri"]}, date(2026, 10, 13))
+    assert [(e.tipo, e.dia, e.inicio) for e in evs] == [("resultado", date(2026, 11, 4), None), ("call", date(2026, 11, 5), time(11))]
