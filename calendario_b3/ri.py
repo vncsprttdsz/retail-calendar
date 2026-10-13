@@ -507,7 +507,8 @@ def coletar(empresas: list[dict], hoje: date) -> tuple[list[EventoRI], set[str]]
     return eventos, falhas
 
 
-def sondar(urls: list[str], padrao: str = r"to Report|Quarter 20\d\d|conference call|cdn\.sea\.com|investor/[1-4]Q20") -> None:
+def sondar(urls: list[str], padrao: str = r"to Report|Quarter 20\d\d|conference call|cdn\.sea\.com|investor/[1-4]Q20"
+           r"|teleconfer|videoconfer|webcast|\b\d{1,2}h\d{0,2}\b|\b11:00|3T26") -> None:
     """Diagnóstico de URLs avulsas: PDF vira texto; HTML mostra PDFs, APIs, trechos e as URLs
     citadas no JavaScript da página (sites Next.js carregam o conteúdo por API)."""
     from urllib.parse import urljoin
@@ -535,6 +536,16 @@ def sondar(urls: list[str], padrao: str = r"to Report|Quarter 20\d\d|conference 
         print(f"   apis: {apis}")
         for m in list(re.finditer(padrao, html, re.I))[:10]:
             print(f"   …{html[max(0, m.start() - 200): m.end() + 300]!r}")
+        fm = mz_id(html)
+        if fm:  # site MZ: mostra também a agenda da API (campos completos)
+            import json
+
+            print(f"   mz: {fm}")
+            try:
+                print(f"   mz future: {json.dumps(mz_eventos(fm, 'future'), ensure_ascii=False)[:6000]}")
+            except Exception as e:
+                print(f"   mz future: FALHA {e}")
+            print(f"   texto: {_texto(html)[:4000]}")
         for src in re.findall(r"<script[^>]+src=[\"']([^\"']*(?:page|app)[^\"']*)", html, re.I)[:6]:
             try:
                 js = requests.get(urljoin(url, src), headers=HEADERS, timeout=60).text
