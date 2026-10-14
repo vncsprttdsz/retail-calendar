@@ -1,6 +1,6 @@
 {
  "ALLD3 call 3Q26": {
-  "assinatura": "8d486ab3a2309a25",
+  "assinatura": "275bc31a7578697e",
   "data": "2026-11-13",
   "evento": {
    "data": "2026-11-13",
@@ -8,7 +8,8 @@
    "evento": "Call 3Q26",
    "extras": {
     "fim": "11:00",
-    "fonte": "RI"
+    "fonte": "RI",
+    "link": "https://mzgroup.zoom.us/webinar/register/WN_neiP_8FnTuOXANU5nppUKw#/registration"
    },
    "hora": "10:00",
    "periodo": "",
@@ -20,7 +21,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 1
  },
  "ALLD3 resultado 3Q26": {
   "assinatura": "14ea0a1f52b527ef",
@@ -562,16 +563,17 @@
   "sequencia": 0
  },
  "PGMN3 call 3Q26": {
-  "assinatura": "03632cfc0fffdb38",
+  "assinatura": "9c1fbb406b72980a",
   "data": "2026-11-05",
   "evento": {
    "data": "2026-11-05",
    "empresa": "PAGUE MENOS",
    "evento": "Call 3Q26",
    "extras": {
-    "fonte": "RI"
+    "fonte": "RI",
+    "link": "https://zoom.us/webinar/register/WN_vMWhDRFBTmSku0xVe1lalQ"
    },
-   "hora": null,
+   "hora": "10:00",
    "periodo": "",
    "ticker": "PGMN3",
    "visto_em": "2026-10-09T08:15:03Z"
@@ -581,7 +583,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 1
  },
  "PGMN3 resultado 3Q26": {
   "assinatura": "3ed17cd4d82fb5a2",
@@ -699,16 +701,17 @@
   "sequencia": 0
  },
  "RIAA3 call 3Q26": {
-  "assinatura": "78009d541b6b31e3",
+  "assinatura": "07f7424554901e2b",
   "data": "2026-11-10",
   "evento": {
    "data": "2026-11-10",
    "empresa": "RIACHUELO",
    "evento": "Call 3Q26",
    "extras": {
-    "fonte": "RI"
+    "fonte": "manual",
+    "link": "https://mzgroup.zoom.us/webinar/register/WN_tz-oGrCuRGGYRp7rP2oFeQ#/registration"
    },
-   "hora": null,
+   "hora": "10:00",
    "periodo": "",
    "ticker": "RIAA3",
    "visto_em": "2026-10-09T08:15:03Z"
@@ -718,7 +721,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 1
  },
  "RIAA3 resultado 3Q26": {
   "assinatura": "89767b69035f768f",
@@ -810,17 +813,17 @@
   "sequencia": 0
  },
  "SMFT3 call 3Q26": {
-  "assinatura": "47c1e199b059e510",
+  "assinatura": "ca6070ec35fff5ba",
   "data": "2026-11-05",
   "evento": {
    "data": "2026-11-05",
    "empresa": "SMART FIT",
    "evento": "Call 3Q26",
    "extras": {
-    "fim": "12:00",
+    "fim": "15:00",
     "fonte": "RI"
    },
-   "hora": "11:00",
+   "hora": "13:30",
    "periodo": "",
    "ticker": "SMFT3",
    "visto_em": "2026-10-09T08:15:03Z"
@@ -830,7 +833,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 1
  },
  "SMFT3 resultado 3Q26": {
   "assinatura": "75230c6f594c9255",
