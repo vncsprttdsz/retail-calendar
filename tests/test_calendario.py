@@ -1148,3 +1148,27 @@ def test_convites_sem_configuracao_nao_envia(monkeypatch, tmp_path):
     for v in ("CONVITE_EMAIL", "CONVITE_SENHA", "CONVITE_PARA"):
         monkeypatch.delenv(v, raising=False)
     assert convites.enviar([Evento("X3", "X", "Call 3Q26", date(2026, 11, 5))], tmp_path / "c.json", date(2026, 10, 14), "America/Sao_Paulo", 60) == 0
+
+
+def test_horario_do_pregao_acompanha_horario_de_verao_americano():
+    sp = "America/Sao_Paulo"
+    assert convites.horario_pregao("B3", "fechamento", date(2026, 8, 5), sp) == time(17)   # EUA no horário de verão
+    assert convites.horario_pregao("B3", "fechamento", date(2026, 11, 5), sp) == time(18)  # depois de 01/11
+    assert convites.horario_pregao("NASDAQ", "fechamento", date(2026, 11, 4), sp) == time(18)
+    assert convites.horario_pregao("NYSE", "abertura", date(2026, 11, 10), sp) == time(11, 30)
+
+
+def test_convite_divulgacao_no_fechamento_e_lembretes():
+    agora = datetime(2026, 10, 14, tzinfo=timezone.utc)
+    monta = lambda e, mercado=None: re.sub(r"\r?\n ", "", convites.montar(
+        "REQUEST", "k", 0, e, "a@gmail.com", ["b@x.com"], "America/Sao_Paulo", 60, agora, mercado))
+    # Divulgação B3 em 05/11: 18:00-19:00 de Brasília (21:00-22:00 UTC), lembrete 15 min.
+    cal = monta(Evento("CEAB3", "CEA", "Resultado 3Q26", date(2026, 11, 5)))
+    assert "DTSTART:20261105T210000Z" in cal and "DTEND:20261105T220000Z" in cal and "TRIGGER:-PT15M" in cal
+    # Sea divulga antes da abertura da NYSE: 9:30 ET = 11:30 de Brasília em novembro.
+    cal = monta(Evento("SE", "Sea", "Resultado 3Q26", date(2026, 11, 10)), {"SE": ("NYSE", "abertura")})
+    assert "DTSTART:20261110T143000Z" in cal and "DTEND:20261110T153000Z" in cal
+    # Call com horário: lembrete 30 min; sem horário (dia inteiro): sem lembrete.
+    assert "TRIGGER:-PT30M" in monta(Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5), time(11)))
+    assert "VALARM" not in monta(Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5)))
+    assert cal.index("BEGIN:VALARM") < cal.index("END:VEVENT")

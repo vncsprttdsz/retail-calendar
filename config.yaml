@@ -10,8 +10,11 @@ calendario:
 # Convites por e-mail (põem os eventos no calendário principal do Outlook). Precisa dos secrets
 # CONVITE_EMAIL, CONVITE_SENHA e CONVITE_PARA. Deixe false até o convite de teste chegar
 # (workflow com "testar_aviso"); ao ligar, a primeira rodada manda um convite por evento futuro.
+# Nos convites, a divulgação de resultados vai às 1h a partir do fechamento da bolsa (B3: 17:00 no
+# horário de verão americano, 18:00 no resto do ano), com lembrete 15 min antes; o call, com lembrete
+# 30 min antes. Por empresa: bolsa (B3, NASDAQ, NYSE) e divulgacao (fechamento ou abertura).
 convites:
-  ativo: false
+  ativo: true
 
 fonte:
   pagina: "https://www.b3.com.br/pt_br/produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-eventos-corporativos/"
@@ -107,9 +110,9 @@ cobertura:
 #     e o Yahoo já tem data confirmada. O comunicado "to Report ... Results" (PDF) traz a data, o call
 #     (horário em ET, convertido para Brasília) e o link do webcast.
 exterior:
-  - { ticker: MELI, yahoo: MELI, nome: MercadoLibre, manual: {},
+  - { ticker: MELI, yahoo: MELI, nome: MercadoLibre, manual: {}, bolsa: NASDAQ,
       ri: ["https://investor.mercadolibre.com/news-and-events"] }
   # Sea: a página de notícias (sea.com/investor/newsroom) carrega a lista por esta API; o comunicado
   # "Sea Limited to Report ... Results" (PDF) traz a data, o horário do call (ET) e o link do webcast.
-  - { ticker: SE, yahoo: SE, nome: Sea Limited, manual: {},
+  - { ticker: SE, yahoo: SE, nome: Sea Limited, manual: {}, bolsa: NYSE, divulgacao: abertura,
       ri: ["https://www.sea.com/api/invest/news?page=1&size=10"] }

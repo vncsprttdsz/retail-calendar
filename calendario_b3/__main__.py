@@ -197,6 +197,13 @@ def _aplicar_ri_exterior(cfg: dict, externos: list, hoje) -> tuple[list, set]:
     return ajustes.substituir(externos, correcoes), {(t, "call") for t in falhas}
 
 
+def _mercados(cfg: dict) -> dict:
+    """{ticker: (bolsa, momento)} do horário da divulgação nos convites: B3/fechamento por padrão;
+    `bolsa` e `divulgacao` ("fechamento" ou "abertura") no config mudam por empresa."""
+    itens = ((cfg.get("cobertura") or {}).get("empresas") or []) + (cfg.get("exterior") or [])
+    return {str(i["ticker"]).upper(): (str(i.get("bolsa", "B3")), str(i.get("divulgacao", "fechamento"))) for i in itens}
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--config", type=Path, default=RAIZ / "config.yaml")
@@ -326,7 +333,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if (cfg.get("convites") or {}).get("ativo"):
             convites.enviar(eventos, args.historico.parent / "convites.json", hoje, cfg_cal["fuso"],
-                            int(cfg_cal.get("duracao_minutos", 60)))
+                            int(cfg_cal.get("duracao_minutos", 60)), mercado=_mercados(cfg))
     except Exception as e:
         log.error("convites: erro inesperado (%s)", type(e).__name__)
 

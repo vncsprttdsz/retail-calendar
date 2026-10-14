@@ -24,7 +24,8 @@ import os
 import re
 import smtplib
 import time
-from datetime import date, datetime, timezone
+from dataclasses import replace
+from datetime import date, datetime, time, timedelta, timezone
 from email.message import EmailMessage
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -46,16 +47,51 @@ def _uid(chave: str) -> str:
     return hashlib.sha1(f"convite|{chave}".encode()).hexdigest()[:20] + "@retail-calendar"
 
 
-def _corpo(e: Evento, fuso: str, duracao: int) -> list[str]:
-    return [*ics.horario(e, ZoneInfo(fuso), duracao), *ics.conteudo(e)]
+# Horário de referência da divulgação de resultados, por bolsa: (fuso, hora, minuto).
+# A B3 fecha junto com Nova York: 17:00 de Brasília no horário de verão americano, 18:00 no resto do ano.
+_PREGAO = {
+    ("B3", "fechamento"): ("America/New_York", 16, 0),
+    ("B3", "abertura"): ("America/Sao_Paulo", 10, 0),
+    ("NASDAQ", "fechamento"): ("America/New_York", 16, 0),
+    ("NASDAQ", "abertura"): ("America/New_York", 9, 30),
+    ("NYSE", "fechamento"): ("America/New_York", 16, 0),
+    ("NYSE", "abertura"): ("America/New_York", 9, 30),
+}
+LEMBRETE_CALL, LEMBRETE_RESULTADO, DURACAO_RESULTADO = 30, 15, 60
 
 
-def _assinatura(e: Evento, fuso: str, duracao: int) -> str:
-    return hashlib.sha1("\n".join(_corpo(e, fuso, duracao)).encode()).hexdigest()[:16]
+def horario_pregao(bolsa: str, momento: str, dia: date, fuso: str) -> time:
+    """Abertura/fechamento da bolsa naquele dia, no fuso do calendário (ex.: B3 fechamento em 05/11 -> 18:00)."""
+    tz, h, m = _PREGAO[(bolsa.upper(), momento.lower())]
+    return datetime(dia.year, dia.month, dia.day, h, m, tzinfo=ZoneInfo(tz)).astimezone(ZoneInfo(fuso)).time()
+
+
+def _convite(e: Evento, fuso: str, mercado: dict) -> tuple[Evento, int | None]:
+    """Evento como vai no convite e o lembrete (minutos antes).
+
+    Divulgação de resultados: 1 hora a partir do fechamento (ou abertura) da bolsa, lembrete 15 min.
+    Call: horário do RI, lembrete 30 min (sem horário, fica dia inteiro e sem lembrete)."""
+    if ajustes.tipo(e) == "call":
+        return e, (LEMBRETE_CALL if e.hora else None)
+    bolsa, momento = mercado.get(e.ticker, ("B3", "fechamento"))
+    inicio = horario_pregao(bolsa, momento, e.data, fuso)
+    fim = (datetime.combine(e.data, inicio) + timedelta(minutes=DURACAO_RESULTADO)).time()
+    return replace(e, hora=inicio, extras={**e.extras, "fim": f"{fim:%H:%M}"}), LEMBRETE_RESULTADO
+
+
+def _corpo(e: Evento, fuso: str, duracao: int, mercado: dict | None = None) -> list[str]:
+    ev, lembrete = _convite(e, fuso, mercado or {})
+    alarme = ["BEGIN:VALARM", "ACTION:DISPLAY", f"DESCRIPTION:{ics._escapar(ics.titulo(ev))}",
+              f"TRIGGER:-PT{lembrete}M", "END:VALARM"] if lembrete else []
+    return [*ics.horario(ev, ZoneInfo(fuso), duracao), *ics.conteudo(ev), *alarme]
+
+
+def _assinatura(e: Evento, fuso: str, duracao: int, mercado: dict | None = None) -> str:
+    return hashlib.sha1("\n".join(_corpo(e, fuso, duracao, mercado)).encode()).hexdigest()[:16]
 
 
 def montar(metodo: str, chave: str, sequencia: int, e: Evento, organizador: str, destinatarios: list[str],
-           fuso: str, duracao: int, agora: datetime) -> str:
+           fuso: str, duracao: int, agora: datetime, mercado: dict | None = None) -> str:
     """iCalendar de um convite (REQUEST) ou cancelamento (CANCEL)."""
     linhas = [
         "BEGIN:VCALENDAR", "VERSION:2.0", f"PRODID:{ics.PRODID}", "CALSCALE:GREGORIAN", f"METHOD:{metodo}",
@@ -65,9 +101,9 @@ def montar(metodo: str, chave: str, sequencia: int, e: Evento, organizador: str,
         f"DTSTAMP:{agora.astimezone(timezone.utc):%Y%m%dT%H%M%SZ}",
         f"ORGANIZER;CN=Calendário de Resultados:mailto:{organizador}",
         *[f"ATTENDEE;ROLE=OPT-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=FALSE:mailto:{d}" for d in destinatarios],
-        *_corpo(e, fuso, duracao),
         "X-MICROSOFT-CDO-INTENDEDSTATUS:FREE",
         f"STATUS:{'CANCELLED' if metodo == 'CANCEL' else 'CONFIRMED'}",
+        *_corpo(e, fuso, duracao, mercado),
         "END:VEVENT", "END:VCALENDAR",
     ]
     return "\r\n".join(ics._dobrar(l) for l in linhas) + "\r\n"
@@ -87,12 +123,12 @@ def _mensagem(metodo: str, assunto: str, texto: str, cal: str, de: str, para: li
     return msg
 
 
-def planejar(eventos: list[Evento], estado: dict, hoje: date, fuso: str, duracao: int) -> list[tuple]:
+def planejar(eventos: list[Evento], estado: dict, hoje: date, fuso: str, duracao: int, mercado: dict | None = None) -> list[tuple]:
     """O que enviar: [(metodo, chave, sequencia, evento, assinatura), ...]."""
     futuros = {_chave(e): e for e in eventos if e.data >= hoje}
     plano = []
     for chave, e in sorted(futuros.items(), key=lambda kv: (kv[1].data, kv[0])):
-        assinatura = _assinatura(e, fuso, duracao)
+        assinatura = _assinatura(e, fuso, duracao, mercado)
         anterior = estado.get(chave)
         if anterior is None:
             plano.append(("REQUEST", chave, 0, e, assinatura))
@@ -106,15 +142,16 @@ def planejar(eventos: list[Evento], estado: dict, hoje: date, fuso: str, duracao
 
 
 def enviar(eventos: list[Evento], caminho_estado: Path, hoje: date, fuso: str, duracao: int,
-           smtp_factory=None, pausa: float = 1.0) -> int:
-    """Envia convites novos, atualizações e cancelamentos. Devolve quantos e-mails saíram."""
+           smtp_factory=None, pausa: float = 1.0, mercado: dict | None = None) -> int:
+    """Envia convites novos, atualizações e cancelamentos. Devolve quantos e-mails saíram.
+    `mercado`: {ticker: (bolsa, "fechamento"|"abertura")} para o horário da divulgação (padrão: B3, fechamento)."""
     de, senha = os.environ.get("CONVITE_EMAIL", "").strip(), os.environ.get("CONVITE_SENHA", "").replace(" ", "")
     para = [d.strip() for d in re.split(r"[,;\s]+", os.environ.get("CONVITE_PARA", "")) if d.strip()]
     if not (de and senha and para):
         log.info("CONVITE_EMAIL/CONVITE_SENHA/CONVITE_PARA não configurados; convites não enviados")
         return 0
     estado = json.loads(caminho_estado.read_text(encoding="utf-8")) if caminho_estado.exists() else {}
-    plano = planejar(eventos, estado, hoje, fuso, duracao)
+    plano = planejar(eventos, estado, hoje, fuso, duracao, mercado)
     # Eventos que já passaram saem do estado (não há o que atualizar).
     estado = {k: v for k, v in estado.items() if v["data"] >= hoje.isoformat()}
     if not plano:
@@ -132,13 +169,14 @@ def enviar(eventos: list[Evento], caminho_estado: Path, hoje: date, fuso: str, d
     try:
         for i, (metodo, chave, seq, e, assinatura) in enumerate(plano):
             nome = ics.titulo(e)
+            visto, _ = _convite(e, fuso, mercado or {})  # assunto com o horário que vai no convite
             if metodo == "CANCEL":
-                assunto, texto = f"Cancelado: {nome}", f"{nome} ({_quando(e)}) saiu do calendário de resultados."
+                assunto, texto = f"Cancelado: {nome}", f"{nome} ({_quando(visto)}) saiu do calendário de resultados."
             elif seq == 0:
-                assunto, texto = f"{nome} ({_quando(e)})", f"{nome}: {_quando(e)}" + (f"\nWebcast: {e.extras['link']}" if e.extras.get("link") else "")
+                assunto, texto = f"{nome} ({_quando(visto)})", f"{nome}: {_quando(visto)}" + (f"\nWebcast: {e.extras['link']}" if e.extras.get("link") else "")
             else:
-                assunto, texto = f"Atualizado: {nome} ({_quando(e)})", f"{nome}: {_quando(e)}" + (f"\nWebcast: {e.extras['link']}" if e.extras.get("link") else "")
-            cal = montar(metodo, chave, seq, e, de, para, fuso, duracao, agora)
+                assunto, texto = f"Atualizado: {nome} ({_quando(visto)})", f"{nome}: {_quando(visto)}" + (f"\nWebcast: {e.extras['link']}" if e.extras.get("link") else "")
+            cal = montar(metodo, chave, seq, e, de, para, fuso, duracao, agora, mercado)
             try:
                 if i:
                     time.sleep(pausa)
