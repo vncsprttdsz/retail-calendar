@@ -1184,3 +1184,16 @@ def test_convites_de_teste_resultado_e_call(monkeypatch):
     assert "SUMMARY:TESTE Resultado 3Q26" in resultado and "TRIGGER:-PT15M" in resultado and "DTSTART;VALUE=DATE" not in resultado
     assert "SUMMARY:TESTE Call 3Q26" in call and "TRIGGER:-PT30M" in call and "URL:https://zoom.us/webinar/register/WN_TESTE_ficticio" in call
     assert smtp.enviadas[1]["Subject"].startswith("🧪 Teste: TESTE Call 3Q26 (") and smtp.enviadas[1]["Subject"].endswith(" 11:00)")
+
+
+def test_convites_varios_na_mesma_rodada(monkeypatch, tmp_path):
+    # Bug real: "time" (datetime.time) sombreava o módulo time e o 2º envio em diante falhava.
+    monkeypatch.setenv("CONVITE_EMAIL", "calendario@gmail.com")
+    monkeypatch.setenv("CONVITE_SENHA", "abcdefghijklmnop")
+    monkeypatch.setenv("CONVITE_PARA", "eu@empresa.com")
+    smtp = SmtpFalso()
+    evs = [Evento("RADL3", "RD", "Resultado 3Q26", date(2026, 11, 3)), Evento("RADL3", "RD", "Call 3Q26", date(2026, 11, 4), time(10)),
+           Evento("CEAB3", "CEA", "Resultado 3Q26", date(2026, 11, 4))]
+    assert convites.enviar(evs, tmp_path / "c.json", date(2026, 10, 14), "America/Sao_Paulo", 60, smtp_factory=lambda: smtp, pausa=0) == 3
+    assert [m["Subject"] for m in smtp.enviadas] == [
+        "RADL Resultado 3Q26 (03/11 18:00)", "CEAB Resultado 3Q26 (04/11 18:00)", "RADL Call 3Q26 (04/11 10:00)"]

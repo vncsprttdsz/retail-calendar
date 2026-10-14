@@ -90,5 +90,8 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git commit -m "Atualiza calendário de resultados ($(date -u +%Y-%m-%dT%H:%MZ))"
+            # Outro commit pode ter chegado durante a rodada: integra antes de enviar (o estado dos
+            # convites não pode se perder, senão o mesmo convite sai de novo).
+            git pull --rebase -X theirs origin main || git pull --rebase origin main
             git push
           fi

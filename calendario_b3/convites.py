@@ -23,7 +23,7 @@ import logging
 import os
 import re
 import smtplib
-import time
+import time as relogio
 from dataclasses import replace
 from datetime import date, datetime, time, timedelta, timezone
 from email.message import EmailMessage
@@ -179,7 +179,7 @@ def enviar(eventos: list[Evento], caminho_estado: Path, hoje: date, fuso: str, d
             cal = montar(metodo, chave, seq, e, de, para, fuso, duracao, agora, mercado)
             try:
                 if i:
-                    time.sleep(pausa)
+                    relogio.sleep(pausa)
                 conexao.send_message(_mensagem(metodo, assunto, texto, cal, de, para))
             except Exception as erro:
                 log.error("convites: falha ao enviar %s (%s); nova tentativa na próxima rodada", assunto, type(erro).__name__)
