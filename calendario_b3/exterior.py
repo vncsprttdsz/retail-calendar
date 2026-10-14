@@ -77,6 +77,25 @@ def _parse_manual(valor: str) -> tuple[date, time | None]:
     return date.fromisoformat(m[1]), (time(int(m[2]), int(m[3])) if m[2] else None)
 
 
+def evento_manual(ticker: str, nome: str, chave, valor) -> Evento:
+    """Entrada de `manual` no config:
+        3Q26: "2026-11-09"                      -> Resultado 3Q26 (dia inteiro)
+        3Q26: "2026-11-09 18:00"                -> Resultado 3Q26 com horário (Brasília)
+        call 3Q26: "2026-11-10 10:00"           -> Call 3Q26
+        call 3Q26: { quando: "2026-11-10 10:00", link: "https://..." }  -> Call 3Q26 com link do webcast
+    """
+    chave = str(chave).strip()
+    m = re.fullmatch(r"(?i)call\s+([1-4]Q\d\d)", chave)
+    extras = {"fonte": "manual"}
+    if isinstance(valor, dict):
+        if valor.get("link"):
+            extras["link"] = str(valor["link"]).strip()
+        valor = valor.get("quando") or valor.get("data")
+    dia, hora = _parse_manual(valor)
+    evento = f"Call {m[1].upper()}" if m else f"Resultado {chave.upper()}"
+    return Evento(ticker, nome, evento, dia, hora, extras=extras)
+
+
 def coletar(itens: list | None, fuso: str, consulta=None) -> tuple[list[Evento], set[str]]:
     """Eventos das empresas do exterior e o conjunto de tickers cuja consulta falhou
     (para esses, o histórico mantém os eventos futuros já conhecidos)."""
@@ -87,9 +106,12 @@ def coletar(itens: list | None, fuso: str, consulta=None) -> tuple[list[Evento],
     for item in itens or []:
         ticker = str(item["ticker"]).upper()
         nome = item.get("nome") or ticker
-        manuais = {str(q).upper(): _parse_manual(v) for q, v in (item.get("manual") or {}).items()}
-        for q, (dia, hora) in manuais.items():
-            eventos.append(Evento(ticker, nome, f"Resultado {q}", dia, hora))
+        manuais = {}
+        for q, v in (item.get("manual") or {}).items():
+            e = evento_manual(ticker, nome, q, v)
+            eventos.append(e)
+            if e.evento.startswith("Resultado"):
+                manuais[str(q).upper()] = (e.data, e.hora)
         try:
             yahoo = consulta(item.get("yahoo") or ticker, tz)
         except Exception as e:

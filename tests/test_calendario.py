@@ -1229,3 +1229,18 @@ def test_convites_quem_entra_na_lista_recebe_os_ja_enviados(monkeypatch, tmp_pat
     # Mudou o horário: atualização para todos.
     assert enviar([Evento("PNVL3", "DIMED", "Call 3Q26", date(2026, 11, 6), time(10))]) == 1
     assert smtp.enviadas[-1]["To"] == "eu@empresa.com, ana@empresa.com, bia@empresa.com" and "SEQUENCE:1" in _cal(smtp.enviadas[-1])
+
+
+def test_call_manual_com_horario_e_link():
+    from calendario_b3 import ajustes
+
+    item = {"ticker": "RIAA3", "nomes": ["RIACHUELO"], "manual": {
+        "call 3Q26": {"quando": "2026-11-10 10:00", "link": "https://mzgroup.zoom.us/webinar/register/WN_x#/registration"},
+        "3Q26": "2026-11-09"}}
+    call, resultado = ajustes.manuais([item])
+    assert (call.evento, call.data, call.hora, call.extras["link"]) == (
+        "Call 3Q26", date(2026, 11, 10), time(10), "https://mzgroup.zoom.us/webinar/register/WN_x#/registration")
+    assert (resultado.evento, resultado.data, resultado.hora) == ("Resultado 3Q26", date(2026, 11, 9), None)
+    # Substitui o call que veio do RI/CVM (mesmo ticker, tipo e trimestre).
+    do_ri = Evento("RIAA3", "RIACHUELO", "Call 3Q26", date(2026, 11, 10), extras={"fonte": "RI"})
+    assert ajustes.substituir([do_ri], [call]) == [call]

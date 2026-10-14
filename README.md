@@ -49,6 +49,8 @@ https://raw.githubusercontent.com/vncsprttdsz/retail-calendar/main/publico/calen
 5. **Data corrigida à mão** (empresas da B3): `manual` na empresa, ex.:
    `- { ticker: MGLU3, ..., manual: { 3Q26: "2026-11-09" } }`. Prevalece sobre B3 e CVM.
    Remova quando a fonte oficial já trouxer a data nova.
+   Para o call (ex.: site de RI bloqueado): `manual: { "call 3Q26": { quando: "2026-11-10 10:00",
+   link: "https://..." } }`.
 
 ### Avisos no WhatsApp (opcional)
 

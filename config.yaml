@@ -51,8 +51,9 @@ eventos:
 #     (data, horário e link do webcast). Sites MZ são lidos pela API de eventos da MZ;
 #     mz: id da companhia na MZ, quando o site não deixa descobrir (ex.: certificado inválido ou
 #         site bloqueado). É o 1º código dos links de arquivo: api.mziq.com/mzfilemanager/v2/d/<id>/...
-# manual: data fixada à mão, prevalece sobre B3 e CVM (ex.: { 3Q26: "2026-11-09" } ou
-#         { 3Q26: "2026-11-09 18:00" }, horário de Brasília; sem horário = dia inteiro).
+# manual: data fixada à mão, prevalece sobre B3, CVM e site de RI (ex.: { 3Q26: "2026-11-09" } ou
+#         { 3Q26: "2026-11-09 18:00" }, horário de Brasília; sem horário = dia inteiro). Para o call:
+#         { "call 3Q26": { quando: "2026-11-10 10:00", link: "https://..." } } (link opcional).
 cobertura:
   empresas:
     # Apparel
@@ -61,7 +62,9 @@ cobertura:
     - { ticker: CEAB3, nomes: ["CEA MODAS", "C&A Modas"], cnpj: "45.242.914/0001-05",
         ri: ["https://ri.cea.com.br/"] }
     - { ticker: RIAA3, nomes: ["RIACHUELO", "Guararapes"], cnpj: "08.402.943/0001-52",
-        ri: ["https://ri.riachuelo.com.br/"], mz: "0c51b75c-1d63-4db0-85ed-6a34ac67fccc" }
+        ri: ["https://ri.riachuelo.com.br/"], mz: "0c51b75c-1d63-4db0-85ed-6a34ac67fccc",
+        manual: { "call 3Q26": { quando: "2026-11-10 10:00",
+                                 link: "https://mzgroup.zoom.us/webinar/register/WN_tz-oGrCuRGGYRp7rP2oFeQ#/registration" } } }
     - { ticker: SBFG3, nomes: ["GRUPO SBF"], cnpj: "13.217.485/0001-11",
         ri: ["https://ri.gruposbf.com.br/"] }
     - { ticker: LREN3, nomes: ["LOJAS RENNER", "Renner"], cnpj: "92.754.738/0001-62",

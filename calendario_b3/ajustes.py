@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from .exterior import _parse_manual
+from .exterior import evento_manual
 from .modelo import Evento
 
 _RE_ROTULO = re.compile(r"\b([1-4]Q\d\d)\b")
@@ -33,11 +33,11 @@ def substituir(eventos: list[Evento], correcoes: list[Evento]) -> list[Evento]:
 
 
 def manuais(empresas: list[dict]) -> list[Evento]:
-    """`manual: { 3Q26: "2026-11-09" }` em cada empresa de cobertura.empresas."""
+    """`manual` em cada empresa de cobertura.empresas: { 3Q26: "2026-11-09" } para a divulgação e
+    { "call 3Q26": { quando: "2026-11-10 10:00", link: "https://..." } } para o call (ver exterior.evento_manual)."""
     saida = []
     for item in empresas or []:
         nomes = item.get("nomes") or []
         for q, valor in (item.get("manual") or {}).items():
-            dia, hora = _parse_manual(valor)
-            saida.append(Evento(str(item["ticker"]).upper(), nomes[0] if nomes else item["ticker"], f"Resultado {str(q).upper()}", dia, hora))
+            saida.append(evento_manual(str(item["ticker"]).upper(), nomes[0] if nomes else item["ticker"], q, valor))
     return saida

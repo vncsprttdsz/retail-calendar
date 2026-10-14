@@ -164,7 +164,8 @@ def _aplicar_ri_exterior(cfg: dict, externos: list, hoje) -> tuple[list, set]:
     if not itens:
         return externos, set()
     nomes = {str(i["ticker"]).upper(): i.get("nome") or i["ticker"] for i in itens}
-    manuais = {(str(i["ticker"]).upper(), str(q).upper()) for i in itens for q in (i.get("manual") or {})}
+    manuais = {ajustes.chave(exterior.evento_manual(str(i["ticker"]).upper(), "", q, v))
+               for i in itens for q, v in (i.get("manual") or {}).items()}
     try:
         achados, falhas = ri.coletar(itens, hoje)
     except Exception as e:
@@ -173,7 +174,7 @@ def _aplicar_ri_exterior(cfg: dict, externos: list, hoje) -> tuple[list, set]:
     atuais = {ajustes.chave(e): e for e in externos}
     correcoes = []
     for r in achados:
-        if r.dia < hoje or (r.ticker, r.rotulo) in manuais:
+        if r.dia < hoje or (r.ticker, r.tipo, r.rotulo) in manuais:
             continue
         nome = nomes.get(r.ticker, r.ticker)
         if r.tipo == "call":
