@@ -1207,3 +1207,25 @@ def test_convite_com_horario_fica_ocupado():
         assert "TRANSP:OPAQUE" in cal and "X-MICROSOFT-CDO-BUSYSTATUS:BUSY" in cal and "INTENDEDSTATUS:BUSY" in cal and "FREE" not in cal
     cal = monta(Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5)))  # call ainda sem horário: dia inteiro, livre
     assert "TRANSP:TRANSPARENT" in cal and "INTENDEDSTATUS:FREE" in cal and "STATUS:BUSY" not in cal
+
+
+def test_convites_quem_entra_na_lista_recebe_os_ja_enviados(monkeypatch, tmp_path):
+    monkeypatch.setenv("CONVITE_EMAIL", "calendario@gmail.com")
+    monkeypatch.setenv("CONVITE_SENHA", "abcdefghijklmnop")
+    estado, hoje, smtp = tmp_path / "convites.json", date(2026, 10, 14), SmtpFalso()
+    enviar = lambda evs: convites.enviar(evs, estado, hoje, "America/Sao_Paulo", 60, smtp_factory=lambda: smtp, pausa=0)
+    call = Evento("PNVL3", "DIMED", "Call 3Q26", date(2026, 11, 6), time(9, 30))
+    monkeypatch.setenv("CONVITE_PARA", "eu@empresa.com")
+    assert enviar([call]) == 1
+    # Entraram duas pessoas: só elas recebem, mesmo UID e mesma SEQUENCE; nada sai para quem já tinha.
+    monkeypatch.setenv("CONVITE_PARA", "eu@empresa.com, ana@empresa.com, bia@empresa.com")
+    assert enviar([call]) == 1
+    msg = smtp.enviadas[-1]
+    assert msg["To"] == "ana@empresa.com, bia@empresa.com" and msg["Subject"] == "PNVL Call 3Q26 (06/11 09:30)"
+    assert "SEQUENCE:0" in _cal(msg) and _cal(msg).count("ATTENDEE") == 3
+    assert enviar([call]) == 0
+    # O estado (repositório público) guarda só hashes dos e-mails.
+    assert "empresa.com" not in estado.read_text()
+    # Mudou o horário: atualização para todos.
+    assert enviar([Evento("PNVL3", "DIMED", "Call 3Q26", date(2026, 11, 6), time(10))]) == 1
+    assert smtp.enviadas[-1]["To"] == "eu@empresa.com, ana@empresa.com, bia@empresa.com" and "SEQUENCE:1" in _cal(smtp.enviadas[-1])

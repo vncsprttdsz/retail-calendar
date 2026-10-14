@@ -15,7 +15,7 @@ calendario:
 # 30 min antes; com horário, aparecem como Ocupado. Por empresa: bolsa (B3, NASDAQ, NYSE) e divulgacao (fechamento ou abertura).
 convites:
   ativo: true
-  apenas: [PNVL3]   # só estes tickers por enquanto; apague a linha para enviar todos
+  # apenas: [PNVL3]   # opcional: só estes tickers
 
 fonte:
   pagina: "https://www.b3.com.br/pt_br/produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-eventos-corporativos/"

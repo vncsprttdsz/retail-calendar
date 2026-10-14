@@ -128,21 +128,36 @@ def _mensagem(metodo: str, assunto: str, texto: str, cal: str, de: str, para: li
     return msg
 
 
-def planejar(eventos: list[Evento], estado: dict, hoje: date, fuso: str, duracao: int, mercado: dict | None = None) -> list[tuple]:
-    """O que enviar: [(metodo, chave, sequencia, evento, assinatura), ...]."""
+def _hash(email: str) -> str:
+    """Destinatário guardado só como hash: o estado vai para o repositório público."""
+    return hashlib.sha1(email.strip().lower().encode()).hexdigest()[:12]
+
+
+def planejar(eventos: list[Evento], estado: dict, hoje: date, fuso: str, duracao: int, mercado: dict | None = None,
+             para: list[str] | None = None) -> list[tuple]:
+    """O que enviar: [(metodo, chave, sequencia, evento, assinatura, destinatarios), ...].
+
+    Evento novo ou alterado vai para todos; evento sem mudança vai só para quem ainda não o recebeu
+    (ex.: alguém entrou na lista), com a mesma SEQUENCE."""
+    para = para or []
     futuros = {_chave(e): e for e in eventos if e.data >= hoje}
     plano = []
     for chave, e in sorted(futuros.items(), key=lambda kv: (kv[1].data, kv[0])):
         assinatura = _assinatura(e, fuso, duracao, mercado)
         anterior = estado.get(chave)
         if anterior is None:
-            plano.append(("REQUEST", chave, 0, e, assinatura))
+            plano.append(("REQUEST", chave, 0, e, assinatura, para))
         elif anterior["assinatura"] != assinatura:
-            plano.append(("REQUEST", chave, anterior["sequencia"] + 1, e, assinatura))
+            plano.append(("REQUEST", chave, anterior["sequencia"] + 1, e, assinatura, para))
+        else:
+            ja = set(anterior.get("para") or [])
+            novos = [d for d in para if _hash(d) not in ja]
+            if novos:
+                plano.append(("REQUEST", chave, anterior["sequencia"], e, assinatura, novos))
     for chave, anterior in estado.items():
         if chave not in futuros and anterior["data"] >= hoje.isoformat():  # sumiu antes de acontecer
             e = Evento.de_json(anterior["evento"])
-            plano.append(("CANCEL", chave, anterior["sequencia"] + 1, e, anterior["assinatura"]))
+            plano.append(("CANCEL", chave, anterior["sequencia"] + 1, e, anterior["assinatura"], para))
     return plano
 
 
@@ -156,7 +171,7 @@ def enviar(eventos: list[Evento], caminho_estado: Path, hoje: date, fuso: str, d
         log.info("CONVITE_EMAIL/CONVITE_SENHA/CONVITE_PARA não configurados; convites não enviados")
         return 0
     estado = json.loads(caminho_estado.read_text(encoding="utf-8")) if caminho_estado.exists() else {}
-    plano = planejar(eventos, estado, hoje, fuso, duracao, mercado)
+    plano = planejar(eventos, estado, hoje, fuso, duracao, mercado, para)
     # Eventos que já passaram saem do estado (não há o que atualizar).
     estado = {k: v for k, v in estado.items() if v["data"] >= hoje.isoformat()}
     if not plano:
@@ -172,12 +187,14 @@ def enviar(eventos: list[Evento], caminho_estado: Path, hoje: date, fuso: str, d
         log.error("convites: falha ao conectar no Gmail (%s)", type(e).__name__)
         return 0
     try:
-        for i, (metodo, chave, seq, e, assinatura) in enumerate(plano):
+        for i, (metodo, chave, seq, e, assinatura, destino) in enumerate(plano):
             nome = ics.titulo(e)
             visto, _ = _convite(e, fuso, mercado or {})  # assunto com o horário que vai no convite
+            anterior = estado.get(chave) or {}
+            reenvio = metodo == "REQUEST" and anterior.get("assinatura") == assinatura  # só para quem entrou na lista
             if metodo == "CANCEL":
                 assunto, texto = f"Cancelado: {nome}", f"{nome} ({_quando(visto)}) saiu do calendário de resultados."
-            elif seq == 0:
+            elif seq == 0 or reenvio:
                 assunto, texto = f"{nome} ({_quando(visto)})", f"{nome}: {_quando(visto)}" + (f"\nWebcast: {e.extras['link']}" if e.extras.get("link") else "")
             else:
                 assunto, texto = f"Atualizado: {nome} ({_quando(visto)})", f"{nome}: {_quando(visto)}" + (f"\nWebcast: {e.extras['link']}" if e.extras.get("link") else "")
@@ -185,16 +202,18 @@ def enviar(eventos: list[Evento], caminho_estado: Path, hoje: date, fuso: str, d
             try:
                 if i:
                     relogio.sleep(pausa)
-                conexao.send_message(_mensagem(metodo, assunto, texto, cal, de, para))
+                conexao.send_message(_mensagem(metodo, assunto, texto, cal, de, destino))
             except Exception as erro:
                 log.error("convites: falha ao enviar %s (%s); nova tentativa na próxima rodada", assunto, type(erro).__name__)
                 continue
             enviados += 1
-            log.info("convite enviado: %s", assunto)
+            log.info("convite enviado: %s (%d destinatário(s))", assunto, len(destino))
             if metodo == "CANCEL":
                 estado.pop(chave, None)
             else:
-                estado[chave] = {"sequencia": seq, "assinatura": assinatura, "data": e.data.isoformat(), "evento": e.para_json()}
+                recebidos = set(anterior.get("para") or []) if reenvio else set()
+                estado[chave] = {"sequencia": seq, "assinatura": assinatura, "data": e.data.isoformat(), "evento": e.para_json(),
+                                 "para": sorted(recebidos | {_hash(d) for d in destino})}
     finally:
         try:
             conexao.quit()

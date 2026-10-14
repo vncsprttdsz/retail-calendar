@@ -100,6 +100,9 @@ Calls: no horário informado pela empresa, com lembrete 30 min antes.
 5. Se ele apareceu no calendário, mude `convites: ativo: true` no `config.yaml`. A primeira rodada
    manda um convite por evento futuro (umas 40-50 no meio da temporada); depois, só novidades.
 
+Quem entra depois em `CONVITE_PARA` recebe, na rodada seguinte, os convites que já tinham saído
+(o estado guarda só um hash de cada e-mail, já que o repositório é público).
+
 Dica: no Outlook, uma regra que mova os e-mails desse remetente para uma pasta mantém a caixa limpa;
 o convite continua indo para o calendário.
 
