@@ -1172,3 +1172,15 @@ def test_convite_divulgacao_no_fechamento_e_lembretes():
     assert "TRIGGER:-PT30M" in monta(Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5), time(11)))
     assert "VALARM" not in monta(Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5)))
     assert cal.index("BEGIN:VALARM") < cal.index("END:VEVENT")
+
+
+def test_convites_de_teste_resultado_e_call(monkeypatch):
+    monkeypatch.setenv("CONVITE_EMAIL", "calendario@gmail.com")
+    monkeypatch.setenv("CONVITE_SENHA", "abcdefghijklmnop")
+    monkeypatch.setenv("CONVITE_PARA", "eu@empresa.com")
+    smtp = SmtpFalso()
+    assert convites.teste(smtp_factory=lambda: smtp)
+    resultado, call = (_cal(m) for m in smtp.enviadas)
+    assert "SUMMARY:TESTE Resultado 3Q26" in resultado and "TRIGGER:-PT15M" in resultado and "DTSTART;VALUE=DATE" not in resultado
+    assert "SUMMARY:TESTE Call 3Q26" in call and "TRIGGER:-PT30M" in call and "URL:https://zoom.us/webinar/register/WN_TESTE_ficticio" in call
+    assert smtp.enviadas[1]["Subject"].startswith("🧪 Teste: TESTE Call 3Q26 (") and smtp.enviadas[1]["Subject"].endswith(" 11:00)")

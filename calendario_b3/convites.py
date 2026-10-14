@@ -199,26 +199,31 @@ def enviar(eventos: list[Evento], caminho_estado: Path, hoje: date, fuso: str, d
     return enviados
 
 
-def teste(fuso: str = "America/Sao_Paulo") -> bool:
-    """Um convite de teste para amanhã às 12:00 (para conferir se chega ao calendário do Outlook)."""
-    from datetime import time as hora, timedelta
-
+def teste(fuso: str = "America/Sao_Paulo", smtp_factory=None) -> bool:
+    """Convites de teste para amanhã, com as mesmas regras dos reais: uma divulgação de resultados
+    (fechamento da B3, 1h, lembrete 15 min) e um call às 11:00 (lembrete 30 min, link Zoom fictício)."""
     de, senha = os.environ.get("CONVITE_EMAIL", "").strip(), os.environ.get("CONVITE_SENHA", "").replace(" ", "")
     para = [d.strip() for d in re.split(r"[,;\s]+", os.environ.get("CONVITE_PARA", "")) if d.strip()]
     if not (de and senha and para):
-        log.info("CONVITE_EMAIL/CONVITE_SENHA/CONVITE_PARA não configurados; convite de teste não enviado")
+        log.info("CONVITE_EMAIL/CONVITE_SENHA/CONVITE_PARA não configurados; convites de teste não enviados")
         return False
     amanha = datetime.now(ZoneInfo(fuso)).date() + timedelta(days=1)
-    e = Evento("TESTE", "Teste", "Convite de teste (pode apagar)", amanha, hora(12))
     agora = datetime.now(timezone.utc)
-    cal = montar("REQUEST", f"teste {agora:%Y%m%d%H%M%S}", 0, e, de, para, fuso, 30, agora)
+    eventos = [
+        Evento("TESTE", "Teste", "Resultado 3Q26", amanha),
+        Evento("TESTE", "Teste", "Call 3Q26", amanha, time(11), extras={"link": "https://zoom.us/webinar/register/WN_TESTE_ficticio"}),
+    ]
     try:
-        with smtplib.SMTP_SSL(*SMTP, timeout=60) as conexao:
-            conexao.login(de, senha)
-            conexao.send_message(_mensagem("REQUEST", "🧪 Teste: convite do calendário de resultados", "Se este evento apareceu "
-                                           "no seu calendário, os convites estão funcionando. Pode apagar.", cal, de, para))
+        conexao = (smtp_factory or (lambda: smtplib.SMTP_SSL(*SMTP, timeout=60)))()
+        conexao.login(de, senha)
+        for e in eventos:
+            visto, _ = _convite(e, fuso, {})
+            cal = montar("REQUEST", f"teste {_chave(e)} {agora:%Y%m%d%H%M%S}", 0, e, de, para, fuso, 60, agora)
+            texto = "Teste do calendário de resultados (pode apagar)." + (f"\nWebcast: {e.extras['link']}" if e.extras.get("link") else "")
+            conexao.send_message(_mensagem("REQUEST", f"🧪 Teste: {ics.titulo(e)} ({_quando(visto)})", texto, cal, de, para))
+        conexao.quit()
     except Exception as erro:
-        log.error("convite de teste: falha (%s)", type(erro).__name__)
+        log.error("convites de teste: falha (%s)", type(erro).__name__)
         return False
-    log.info("convite de teste enviado para %d destinatário(s)", len(para))
+    log.info("convites de teste (resultado e call) enviados para %d destinatário(s)", len(para))
     return True
