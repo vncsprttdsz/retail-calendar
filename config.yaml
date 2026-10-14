@@ -12,7 +12,7 @@ calendario:
 # (workflow com "testar_aviso"); ao ligar, a primeira rodada manda um convite por evento futuro.
 # Nos convites, a divulgação de resultados vai às 1h a partir do fechamento da bolsa (B3: 17:00 no
 # horário de verão americano, 18:00 no resto do ano), com lembrete 15 min antes; o call, com lembrete
-# 30 min antes. Por empresa: bolsa (B3, NASDAQ, NYSE) e divulgacao (fechamento ou abertura).
+# 30 min antes; com horário, aparecem como Ocupado. Por empresa: bolsa (B3, NASDAQ, NYSE) e divulgacao (fechamento ou abertura).
 convites:
   ativo: false
 

@@ -1197,3 +1197,13 @@ def test_convites_varios_na_mesma_rodada(monkeypatch, tmp_path):
     assert convites.enviar(evs, tmp_path / "c.json", date(2026, 10, 14), "America/Sao_Paulo", 60, smtp_factory=lambda: smtp, pausa=0) == 3
     assert [m["Subject"] for m in smtp.enviadas] == [
         "RADL Resultado 3Q26 (03/11 18:00)", "CEAB Resultado 3Q26 (04/11 18:00)", "RADL Call 3Q26 (04/11 10:00)"]
+
+
+def test_convite_com_horario_fica_ocupado():
+    agora = datetime(2026, 10, 14, tzinfo=timezone.utc)
+    monta = lambda e: convites.montar("REQUEST", "k", 0, e, "a@gmail.com", ["b@x.com"], "America/Sao_Paulo", 60, agora)
+    for e in (Evento("CEAB3", "CEA", "Resultado 3Q26", date(2026, 11, 4)), Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5), time(11))):
+        cal = monta(e)
+        assert "TRANSP:OPAQUE" in cal and "X-MICROSOFT-CDO-BUSYSTATUS:BUSY" in cal and "INTENDEDSTATUS:BUSY" in cal and "FREE" not in cal
+    cal = monta(Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5)))  # call ainda sem horário: dia inteiro, livre
+    assert "TRANSP:TRANSPARENT" in cal and "INTENDEDSTATUS:FREE" in cal and "STATUS:BUSY" not in cal

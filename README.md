@@ -85,7 +85,7 @@ O calendário assinado por link não aparece em todas as telas (ex.: agenda da B
 Pendentes do Outlook clássico, app no celular). Com os convites, cada evento chega por e-mail como
 convite de reunião e entra no **calendário principal**. Mudou a data ou o horário, chega uma
 atualização do mesmo convite (o Outlook substitui o evento); saiu do calendário, chega um cancelamento.
-Os eventos ficam como *Livre*. Divulgação de resultados: 1 hora a partir do fechamento da bolsa
+Eventos com horário ficam como *Ocupado* (os de dia inteiro, como *Livre*). Divulgação de resultados: 1 hora a partir do fechamento da bolsa
 (B3 e Nasdaq; a Sea, que divulga antes da abertura, na abertura da NYSE), com lembrete 15 min antes.
 Calls: no horário informado pela empresa, com lembrete 30 min antes.
 

@@ -83,7 +83,13 @@ def _corpo(e: Evento, fuso: str, duracao: int, mercado: dict | None = None) -> l
     ev, lembrete = _convite(e, fuso, mercado or {})
     alarme = ["BEGIN:VALARM", "ACTION:DISPLAY", f"DESCRIPTION:{ics._escapar(ics.titulo(ev))}",
               f"TRIGGER:-PT{lembrete}M", "END:VALARM"] if lembrete else []
-    return [*ics.horario(ev, ZoneInfo(fuso), duracao), *ics.conteudo(ev), *alarme]
+    horario = ics.horario(ev, ZoneInfo(fuso), duracao)
+    if ev.hora:  # com horário: Ocupado (dia inteiro continua Livre, para não bloquear o dia todo)
+        horario = [{"TRANSP:TRANSPARENT": "TRANSP:OPAQUE", "X-MICROSOFT-CDO-BUSYSTATUS:FREE": "X-MICROSOFT-CDO-BUSYSTATUS:BUSY"}.get(l, l)
+                   for l in horario] + ["X-MICROSOFT-CDO-INTENDEDSTATUS:BUSY"]
+    else:
+        horario = horario + ["X-MICROSOFT-CDO-INTENDEDSTATUS:FREE"]
+    return [*horario, *ics.conteudo(ev), *alarme]
 
 
 def _assinatura(e: Evento, fuso: str, duracao: int, mercado: dict | None = None) -> str:
@@ -101,7 +107,6 @@ def montar(metodo: str, chave: str, sequencia: int, e: Evento, organizador: str,
         f"DTSTAMP:{agora.astimezone(timezone.utc):%Y%m%dT%H%M%SZ}",
         f"ORGANIZER;CN=Calendário de Resultados:mailto:{organizador}",
         *[f"ATTENDEE;ROLE=OPT-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=FALSE:mailto:{d}" for d in destinatarios],
-        "X-MICROSOFT-CDO-INTENDEDSTATUS:FREE",
         f"STATUS:{'CANCELLED' if metodo == 'CANCEL' else 'CONFIRMED'}",
         *_corpo(e, fuso, duracao, mercado),
         "END:VEVENT", "END:VCALENDAR",
