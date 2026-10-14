@@ -79,6 +79,28 @@ Sem o secret, as mudanças aparecem só no log do workflow. Telefones e apikeys 
 impressos no log (o repositório é público). O Telegram continua disponível como alternativa:
 secrets `TELEGRAM_BOT_TOKEN` e `TELEGRAM_CHAT_ID` (bot criado no @BotFather).
 
+### Convites no calendário principal do Outlook (opcional)
+
+O calendário assinado por link não aparece em todas as telas (ex.: agenda da Barra de Tarefas
+Pendentes do Outlook clássico, app no celular). Com os convites, cada evento chega por e-mail como
+convite de reunião e entra no **calendário principal**. Mudou a data ou o horário, chega uma
+atualização do mesmo convite (o Outlook substitui o evento); saiu do calendário, chega um cancelamento.
+Os eventos ficam como *Livre*.
+
+1. Crie uma conta Gmail só para isso (não use e-mail pessoal ou de trabalho).
+2. Nela, ative a **verificação em duas etapas** e crie uma **senha de app**
+   (Conta do Google → Segurança → Senhas de app). São 16 letras.
+3. No GitHub (*Settings → Secrets and variables → Actions*), crie os secrets:
+   - `CONVITE_EMAIL`: o endereço Gmail
+   - `CONVITE_SENHA`: a senha de app
+   - `CONVITE_PARA`: quem recebe, separado por vírgula (ex.: `eu@empresa.com, colega@empresa.com`)
+4. Rode o workflow marcando **testar_aviso**: chega um convite de teste para amanhã às 12:00.
+5. Se ele apareceu no calendário, mude `convites: ativo: true` no `config.yaml`. A primeira rodada
+   manda um convite por evento futuro (umas 40-50 no meio da temporada); depois, só novidades.
+
+Dica: no Outlook, uma regra que mova os e-mails desse remetente para uma pasta mantém a caixa limpa;
+o convite continua indo para o calendário.
+
 ## De onde vêm as datas
 
 | Prioridade | Fonte | O que traz |

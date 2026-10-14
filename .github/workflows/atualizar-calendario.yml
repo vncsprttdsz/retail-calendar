@@ -11,7 +11,7 @@ on:
         type: boolean
         default: false
       testar_aviso:
-        description: "Só mandar uma mensagem de teste no WhatsApp/Telegram (não altera o calendário)"
+        description: "Só mandar mensagem de teste no WhatsApp e convite de teste por e-mail (não altera o calendário)"
         type: boolean
         default: false
       sondar:
@@ -64,6 +64,9 @@ jobs:
           CALLMEBOT_WHATSAPP: ${{ secrets.CALLMEBOT_WHATSAPP }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          CONVITE_EMAIL: ${{ secrets.CONVITE_EMAIL }}
+          CONVITE_SENHA: ${{ secrets.CONVITE_SENHA }}
+          CONVITE_PARA: ${{ secrets.CONVITE_PARA }}
         run: python -m calendario_b3 --testar-aviso
 
       - name: Ler cronograma da B3 e gerar .ics
@@ -72,6 +75,9 @@ jobs:
           CALLMEBOT_WHATSAPP: ${{ secrets.CALLMEBOT_WHATSAPP }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          CONVITE_EMAIL: ${{ secrets.CONVITE_EMAIL }}
+          CONVITE_SENHA: ${{ secrets.CONVITE_SENHA }}
+          CONVITE_PARA: ${{ secrets.CONVITE_PARA }}
         run: python -m calendario_b3
 
       - name: Commit se houve mudança

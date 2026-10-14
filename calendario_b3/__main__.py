@@ -20,7 +20,7 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 import yaml
 
-from . import ajustes, cvm, exterior, fonte, historico, ics, noticias, notificar, parser, ri
+from . import ajustes, convites, cvm, exterior, fonte, historico, ics, noticias, notificar, parser, ri
 from .filtros import carregar_cobertura, empresa_da_linha, filtrar
 from .modelo import LinhaFonte
 
@@ -214,7 +214,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.testar_aviso:
         ok = notificar.enviar(["🧪 Teste: os avisos de mudança de data do calendário de resultados vão chegar aqui."])
-        return 0 if ok else 1
+        ok_convite = convites.teste()
+        return 0 if (ok or ok_convite) else 1
 
     cfg = yaml.safe_load(args.config.read_text(encoding="utf-8"))
     cfg_cal, cfg_fonte, cfg_ev = cfg["calendario"], cfg["fonte"], cfg.get("eventos", {})
@@ -321,6 +322,13 @@ def main(argv: list[str] | None = None) -> int:
     historico.salvar(args.historico, eventos)
     if antes:  # primeira execução não gera aviso de "tudo novo"
         notificar.enviar(notificar.diferencas(antes, eventos, hoje))
+    # Convites por e-mail: põem os eventos no calendário principal do Outlook (falha não derruba a rodada).
+    try:
+        if (cfg.get("convites") or {}).get("ativo"):
+            convites.enviar(eventos, args.historico.parent / "convites.json", hoje, cfg_cal["fuso"],
+                            int(cfg_cal.get("duracao_minutos", 60)))
+    except Exception as e:
+        log.error("convites: erro inesperado (%s)", type(e).__name__)
 
     args.saida.parent.mkdir(parents=True, exist_ok=True)
     conteudo = ics.gerar(

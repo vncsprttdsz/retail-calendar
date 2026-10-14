@@ -7,6 +7,12 @@ calendario:
   # Duração usada quando a B3 informa horário (eventos sem horário viram "dia inteiro").
   duracao_minutos: 60
 
+# Convites por e-mail (põem os eventos no calendário principal do Outlook). Precisa dos secrets
+# CONVITE_EMAIL, CONVITE_SENHA e CONVITE_PARA. Deixe false até o convite de teste chegar
+# (workflow com "testar_aviso"); ao ligar, a primeira rodada manda um convite por evento futuro.
+convites:
+  ativo: false
+
 fonte:
   pagina: "https://www.b3.com.br/pt_br/produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-eventos-corporativos/"
   # Opcional: URL direta do arquivo (xlsx/xls/csv). Se vazio, o link é descoberto na página.

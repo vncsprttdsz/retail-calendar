@@ -1,4 +1,6 @@
 import io
+import json
+import re
 from datetime import date, datetime, time, timezone
 from pathlib import Path
 
@@ -1082,3 +1084,67 @@ def test_uid_muda_quando_call_ganha_horario():
     assert ics.uid(sem_hora) == sem_hora.chave
     assert len({ics.uid(sem_hora), ics.uid(com_hora), ics.uid(outra_hora)}) == 3
     assert ics.uid(com_hora) == ics.uid(Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5), time(11)))
+
+
+# --------------------------------------------------------------------------- convites por e-mail
+from calendario_b3 import convites
+
+
+class SmtpFalso:
+    def __init__(self):
+        self.enviadas, self.login_ok = [], None
+
+    def login(self, usuario, senha):
+        self.login_ok = (usuario, senha)
+
+    def send_message(self, msg):
+        self.enviadas.append(msg)
+
+    def quit(self):
+        pass
+
+
+def _cal(msg):
+    texto = next(p for p in msg.walk() if p.get_content_type() == "text/calendar").get_content()
+    return re.sub(r"\r?\n ", "", texto)  # desfaz a quebra de linhas longas (RFC 5545)
+
+
+def test_convites_novo_atualizacao_e_cancelamento(monkeypatch, tmp_path, caplog):
+    monkeypatch.setenv("CONVITE_EMAIL", "calendario@gmail.com")
+    monkeypatch.setenv("CONVITE_SENHA", "abcd efgh ijkl mnop")
+    monkeypatch.setenv("CONVITE_PARA", "eu@empresa.com, colega@empresa.com")
+    estado, hoje, smtp = tmp_path / "convites.json", date(2026, 10, 14), SmtpFalso()
+    enviar = lambda evs: convites.enviar(evs, estado, hoje, "America/Sao_Paulo", 60, smtp_factory=lambda: smtp, pausa=0)
+    call = Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5))
+    passado = Evento("CEAB3", "CEA", "Resultado 2Q26", date(2026, 8, 4))
+
+    assert enviar([passado, call]) == 1  # só o futuro
+    msg = smtp.enviadas[0]
+    assert msg["Subject"] == "CEAB Call 3Q26 (05/11)" and msg["To"] == "eu@empresa.com, colega@empresa.com"
+    cal = _cal(msg)
+    assert "METHOD:REQUEST" in cal and "SEQUENCE:0" in cal and "DTSTART;VALUE=DATE:20261105" in cal
+    assert "ATTENDEE;ROLE=OPT-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=FALSE:mailto:colega@empresa.com" in cal
+    assert smtp.login_ok == ("calendario@gmail.com", "abcdefghijklmnop")
+    uid = re.search(r"UID:(\S+)", cal)[1]
+
+    assert enviar([call]) == 0  # nada mudou: nada reenviado
+
+    # Ganhou horário e link: atualização do mesmo convite (mesmo UID, SEQUENCE maior).
+    com_hora = Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5), time(11), extras={"link": "https://zoom.us/webinar/register/1"})
+    assert enviar([com_hora]) == 1
+    cal = _cal(smtp.enviadas[-1])
+    assert smtp.enviadas[-1]["Subject"] == "Atualizado: CEAB Call 3Q26 (05/11 11:00)"
+    assert f"UID:{uid}" in cal and "SEQUENCE:1" in cal and "DTSTART:20261105T140000Z" in cal and "URL:https://zoom.us/webinar/register/1" in cal
+
+    # Saiu do calendário antes de acontecer: cancelamento.
+    assert enviar([]) == 1
+    cal = _cal(smtp.enviadas[-1])
+    assert smtp.enviadas[-1]["Subject"] == "Cancelado: CEAB Call 3Q26" and "METHOD:CANCEL" in cal and "SEQUENCE:2" in cal and f"UID:{uid}" in cal
+    assert json.loads(estado.read_text()) == {}
+    assert "abcd" not in caplog.text
+
+
+def test_convites_sem_configuracao_nao_envia(monkeypatch, tmp_path):
+    for v in ("CONVITE_EMAIL", "CONVITE_SENHA", "CONVITE_PARA"):
+        monkeypatch.delenv(v, raising=False)
+    assert convites.enviar([Evento("X3", "X", "Call 3Q26", date(2026, 11, 5))], tmp_path / "c.json", date(2026, 10, 14), "America/Sao_Paulo", 60) == 0

@@ -53,6 +53,34 @@ def uid(e: Evento) -> str:
     return hashlib.sha1(f"{e.chave}|{e.hora:%H:%M}|{e.extras.get('fim', '')}".encode()).hexdigest()[:16]
 
 
+def horario(e: Evento, tz: ZoneInfo, duracao_minutos: int) -> list[str]:
+    """DTSTART/DTEND: dia inteiro sem horário; com horário, até `extras["fim"]` ou a duração padrão.
+    Sempre como livre (não bloqueia a agenda)."""
+    if e.hora is None:
+        return [
+            f"DTSTART;VALUE=DATE:{e.data:%Y%m%d}",
+            f"DTEND;VALUE=DATE:{e.data + timedelta(days=1):%Y%m%d}",
+            "TRANSP:TRANSPARENT",
+            "X-MICROSOFT-CDO-BUSYSTATUS:FREE",
+            "X-MICROSOFT-CDO-ALLDAYEVENT:TRUE",
+        ]
+    inicio = datetime.combine(e.data, e.hora, tzinfo=tz)
+    fim = inicio + timedelta(minutes=duracao_minutos)
+    if e.extras.get("fim"):
+        h, m = map(int, e.extras["fim"].split(":"))
+        fim = max(fim.replace(hour=h, minute=m), inicio + timedelta(minutes=15)) if (h, m) > (e.hora.hour, e.hora.minute) else fim
+    return [f"DTSTART:{_utc(inicio)}", f"DTEND:{_utc(fim)}", "TRANSP:TRANSPARENT", "X-MICROSOFT-CDO-BUSYSTATUS:FREE"]
+
+
+def conteudo(e: Evento) -> list[str]:
+    link = e.extras.get("link")
+    return [
+        f"SUMMARY:{_escapar(titulo(e))}",
+        *([f"DESCRIPTION:{_escapar('Webcast: ' + link)}", f"URL:{link}"] if link else []),
+        "CATEGORIES:Resultados",
+    ]
+
+
 def gerar(eventos: list[Evento], nome: str, descricao: str, fuso: str, duracao_minutos: int) -> str:
     tz = ZoneInfo(fuso)
     linhas = [
@@ -70,31 +98,6 @@ def gerar(eventos: list[Evento], nome: str, descricao: str, fuso: str, duracao_m
     for e in eventos:
         visto = datetime.strptime(e.visto_em, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc) if e.visto_em else datetime(2000, 1, 1, tzinfo=timezone.utc)
         linhas += ["BEGIN:VEVENT", f"UID:{uid(e)}@retail-calendar", f"DTSTAMP:{_utc(visto)}"]
-        if e.hora is None:
-            linhas += [
-                f"DTSTART;VALUE=DATE:{e.data:%Y%m%d}",
-                f"DTEND;VALUE=DATE:{e.data + timedelta(days=1):%Y%m%d}",
-                "TRANSP:TRANSPARENT",
-                "X-MICROSOFT-CDO-BUSYSTATUS:FREE",
-                "X-MICROSOFT-CDO-ALLDAYEVENT:TRUE",
-            ]
-        else:
-            inicio = datetime.combine(e.data, e.hora, tzinfo=tz)
-            fim = inicio + timedelta(minutes=duracao_minutos)
-            if e.extras.get("fim"):
-                h, m = map(int, e.extras["fim"].split(":"))
-                fim = max(fim.replace(hour=h, minute=m), inicio + timedelta(minutes=15)) if (h, m) > (e.hora.hour, e.hora.minute) else fim
-            linhas += [
-                f"DTSTART:{_utc(inicio)}",
-                f"DTEND:{_utc(fim)}",
-                "TRANSP:TRANSPARENT",
-                "X-MICROSOFT-CDO-BUSYSTATUS:FREE",
-            ]
-        linhas += [
-            f"SUMMARY:{_escapar(titulo(e))}",
-            *([f"DESCRIPTION:{_escapar('Webcast: ' + e.extras['link'])}", f"URL:{e.extras['link']}"] if e.extras.get("link") else []),
-            "CATEGORIES:Resultados",
-            "END:VEVENT",
-        ]
+        linhas += [*horario(e, tz, duracao_minutos), *conteudo(e), "END:VEVENT"]
     linhas.append("END:VCALENDAR")
     return "\r\n".join(_dobrar(l) for l in linhas) + "\r\n"
