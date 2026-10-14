@@ -1072,3 +1072,13 @@ def test_ocr_real_cea_e_panvel():
               "de 2026 (sexta-feira) 9:30 (Horário de Brasília - BRT) 8:30 (Us EDT) Para acompanhar, clique aqui.")
     assert ri.horarios_no_texto(cea) == {(11, 5): time(11)}
     assert ri.horarios_no_texto(panvel) == {(11, 6): time(9, 30)}
+
+
+def test_uid_muda_quando_call_ganha_horario():
+    # Mesmo UID para o call "dia inteiro" e com horário fazia o Outlook manter 24h de duração.
+    sem_hora = Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5))
+    com_hora = Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5), time(11))
+    outra_hora = Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5), time(10))
+    assert ics.uid(sem_hora) == sem_hora.chave
+    assert len({ics.uid(sem_hora), ics.uid(com_hora), ics.uid(outra_hora)}) == 3
+    assert ics.uid(com_hora) == ics.uid(Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5), time(11)))

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import re
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
@@ -43,6 +44,15 @@ def titulo(e: Evento) -> str:
     return f"{ticker} {evento}{periodo}"
 
 
+def uid(e: Evento) -> str:
+    """Identificador do evento no calendário. Quando o evento ganha (ou muda de) horário, o UID muda:
+    o Outlook, ao atualizar a assinatura, mescla um evento de mesmo UID com a versão antiga e mantém
+    a duração de "dia inteiro" (24h). Com UID novo, ele apaga o antigo e cria o novo."""
+    if e.hora is None:
+        return e.chave
+    return hashlib.sha1(f"{e.chave}|{e.hora:%H:%M}|{e.extras.get('fim', '')}".encode()).hexdigest()[:16]
+
+
 def gerar(eventos: list[Evento], nome: str, descricao: str, fuso: str, duracao_minutos: int) -> str:
     tz = ZoneInfo(fuso)
     linhas = [
@@ -59,7 +69,7 @@ def gerar(eventos: list[Evento], nome: str, descricao: str, fuso: str, duracao_m
     ]
     for e in eventos:
         visto = datetime.strptime(e.visto_em, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc) if e.visto_em else datetime(2000, 1, 1, tzinfo=timezone.utc)
-        linhas += ["BEGIN:VEVENT", f"UID:{e.chave}@retail-calendar", f"DTSTAMP:{_utc(visto)}"]
+        linhas += ["BEGIN:VEVENT", f"UID:{uid(e)}@retail-calendar", f"DTSTAMP:{_utc(visto)}"]
         if e.hora is None:
             linhas += [
                 f"DTSTART;VALUE=DATE:{e.data:%Y%m%d}",
