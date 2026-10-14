@@ -14,7 +14,8 @@ calendario:
 # horário de verão americano, 18:00 no resto do ano), com lembrete 15 min antes; o call, com lembrete
 # 30 min antes; com horário, aparecem como Ocupado. Por empresa: bolsa (B3, NASDAQ, NYSE) e divulgacao (fechamento ou abertura).
 convites:
-  ativo: false
+  ativo: true
+  apenas: [PNVL3]   # só estes tickers por enquanto; apague a linha para enviar todos
 
 fonte:
   pagina: "https://www.b3.com.br/pt_br/produtos-e-servicos/negociacao/renda-variavel/acoes/consultas/cronograma-de-eventos-corporativos/"

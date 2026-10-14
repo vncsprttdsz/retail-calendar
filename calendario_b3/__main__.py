@@ -331,8 +331,12 @@ def main(argv: list[str] | None = None) -> int:
         notificar.enviar(notificar.diferencas(antes, eventos, hoje))
     # Convites por e-mail: põem os eventos no calendário principal do Outlook (falha não derruba a rodada).
     try:
-        if (cfg.get("convites") or {}).get("ativo"):
-            convites.enviar(eventos, args.historico.parent / "convites.json", hoje, cfg_cal["fuso"],
+        cfg_conv = cfg.get("convites") or {}
+        if cfg_conv.get("ativo"):
+            # "apenas": liga os convites só para alguns tickers (ex.: conferir antes de ligar para todos).
+            apenas = {str(t).upper() for t in cfg_conv.get("apenas") or []}
+            alvo = [e for e in eventos if not apenas or e.ticker in apenas]
+            convites.enviar(alvo, args.historico.parent / "convites.json", hoje, cfg_cal["fuso"],
                             int(cfg_cal.get("duracao_minutos", 60)), mercado=_mercados(cfg))
     except Exception as e:
         log.error("convites: erro inesperado (%s)", type(e).__name__)
