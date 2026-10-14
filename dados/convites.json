@@ -1,0 +1,38 @@
+{
+ "PNVL3 call 3Q26": {
+  "assinatura": "8bfdb0bc8e2f0dd6",
+  "data": "2026-11-06",
+  "evento": {
+   "data": "2026-11-06",
+   "empresa": "DIMED",
+   "evento": "Call 3Q26",
+   "extras": {
+    "fonte": "RI",
+    "link": "https://mzgroup.zoom.us/webinar/register/WN_APnoN5HPRWGi6tSv8EbNfg#/registration"
+   },
+   "hora": "09:30",
+   "periodo": "",
+   "ticker": "PNVL3",
+   "visto_em": "2026-10-09T08:15:03Z"
+  },
+  "sequencia": 0
+ },
+ "PNVL3 resultado 3Q26": {
+  "assinatura": "887822b8c4fe64d8",
+  "data": "2026-11-05",
+  "evento": {
+   "data": "2026-11-05",
+   "empresa": "DIMED",
+   "evento": "Resultado 3Q26",
+   "extras": {
+    "entregue": "2026-03-10",
+    "fonte": "CVM"
+   },
+   "hora": null,
+   "periodo": "",
+   "ticker": "PNVL3",
+   "visto_em": "2026-10-03T17:10:57Z"
+  },
+  "sequencia": 0
+ }
+}
