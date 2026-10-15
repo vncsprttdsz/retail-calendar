@@ -841,6 +841,10 @@ DTEND:20261105T180000Z
 TRANSP:TRANSPARENT
 X-MICROSOFT-CDO-BUSYSTATUS:FREE
 SUMMARY:SMFT Call 3Q26
+DESCRIPTION:Webcast: https://tenmeetings.com.br/ten-events/#/webinar?evento
+ =ConferenciadeResultados3T26-SmartFit_953
+URL:https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeRes
+ ultados3T26-SmartFit_953
 CATEGORIES:Resultados
 END:VEVENT
 BEGIN:VEVENT
