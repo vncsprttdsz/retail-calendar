@@ -1244,3 +1244,29 @@ def test_call_manual_com_horario_e_link():
     # Substitui o call que veio do RI/CVM (mesmo ticker, tipo e trimestre).
     do_ri = Evento("RIAA3", "RIACHUELO", "Call 3Q26", date(2026, 11, 10), extras={"fonte": "RI"})
     assert ajustes.substituir([do_ri], [call]) == [call]
+
+
+def test_link_do_call_em_portugues_primeiro():
+    # Dois calls na mesma home: o link em português vem primeiro, mesmo que o em inglês apareça antes.
+    html = ('<h2>VIDEOCONFERÊNCIA EM INGLÊS</h2><p>13 de Novembro 12h</p>'
+            '<a href="https://mzgroup.zoom.us/webinar/register/WN_EN#/registration">Click here</a>'
+            '<h2>VIDEOCONFERÊNCIA EM PORTUGUÊS</h2><p>(Com tradução simultânea para o inglês)</p><p>13 de Novembro 10h</p>'
+            '<a href="https://mzgroup.zoom.us/webinar/register/WN_PT#/registration">Clique aqui</a>')
+    assert ri.links_de_call(html) == ["https://mzgroup.zoom.us/webinar/register/WN_PT#/registration",
+                                      "https://mzgroup.zoom.us/webinar/register/WN_EN#/registration"]
+    # "tradução simultânea para o inglês" não faz o link virar "em inglês" (pop-up real do Grupo SBF).
+    assert ri.links_de_call(POPUP_SBFG) == ["https://mzgroup.zoom.us/webinar/register/WN_2hTIaG29S7yFDIKVCSRnZw#/registration"]
+
+
+def test_pagina_em_ingles_troca_pela_versao_em_portugues(monkeypatch):
+    pedidas = []
+
+    def get(url):
+        pedidas.append(url)
+        if len(pedidas) == 1:  # 1º acesso redireciona para /en/ (ex.: geolocalização)
+            return type("R", (), {"url": "https://ri.x.com.br/en/", "text": '<html lang="en-US">EN'})()
+        return type("R", (), {"url": "https://ri.x.com.br/", "text": '<html lang="pt-BR">PT'})()
+
+    monkeypatch.setattr(ri, "_get", get)
+    assert ri._pagina_pt("X3", "https://ri.x.com.br/") == '<html lang="pt-BR">PT'
+    assert pedidas == ["https://ri.x.com.br/", "https://ri.x.com.br/"]

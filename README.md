@@ -126,7 +126,8 @@ Sites de RI: os da MZ Group (maioria da cobertura) são lidos pela API de evento
 RIWeb (Magalu, RD), pelo bloco "Calendário de Eventos" da home. Quando a agenda traz o call
 sem horário, o horário escrito no texto da home é usado (ex.: Renner: "Videoconferência:
 6 de novembro 10h (Brasil)"). Links de inscrição em
-destaque na home (pop-up) são associados ao próximo call (até 21 dias). O link do webcast
+destaque na home (pop-up) são associados ao próximo call (com mais de um link, vale o do call em
+português; páginas que vierem em inglês são trocadas pela versão em português) (até 21 dias). O link do webcast
 costuma aparecer poucos dias antes do call; quando aparece, o evento é atualizado e o
 WhatsApp avisa (`🔗`).
 

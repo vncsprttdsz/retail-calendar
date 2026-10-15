@@ -200,9 +200,36 @@ def _hora(s: str | None) -> time | None:
     return time(int(m[1]), int(m[2])) if m and int(m[1]) < 24 else None
 
 
+_RE_PT = re.compile(r"portugu[êe]s|portuguese|\(PT\)|\bPT-BR\b", re.I)
+# "em inglês"/"English" marcam o link do call em inglês; "tradução simultânea para o inglês" não.
+_RE_EN = re.compile(r"(?<!para o )(?<!para )\b(?:em|in)\s+(?:ingl[êe]s|english)\b|\benglish\s+(?:call|version|webcast|conference)\b|\(EN\)", re.I)
+
+
+def _idioma_do_link(html: str, pos: int) -> int:
+    """+1 se o texto perto do link indica português, -1 se indica inglês (0: indefinido)."""
+    antes = _texto(html[max(0, pos - 700): pos])[-260:]
+    depois = _texto(html[pos: pos + 400])[:120]
+    perto = f"{antes} {depois}"
+    # O título mais próximo antes do link manda (ex.: "VIDEOCONFERÊNCIA EM INGLÊS" depois de "... EM PORTUGUÊS").
+    ult_pt = max((m.end() for m in _RE_PT.finditer(antes)), default=-1)
+    ult_en = max((m.end() for m in _RE_EN.finditer(antes)), default=-1)
+    if ult_en > ult_pt:
+        return -1
+    if ult_pt > ult_en or _RE_PT.search(depois):
+        return 1
+    return -1 if _RE_EN.search(perto) else 0
+
+
 def links_de_call(html: str) -> list[str]:
-    achados = [l.replace("&amp;", "&") for l in _RE_LINK_CALL.findall(html or "")]
-    return [l for l in dict.fromkeys(achados) if not re.search(r"\.(png|jpe?g|svg|gif|css|js)(\?|$)", l, re.I)]
+    """Links de inscrição/transmissão do call; o do call em português primeiro, o em inglês por último."""
+    html = html or ""
+    achados = {}
+    for m in _RE_LINK_CALL.finditer(html):
+        link = m.group(0).replace("&amp;", "&")
+        if re.search(r"\.(png|jpe?g|svg|gif|css|js)(\?|$)", link, re.I) or link in achados:
+            continue
+        achados[link] = _idioma_do_link(html, m.start())
+    return sorted(achados, key=lambda l: -achados[l])  # sorted é estável: empate mantém a ordem da página
 
 
 def de_mz(ticker: str, eventos: list[dict]) -> list[EventoRI]:
@@ -460,6 +487,30 @@ def ocr(url: str) -> str:
         return ""
 
 
+def _em_ingles(r) -> bool:
+    url, texto = getattr(r, "url", "") or "", getattr(r, "text", "") or ""
+    return bool(re.search(r"/en(?:-us)?/?(?:$|[?#])|/en/", url) or re.search(r"<html[^>]+lang=[\"']en", texto[:3000], re.I))
+
+
+def _pagina_pt(ticker: str, url: str) -> str:
+    """Página do RI em português: se vier em inglês (redirecionamento ou idioma da página), tenta a
+    versão em português (sem "/en/" ou com ?lang=pt-br) para pegar o link do call em português."""
+    r = _get(url)
+    if not _em_ingles(r):
+        return r.text
+    base = re.sub(r"/en(?:-us)?(?=/|$)", "", getattr(r, "url", "") or url, count=1)
+    for alternativa in dict.fromkeys([base, f"{base}{'&' if '?' in base else '?'}lang=pt-br"]):
+        try:
+            r2 = _get(alternativa)
+        except Exception:
+            continue
+        if not _em_ingles(r2):
+            log.info("%s: RI %s veio em inglês; usando %s", ticker, url, alternativa)
+            return r2.text
+    log.warning("%s: RI %s só disponível em inglês; o link do call pode ser o do call em inglês", ticker, url)
+    return r.text
+
+
 def _get(url: str) -> requests.Response:
     r = requests.get(url, headers=HEADERS, timeout=40)
     r.raise_for_status()
@@ -475,7 +526,7 @@ def eventos_da_empresa(item: dict, hoje: date) -> list[EventoRI]:
     home = ""
     for url in urls:
         try:
-            html = _get(url).text
+            html = _pagina_pt(ticker, url)
         except Exception as e:
             log.info("%s: RI %s indisponível (%s)", ticker, url, type(e).__name__)
             continue
