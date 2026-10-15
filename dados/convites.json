@@ -92,16 +92,17 @@
   "sequencia": 0
  },
  "AUAU3 call 3Q26": {
-  "assinatura": "eac796eb1aa614d1",
+  "assinatura": "26466963ba29090d",
   "data": "2026-11-13",
   "evento": {
    "data": "2026-11-13",
    "empresa": "PETZCOBASI",
    "evento": "Call 3Q26",
    "extras": {
-    "fonte": "RI"
+    "fonte": "manual",
+    "link": "https://mzgroup.zoom.us/webinar/register/WN_bVViJc6DS3KNDVF_URLj-w#/registration"
    },
-   "hora": null,
+   "hora": "10:00",
    "periodo": "",
    "ticker": "AUAU3",
    "visto_em": "2026-10-09T08:15:03Z"
@@ -111,7 +112,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 1
  },
  "AUAU3 resultado 3Q26": {
   "assinatura": "418a4c732cc52b64",
