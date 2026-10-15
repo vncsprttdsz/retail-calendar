@@ -100,7 +100,9 @@ cobertura:
     - { ticker: NATU3, nomes: ["NATURA", "Natura Cosmeticos"], cnpj: "71.673.990/0001-77",
         ri: ["https://ri.natura.com.br/"] }
     - { ticker: AUAU3, nomes: ["PETZCOBASI", "Petz", "Cobasi"], cnpj: "53.153.938/0001-08",
-        ri: ["https://ri.petzcobasi.com.br/"] }
+        ri: ["https://ri.petzcobasi.com.br/"],
+        manual: { "call 3Q26": { quando: "2026-11-13 10:00",
+                                 link: "https://mzgroup.zoom.us/webinar/register/WN_bVViJc6DS3KNDVF_URLj-w#/registration" } } }
     - { ticker: SMFT3, nomes: ["SMART FIT"], cnpj: "07.594.978/0001-78",
         ri: ["https://investor.smartfit.com.br/"] }
     - { ticker: VIVA3, nomes: ["VIVARA S.A.", "Vivara"], cnpj: "33.839.910/0001-11",
