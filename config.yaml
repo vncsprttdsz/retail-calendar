@@ -120,3 +120,5 @@ exterior:
   # "Sea Limited to Report ... Results" (PDF) traz a data, o horário do call (ET) e o link do webcast.
   - { ticker: SE, yahoo: SE, nome: Sea Limited, manual: {}, bolsa: NYSE, divulgacao: abertura,
       ri: ["https://www.sea.com/api/invest/news?page=1&size=10"] }
+  # Carrefour SA (Euronext Paris): referência para Carrefour/Atacadão no Brasil (CRFB3 saiu da B3).
+  - { ticker: CA, yahoo: CA.PA, nome: Carrefour, manual: {}, bolsa: EURONEXT }

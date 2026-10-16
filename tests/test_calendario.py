@@ -1270,3 +1270,9 @@ def test_pagina_em_ingles_troca_pela_versao_em_portugues(monkeypatch):
     monkeypatch.setattr(ri, "_get", get)
     assert ri._pagina_pt("X3", "https://ri.x.com.br/") == '<html lang="pt-BR">PT'
     assert pedidas == ["https://ri.x.com.br/", "https://ri.x.com.br/"]
+
+
+def test_fechamento_euronext_em_brasilia():
+    # Paris fecha 17:30: 12:30 de Brasília no horário de verão europeu, 13:30 no inverno.
+    assert convites.horario_pregao("EURONEXT", "fechamento", date(2026, 10, 22), "America/Sao_Paulo") == time(12, 30)
+    assert convites.horario_pregao("EURONEXT", "fechamento", date(2027, 2, 24), "America/Sao_Paulo") == time(13, 30)

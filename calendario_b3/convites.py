@@ -56,6 +56,8 @@ _PREGAO = {
     ("NASDAQ", "abertura"): ("America/New_York", 9, 30),
     ("NYSE", "fechamento"): ("America/New_York", 16, 0),
     ("NYSE", "abertura"): ("America/New_York", 9, 30),
+    ("EURONEXT", "fechamento"): ("Europe/Paris", 17, 30),
+    ("EURONEXT", "abertura"): ("Europe/Paris", 9, 0),
 }
 LEMBRETE_CALL, LEMBRETE_RESULTADO, DURACAO_RESULTADO = 30, 15, 60
 
