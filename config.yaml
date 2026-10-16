@@ -106,7 +106,8 @@ cobertura:
     - { ticker: VIVA3, nomes: ["VIVARA S.A.", "Vivara"], cnpj: "33.839.910/0001-11",
         ri: ["https://ri.vivara.com.br/"], mz: "61a4df2d-a461-44d6-9128-da74058019db" }
 
-# Empresas listadas fora do Brasil (não estão no cronograma da B3). A próxima data de
+# Empresas listadas fora do Brasil (não estão no cronograma da B3). exibir: nome usado no lugar do
+# ticker no calendário, nos convites e no WhatsApp (ex.: "Carrefour França Resultado 3Q26"). A próxima data de
 # resultado vem do Yahoo Finance; enquanto não for confirmada, o título leva "(estimado)".
 # Datas manuais prevalecem sobre o Yahoo (horário de Brasília; sem horário = dia inteiro):
 #   manual: { 3Q26: "2026-11-04 18:00" }
@@ -118,7 +119,7 @@ exterior:
       ri: ["https://investor.mercadolibre.com/news-and-events"] }
   # Sea: a página de notícias (sea.com/investor/newsroom) carrega a lista por esta API; o comunicado
   # "Sea Limited to Report ... Results" (PDF) traz a data, o horário do call (ET) e o link do webcast.
-  - { ticker: SE, yahoo: SE, nome: Sea Limited, manual: {}, bolsa: NYSE, divulgacao: abertura,
+  - { ticker: SE, yahoo: SE, nome: Sea Limited, exibir: Sea Ltd, manual: {}, bolsa: NYSE, divulgacao: abertura,
       ri: ["https://www.sea.com/api/invest/news?page=1&size=10"] }
   # Carrefour SA (Euronext Paris): referência para Carrefour/Atacadão no Brasil (CRFB3 saiu da B3).
-  - { ticker: CA, yahoo: CA.PA, nome: Carrefour, manual: {}, bolsa: EURONEXT }
+  - { ticker: CA, yahoo: CA.PA, nome: Carrefour, exibir: Carrefour França, manual: {}, bolsa: EURONEXT }

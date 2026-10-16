@@ -526,7 +526,8 @@ def eventos_da_empresa(item: dict, hoje: date) -> list[EventoRI]:
     home = ""
     for url in urls:
         try:
-            html = _pagina_pt(ticker, url)
+            # Empresas do exterior (MELI, Sea, Carrefour) têm site só em inglês/francês: regra do português só para a B3.
+            html = _get(url).text if item.get("yahoo") else _pagina_pt(ticker, url)
         except Exception as e:
             log.info("%s: RI %s indisponível (%s)", ticker, url, type(e).__name__)
             continue

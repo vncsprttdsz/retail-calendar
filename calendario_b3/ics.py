@@ -36,11 +36,16 @@ def _utc(dt: datetime) -> str:
     return dt.astimezone(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
 
+# Nome de exibição por ticker (`exibir` no config), no lugar do ticker: ex. {"CA": "Carrefour França"}.
+NOMES: dict[str, str] = {}
+
+
 def titulo(e: Evento) -> str:
-    """'LREN Resultado 3Q26': ticker sem o número da classe (LREN3 -> LREN)."""
+    """'LREN Resultado 3Q26': ticker sem o número da classe (LREN3 -> LREN), ou o nome de exibição
+    do config (ex.: 'Carrefour França Resultado 3Q26')."""
     evento = e.evento.strip() or "Evento corporativo"
     periodo = f" {e.periodo.strip()}" if e.periodo.strip() and e.periodo.strip() not in evento else ""
-    ticker = re.sub(r"\d+$", "", e.ticker)
+    ticker = NOMES.get(e.ticker) or re.sub(r"\d+$", "", e.ticker)
     return f"{ticker} {evento}{periodo}"
 
 

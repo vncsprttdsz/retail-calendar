@@ -1276,3 +1276,10 @@ def test_fechamento_euronext_em_brasilia():
     # Paris fecha 17:30: 12:30 de Brasília no horário de verão europeu, 13:30 no inverno.
     assert convites.horario_pregao("EURONEXT", "fechamento", date(2026, 10, 22), "America/Sao_Paulo") == time(12, 30)
     assert convites.horario_pregao("EURONEXT", "fechamento", date(2027, 2, 24), "America/Sao_Paulo") == time(13, 30)
+
+
+def test_nome_de_exibicao_no_lugar_do_ticker(monkeypatch):
+    monkeypatch.setattr(ics, "NOMES", {"CA": "Carrefour França", "SE": "Sea Ltd"})
+    assert ics.titulo(Evento("CA", "Carrefour", "Resultado 3Q26", date(2026, 10, 22))) == "Carrefour França Resultado 3Q26"
+    assert ics.titulo(Evento("SE", "Sea", "Call 3Q26", date(2026, 11, 10))) == "Sea Ltd Call 3Q26"
+    assert ics.titulo(Evento("LREN3", "R", "Call 3Q26", date(2026, 11, 6))) == "LREN Call 3Q26"

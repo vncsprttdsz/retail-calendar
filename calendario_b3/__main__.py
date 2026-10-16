@@ -226,6 +226,10 @@ def main(argv: list[str] | None = None) -> int:
         return 0 if (ok or ok_convite) else 1
 
     cfg = yaml.safe_load(args.config.read_text(encoding="utf-8"))
+    # Nome de exibição (`exibir`) no lugar do ticker no calendário, nos convites e no WhatsApp.
+    ics.NOMES.update({str(i["ticker"]).upper(): str(i["exibir"])
+                      for i in ((cfg.get("cobertura") or {}).get("empresas") or []) + (cfg.get("exterior") or [])
+                      if i.get("exibir")})
     cfg_cal, cfg_fonte, cfg_ev = cfg["calendario"], cfg["fonte"], cfg.get("eventos", {})
     forcadas = cfg_fonte.get("colunas") or {}
 
