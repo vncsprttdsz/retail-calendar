@@ -630,6 +630,31 @@
     "extras": {}
   },
   {
+    "ticker": "CA",
+    "empresa": "Carrefour",
+    "evento": "Call 3Q26",
+    "data": "2026-10-20",
+    "hora": "13:15",
+    "periodo": "",
+    "visto_em": "2026-10-16T13:06:57Z",
+    "extras": {
+      "fonte": "manual",
+      "link": "https://www.carrefour.com/en/news/2026/q3-2026-live"
+    }
+  },
+  {
+    "ticker": "CA",
+    "empresa": "Carrefour",
+    "evento": "Resultado 3Q26",
+    "data": "2026-10-20",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-16T13:06:57Z",
+    "extras": {
+      "fonte": "manual"
+    }
+  },
+  {
     "ticker": "RADL3",
     "empresa": "RAIADROGASIL",
     "evento": "Resultado 3Q26",
