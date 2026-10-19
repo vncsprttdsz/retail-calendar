@@ -47,16 +47,17 @@
   "sequencia": 0
  },
  "ASAI3 call 3Q26": {
-  "assinatura": "c3e36e1fe2747700",
+  "assinatura": "652c5eebb289da77",
   "data": "2026-11-06",
   "evento": {
    "data": "2026-11-06",
    "empresa": "ASSAI",
    "evento": "Call 3Q26",
    "extras": {
-    "fonte": "RI"
+    "fonte": "RI",
+    "link": "https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeResultados3T26_460"
    },
-   "hora": null,
+   "hora": "11:00",
    "periodo": "",
    "ticker": "ASAI3",
    "visto_em": "2026-10-09T08:15:03Z"
@@ -66,7 +67,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 1
  },
  "ASAI3 resultado 3Q26": {
   "assinatura": "fbfad40171a00990",
@@ -906,16 +907,17 @@
   "sequencia": 0
  },
  "TFCO4 call 3Q26": {
-  "assinatura": "fd10aaa9189e56ab",
+  "assinatura": "a6473f2ce6687430",
   "data": "2026-11-13",
   "evento": {
    "data": "2026-11-13",
    "empresa": "TRACK FIELD",
    "evento": "Call 3Q26",
    "extras": {
-    "fonte": "RI"
+    "fonte": "RI",
+    "link": "https://mzgroup.zoom.us/webinar/register/WN_kxDa1-iCQXCtjhvKptnICQ"
    },
-   "hora": null,
+   "hora": "11:00",
    "periodo": "",
    "ticker": "TFCO4",
    "visto_em": "2026-10-09T08:15:03Z"
@@ -925,7 +927,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 1
  },
  "TFCO4 resultado 3Q26": {
   "assinatura": "3cda87c257b58698",
