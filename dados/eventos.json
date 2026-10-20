@@ -851,11 +851,12 @@
     "empresa": "QUERO-QUERO",
     "evento": "Call 3Q26",
     "data": "2026-11-06",
-    "hora": null,
+    "hora": "09:00",
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
-      "fonte": "RI"
+      "fonte": "RI",
+      "link": "https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeResultados3T26-LOJASQUERO-QUERO_948"
     }
   },
   {

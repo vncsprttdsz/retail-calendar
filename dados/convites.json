@@ -364,16 +364,17 @@
   "sequencia": 0
  },
  "LJQQ3 call 3Q26": {
-  "assinatura": "82a39a52e1e8e7af",
+  "assinatura": "d504d22442f7d8bb",
   "data": "2026-11-06",
   "evento": {
    "data": "2026-11-06",
    "empresa": "QUERO-QUERO",
    "evento": "Call 3Q26",
    "extras": {
-    "fonte": "RI"
+    "fonte": "RI",
+    "link": "https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeResultados3T26-LOJASQUERO-QUERO_948"
    },
-   "hora": null,
+   "hora": "09:00",
    "periodo": "",
    "ticker": "LJQQ3",
    "visto_em": "2026-10-09T08:15:03Z"
@@ -383,7 +384,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 1
  },
  "LJQQ3 resultado 3Q26": {
   "assinatura": "f8362e778a53cf2e",
