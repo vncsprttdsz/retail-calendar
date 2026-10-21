@@ -1019,7 +1019,8 @@
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
-      "fonte": "RI"
+      "fonte": "RI",
+      "link": "https://mzcast.mziq.com/webcast/vulcabras/vulcabras_3t23_por.mp4"
     }
   },
   {
@@ -1181,11 +1182,12 @@
     "empresa": "NATURA",
     "evento": "Call 3Q26",
     "data": "2026-11-13",
-    "hora": null,
+    "hora": "07:00",
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
-      "fonte": "RI"
+      "fonte": "RI",
+      "link": "https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeResultados3T26_158"
     }
   },
   {

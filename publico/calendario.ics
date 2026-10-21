@@ -1056,6 +1056,9 @@ TRANSP:TRANSPARENT
 X-MICROSOFT-CDO-BUSYSTATUS:FREE
 X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
 SUMMARY:VULC Call 3Q26
+DESCRIPTION:Webcast: https://mzcast.mziq.com/webcast/vulcabras/vulcabras_3t
+ 23_por.mp4
+URL:https://mzcast.mziq.com/webcast/vulcabras/vulcabras_3t23_por.mp4
 CATEGORIES:Resultados
 END:VEVENT
 BEGIN:VEVENT
@@ -1197,14 +1200,17 @@ SUMMARY:GMAT Call 3Q26
 CATEGORIES:Resultados
 END:VEVENT
 BEGIN:VEVENT
-UID:97628e3c2c150450@retail-calendar
+UID:a20a014e877dad44@retail-calendar
 DTSTAMP:20261009T081503Z
-DTSTART;VALUE=DATE:20261113
-DTEND;VALUE=DATE:20261114
+DTSTART:20261113T100000Z
+DTEND:20261113T110000Z
 TRANSP:TRANSPARENT
 X-MICROSOFT-CDO-BUSYSTATUS:FREE
-X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
 SUMMARY:NATU Call 3Q26
+DESCRIPTION:Webcast: https://tenmeetings.com.br/ten-events/#/webinar?evento
+ =ConferenciadeResultados3T26_158
+URL:https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeRes
+ ultados3T26_158
 CATEGORIES:Resultados
 END:VEVENT
 BEGIN:VEVENT

@@ -183,51 +183,6 @@
   ],
   "sequencia": 0
  },
- "CA call 3Q26": {
-  "assinatura": "2df5784b881e8b23",
-  "data": "2026-10-20",
-  "evento": {
-   "data": "2026-10-20",
-   "empresa": "Carrefour",
-   "evento": "Call 3Q26",
-   "extras": {
-    "fonte": "manual",
-    "link": "https://www.carrefour.com/en/news/2026/q3-2026-live"
-   },
-   "hora": "13:15",
-   "periodo": "",
-   "ticker": "CA",
-   "visto_em": "2026-10-16T13:06:57Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0
- },
- "CA resultado 3Q26": {
-  "assinatura": "c956248646d479ac",
-  "data": "2026-10-20",
-  "evento": {
-   "data": "2026-10-20",
-   "empresa": "Carrefour",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "fonte": "manual"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "CA",
-   "visto_em": "2026-10-16T13:06:57Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0
- },
  "CEAB3 call 3Q26": {
   "assinatura": "eac99929ab29e206",
   "data": "2026-11-05",
@@ -521,16 +476,17 @@
   "sequencia": 0
  },
  "NATU3 call 3Q26": {
-  "assinatura": "9c65d4bcaffabc28",
+  "assinatura": "b53c26975fa5886c",
   "data": "2026-11-13",
   "evento": {
    "data": "2026-11-13",
    "empresa": "NATURA",
    "evento": "Call 3Q26",
    "extras": {
-    "fonte": "RI"
+    "fonte": "RI",
+    "link": "https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeResultados3T26_158"
    },
-   "hora": null,
+   "hora": "07:00",
    "periodo": "",
    "ticker": "NATU3",
    "visto_em": "2026-10-09T08:15:03Z"
@@ -540,7 +496,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 1
  },
  "NATU3 resultado 3Q26": {
   "assinatura": "8a54f1ffbb7615b5",
@@ -999,14 +955,15 @@
   "sequencia": 0
  },
  "VULC3 call 3Q26": {
-  "assinatura": "5d9c8b4bf72a5f0e",
+  "assinatura": "3f55d3583be6958c",
   "data": "2026-11-11",
   "evento": {
    "data": "2026-11-11",
    "empresa": "VULCABRAS",
    "evento": "Call 3Q26",
    "extras": {
-    "fonte": "RI"
+    "fonte": "RI",
+    "link": "https://mzcast.mziq.com/webcast/vulcabras/vulcabras_3t23_por.mp4"
    },
    "hora": null,
    "periodo": "",
@@ -1018,7 +975,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 1
  },
  "VULC3 resultado 3Q26": {
   "assinatura": "80d073bea37297b5",
