@@ -1020,7 +1020,7 @@
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
       "fonte": "RI",
-      "link": "https://mzcast.mziq.com/webcast/vulcabras/vulcabras_3t23_por.mp4"
+      "link": "https://mzgroup.zoom.us/webinar/register/WN_k1FkDZBUR76KU5VCnOgOtw#/registration"
     }
   },
   {
@@ -1054,11 +1054,12 @@
     "empresa": "AZZAS 2154",
     "evento": "Call 3Q26",
     "data": "2026-11-12",
-    "hora": null,
+    "hora": "10:00",
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
-      "fonte": "RI"
+      "fonte": "RI",
+      "link": "https://us06web.zoom.us/j/82791796700"
     }
   },
   {
@@ -1071,7 +1072,7 @@
     "visto_em": "2026-10-09T10:11:32Z",
     "extras": {
       "fonte": "CVM",
-      "entregue": "2026-09-23 16:56:35"
+      "entregue": "2026-09-23"
     }
   },
   {
@@ -1214,6 +1215,54 @@
     "extras": {
       "fonte": "RI",
       "link": "https://mzgroup.zoom.us/webinar/register/WN_kxDa1-iCQXCtjhvKptnICQ"
+    }
+  },
+  {
+    "ticker": "MELI",
+    "empresa": "MercadoLibre",
+    "evento": "Resultado 4Q26 (estimado)",
+    "data": "2027-02-24",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-26T17:01:06Z",
+    "extras": {
+      "fonte": "RI"
+    }
+  },
+  {
+    "ticker": "MELI",
+    "empresa": "MercadoLibre",
+    "evento": "Resultado 1Q27 (estimado)",
+    "data": "2027-05-06",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-26T17:01:06Z",
+    "extras": {
+      "fonte": "RI"
+    }
+  },
+  {
+    "ticker": "MELI",
+    "empresa": "MercadoLibre",
+    "evento": "Resultado 2Q27 (estimado)",
+    "data": "2027-08-05",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-26T17:01:06Z",
+    "extras": {
+      "fonte": "RI"
+    }
+  },
+  {
+    "ticker": "MELI",
+    "empresa": "MercadoLibre",
+    "evento": "Resultado 3Q27 (estimado)",
+    "data": "2027-11-04",
+    "hora": null,
+    "periodo": "",
+    "visto_em": "2026-10-26T17:01:06Z",
+    "extras": {
+      "fonte": "RI"
     }
   }
 ]

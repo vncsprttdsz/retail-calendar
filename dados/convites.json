@@ -139,16 +139,17 @@
   "sequencia": 0
  },
  "AZZA3 call 3Q26": {
-  "assinatura": "17c7dbd4b56a817b",
+  "assinatura": "f7c0e79a203c97bc",
   "data": "2026-11-12",
   "evento": {
    "data": "2026-11-12",
    "empresa": "AZZAS 2154",
    "evento": "Call 3Q26",
    "extras": {
-    "fonte": "RI"
+    "fonte": "RI",
+    "link": "https://us06web.zoom.us/j/82791796700"
    },
-   "hora": null,
+   "hora": "10:00",
    "periodo": "",
    "ticker": "AZZA3",
    "visto_em": "2026-10-09T08:15:03Z"
@@ -158,7 +159,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 1
  },
  "AZZA3 resultado 3Q26": {
   "assinatura": "d9f8510674004e23",
@@ -410,6 +411,50 @@
   ],
   "sequencia": 0
  },
+ "MELI resultado 1Q27": {
+  "assinatura": "8d87c7b9a09d5d39",
+  "data": "2027-05-06",
+  "evento": {
+   "data": "2027-05-06",
+   "empresa": "MercadoLibre",
+   "evento": "Resultado 1Q27 (estimado)",
+   "extras": {
+    "fonte": "RI"
+   },
+   "hora": null,
+   "periodo": "",
+   "ticker": "MELI",
+   "visto_em": "2026-10-26T17:01:06Z"
+  },
+  "para": [
+   "1a7f01c059d8",
+   "7a8223113896",
+   "eb589560c66d"
+  ],
+  "sequencia": 0
+ },
+ "MELI resultado 2Q27": {
+  "assinatura": "244d415ab83e2b4a",
+  "data": "2027-08-05",
+  "evento": {
+   "data": "2027-08-05",
+   "empresa": "MercadoLibre",
+   "evento": "Resultado 2Q27 (estimado)",
+   "extras": {
+    "fonte": "RI"
+   },
+   "hora": null,
+   "periodo": "",
+   "ticker": "MELI",
+   "visto_em": "2026-10-26T17:01:06Z"
+  },
+  "para": [
+   "1a7f01c059d8",
+   "7a8223113896",
+   "eb589560c66d"
+  ],
+  "sequencia": 0
+ },
  "MELI resultado 3Q26": {
   "assinatura": "f6581035621df2e2",
   "data": "2026-11-04",
@@ -422,6 +467,50 @@
    "periodo": "",
    "ticker": "MELI",
    "visto_em": "2026-10-03T18:11:43Z"
+  },
+  "para": [
+   "1a7f01c059d8",
+   "7a8223113896",
+   "eb589560c66d"
+  ],
+  "sequencia": 0
+ },
+ "MELI resultado 3Q27": {
+  "assinatura": "aad65320c1bd3a15",
+  "data": "2027-11-04",
+  "evento": {
+   "data": "2027-11-04",
+   "empresa": "MercadoLibre",
+   "evento": "Resultado 3Q27 (estimado)",
+   "extras": {
+    "fonte": "RI"
+   },
+   "hora": null,
+   "periodo": "",
+   "ticker": "MELI",
+   "visto_em": "2026-10-26T17:01:06Z"
+  },
+  "para": [
+   "1a7f01c059d8",
+   "7a8223113896",
+   "eb589560c66d"
+  ],
+  "sequencia": 0
+ },
+ "MELI resultado 4Q26": {
+  "assinatura": "d7c8f0da9b38c094",
+  "data": "2027-02-24",
+  "evento": {
+   "data": "2027-02-24",
+   "empresa": "MercadoLibre",
+   "evento": "Resultado 4Q26 (estimado)",
+   "extras": {
+    "fonte": "RI"
+   },
+   "hora": null,
+   "periodo": "",
+   "ticker": "MELI",
+   "visto_em": "2026-10-26T17:01:06Z"
   },
   "para": [
    "1a7f01c059d8",
@@ -956,7 +1045,7 @@
   "sequencia": 0
  },
  "VULC3 call 3Q26": {
-  "assinatura": "3f55d3583be6958c",
+  "assinatura": "45ff0162dbc57e6a",
   "data": "2026-11-11",
   "evento": {
    "data": "2026-11-11",
@@ -964,7 +1053,7 @@
    "evento": "Call 3Q26",
    "extras": {
     "fonte": "RI",
-    "link": "https://mzcast.mziq.com/webcast/vulcabras/vulcabras_3t23_por.mp4"
+    "link": "https://mzgroup.zoom.us/webinar/register/WN_k1FkDZBUR76KU5VCnOgOtw#/registration"
    },
    "hora": null,
    "periodo": "",
@@ -976,7 +1065,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1
+  "sequencia": 2
  },
  "VULC3 resultado 3Q26": {
   "assinatura": "80d073bea37297b5",
