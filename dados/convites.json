@@ -886,6 +886,29 @@
   ],
   "sequencia": 0
  },
+ "SE call 3Q26": {
+  "assinatura": "8e4141d97b60c327",
+  "data": "2026-11-10",
+  "evento": {
+   "data": "2026-11-10",
+   "empresa": "Sea Limited",
+   "evento": "Call 3Q26",
+   "extras": {
+    "fonte": "RI",
+    "link": "https://events.q4inc.com/attendee/360627099"
+   },
+   "hora": "09:30",
+   "periodo": "",
+   "ticker": "SE",
+   "visto_em": "2026-10-27T16:02:51Z"
+  },
+  "para": [
+   "1a7f01c059d8",
+   "7a8223113896",
+   "eb589560c66d"
+  ],
+  "sequencia": 0
+ },
  "SE resultado 3Q26": {
   "assinatura": "4dc000a87f213faa",
   "data": "2026-11-10",
