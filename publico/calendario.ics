@@ -934,14 +934,17 @@ URL:https://mzgroup.zoom.us/webinar/register/WN_APnoN5HPRWGi6tSv8EbNfg#/reg
 CATEGORIES:Resultados
 END:VEVENT
 BEGIN:VEVENT
-UID:102496bc6f266709@retail-calendar
+UID:0bc01f5c3f17bb3b@retail-calendar
 DTSTAMP:20261009T081503Z
-DTSTART;VALUE=DATE:20261106
-DTEND;VALUE=DATE:20261107
+DTSTART:20261106T150000Z
+DTEND:20261106T160000Z
 TRANSP:TRANSPARENT
 X-MICROSOFT-CDO-BUSYSTATUS:FREE
-X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
 SUMMARY:VIVA Call 3Q26
+DESCRIPTION:Webcast: https://tenmeetings.com.br/ten-events/#/webinar?evento
+ =ConferenciadeResultados3T26-Vivara_939
+URL:https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeRes
+ ultados3T26-Vivara_939
 CATEGORIES:Resultados
 END:VEVENT
 BEGIN:VEVENT

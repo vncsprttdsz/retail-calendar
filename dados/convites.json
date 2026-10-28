@@ -1023,16 +1023,17 @@
   "sequencia": 0
  },
  "VIVA3 call 3Q26": {
-  "assinatura": "ffe65d4913f595cc",
+  "assinatura": "d979112c441a2adb",
   "data": "2026-11-06",
   "evento": {
    "data": "2026-11-06",
    "empresa": "VIVARA S.A.",
    "evento": "Call 3Q26",
    "extras": {
-    "fonte": "RI"
+    "fonte": "RI",
+    "link": "https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeResultados3T26-Vivara_939"
    },
-   "hora": null,
+   "hora": "12:00",
    "periodo": "",
    "ticker": "VIVA3",
    "visto_em": "2026-10-09T08:15:03Z"
@@ -1042,7 +1043,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 1
  },
  "VIVA3 resultado 3Q26": {
   "assinatura": "ae8e3f7f593c55d2",
