@@ -220,12 +220,31 @@ def _idioma_do_link(html: str, pos: int) -> int:
     return -1 if _RE_EN.search(perto) else 0
 
 
+def _sem_urldefense(link: str) -> str:
+    """Link reescrito pelo filtro de e-mail Proofpoint (ex.: pop-up da Vivara colado de um e-mail):
+    https://urldefense.com/v3/__https://site/*/x__;Iw!!...$ -> https://site/#/x
+    Cada `*` é um caractere (em base64 depois de `__;`); `**X`, uma sequência de caracteres."""
+    import base64
+    import string
+
+    m = re.match(r"https?://urldefense(?:\.proofpoint)?\.com/v3/__(.+?)__;([^!]*)!", link)
+    if not m:
+        return link
+    url, codigo = m[1], m[2]
+    try:
+        chars = iter(base64.urlsafe_b64decode(codigo + "=" * (-len(codigo) % 4)).decode("utf-8"))
+        tamanhos = {c: i + 2 for i, c in enumerate(string.ascii_uppercase + string.ascii_lowercase + string.digits + "-_")}
+        return re.sub(r"\*(\*.)?", lambda r: "".join(next(chars) for _ in range(tamanhos[r[1][1]] if r[1] else 1)), url)
+    except Exception:
+        return link
+
+
 def links_de_call(html: str) -> list[str]:
     """Links de inscrição/transmissão do call; o do call em português primeiro, o em inglês por último."""
     html = html or ""
     achados = {}
     for m in _RE_LINK_CALL.finditer(html):
-        link = m.group(0).replace("&amp;", "&")
+        link = _sem_urldefense(m.group(0).replace("&amp;", "&"))
         if re.search(r"\.(png|jpe?g|svg|gif|css|js)(\?|$)", link, re.I) or link in achados:
             continue
         achados[link] = _idioma_do_link(html, m.start())

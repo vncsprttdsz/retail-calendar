@@ -1373,3 +1373,47 @@ def test_site_sem_certificado_intermediario(tmp_path: Path, monkeypatch):
             get_real(url, verify=str(tmp_path / "raiz.pem"), timeout=10)
     finally:
         servidor.shutdown()
+
+
+POPUP_VIVA = """<div id="popup"><div class="img">
+            <img src="" alt="">
+          </div>
+          <div class="content">
+            <p>&nbsp;</p>
+<p style="text-align: center"><span style="font-size: 12pt"><b>DIVULGAÇÃO DE RESULTADOS 3T26<br />
+</b>05/11/2026<br />
+<span style="font-size: 8pt">após fechamento do mercado</span></span></p>
+<p style="text-align: center"><span style="font-size: 12pt"><b>VIDEOCONFERÊNCIA DE RESULTADOS<strong>\xa0</strong><br />
+</b>06/11/2026<br />
+12h (BRT) | 10h (US ET)</span></p>
+<p style="text-align: center"><span style="font-size: 12pt">Português<br />
+com tradução simultânea para Inglês\xa0</span></p>
+<p style="text-align: center"><span style="font-size: 18pt"><a style="text-align: center" href="https://urldefense.com/v3/__https://tenmeetings.com.br/ten-events/*/webinar?evento=ConferenciadeResultados3T26-Vivara_939__;Iw!!CKaaAHsD0ik!-tbS4pyWh1Ut8PNcqV_o1NVlGi2Din3DSbnqHo6K1J34NJJw-UtrC_CBKITZKCixCxbWq7Eqb0GHHKxSeT9I26Q8CxtX$" target="_blank" rel="noopener">clique aqui</a></span></p>
+          </div></div>"""
+
+MZ_VIVA = [
+    {"event_name": "Divulgação de Resultados 3T2026", "event_date": "2026-11-05T12:00:00.000Z", "event_starttime": "",
+     "event_endtime": "", "event_details": "", "external_link": None, "advanced": ""},
+    {"event_name": "Teleconferência de Resultados 3T2026", "event_date": "2026-11-06T12:00:00.000Z", "event_starttime": "",
+     "event_endtime": "", "event_details": "", "external_link": "", "advanced": ""},
+]
+
+
+def test_popup_vivara_horario_e_link_sem_urldefense(monkeypatch):
+    monkeypatch.setattr(ri, "_get", lambda url: type("R", (), {"text": POPUP_VIVA})())
+    monkeypatch.setattr(ri, "mz_eventos", lambda fm, tipo: MZ_VIVA)
+    evs = ri.eventos_da_empresa({"ticker": "VIVA3", "ri": ["https://ri"], "mz": "id"}, date(2026, 10, 28))
+    assert [(e.tipo, e.dia, e.inicio, e.link) for e in evs] == [
+        ("resultado", date(2026, 11, 5), None, ""),
+        ("call", date(2026, 11, 6), time(12),
+         "https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeResultados3T26-Vivara_939"),
+    ]
+
+
+def test_sem_urldefense_sequencia_de_caracteres():
+    # `**B` = 3 caracteres seguidos ("a b" -> "%20" de exemplo); link comum fica igual.
+    import base64
+
+    codigo = base64.urlsafe_b64encode(b"#%20").decode().rstrip("=")
+    assert ri._sem_urldefense(f"https://urldefense.com/v3/__https://x.com/*/a**Bb__;{codigo}!!abc$") == "https://x.com/#/a%20b"
+    assert ri._sem_urldefense("https://zoom.us/webinar/register/WN_x") == "https://zoom.us/webinar/register/WN_x"
