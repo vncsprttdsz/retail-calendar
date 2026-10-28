@@ -1283,3 +1283,93 @@ def test_nome_de_exibicao_no_lugar_do_ticker(monkeypatch):
     assert ics.titulo(Evento("CA", "Carrefour", "Resultado 3Q26", date(2026, 10, 22))) == "Carrefour França Resultado 3Q26"
     assert ics.titulo(Evento("SE", "Sea", "Call 3Q26", date(2026, 11, 10))) == "Sea Ltd Call 3Q26"
     assert ics.titulo(Evento("LREN3", "R", "Call 3Q26", date(2026, 11, 6))) == "LREN Call 3Q26"
+
+
+def test_site_sem_certificado_intermediario(tmp_path: Path, monkeypatch):
+    """Servidor que só manda o certificado final (ex.: ri.vivara.com.br): o intermediário vem do
+    endereço do emissor (AIA) e a conexão continua verificada contra as CAs raiz."""
+    import http.server
+    import ssl
+    import threading
+    from datetime import timedelta
+
+    x509 = pytest.importorskip("cryptography.x509")
+    from cryptography.hazmat.primitives import hashes, serialization
+    from cryptography.hazmat.primitives.asymmetric import ec
+    from cryptography.x509.oid import AuthorityInformationAccessOID, NameOID
+
+    from calendario_b3 import ri
+
+    agora = datetime.now(timezone.utc)
+
+    def cert(nome, chave, emissor, chave_emissor, ca, extras=()):
+        b = (x509.CertificateBuilder().subject_name(x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, nome)]))
+             .issuer_name(emissor).public_key(chave.public_key()).serial_number(x509.random_serial_number())
+             .not_valid_before(agora - timedelta(days=1)).not_valid_after(agora + timedelta(days=30))
+             .add_extension(x509.BasicConstraints(ca=ca, path_length=None), critical=True))
+        for ext in extras:
+            b = b.add_extension(ext, critical=False)
+        return b.sign(chave_emissor, hashes.SHA256())
+
+    k_raiz, k_int, k_folha = (ec.generate_private_key(ec.SECP256R1()) for _ in range(3))
+    raiz = cert("Raiz Teste", k_raiz, x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, "Raiz Teste")]), k_raiz, True)
+    inter = cert("Intermediaria Teste", k_int, raiz.subject, k_raiz, True)
+    aia = x509.AuthorityInformationAccess([
+        x509.AccessDescription(AuthorityInformationAccessOID.OCSP, x509.UniformResourceIdentifier("http://ocsp.teste")),
+        x509.AccessDescription(AuthorityInformationAccessOID.CA_ISSUERS,
+                               x509.UniformResourceIdentifier("http://ca.teste/intermediaria.crt"))])
+    folha = cert("localhost", k_folha, inter.subject, k_int, False,
+                 [aia, x509.SubjectAlternativeName([x509.DNSName("localhost")])])
+
+    pem = lambda c: c.public_bytes(serialization.Encoding.PEM)
+    (tmp_path / "folha.pem").write_bytes(pem(folha))
+    (tmp_path / "chave.pem").write_bytes(k_folha.private_bytes(
+        serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8, serialization.NoEncryption()))
+    (tmp_path / "raiz.pem").write_bytes(pem(raiz))
+
+    class Pagina(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write("Teleconferência: 6 de novembro 10h".encode())
+
+        def log_message(self, *a):
+            pass
+
+    servidor = http.server.HTTPServer(("localhost", 0), Pagina)
+    contexto = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    contexto.load_cert_chain(tmp_path / "folha.pem", tmp_path / "chave.pem")  # sem o intermediário
+    servidor.socket = contexto.wrap_socket(servidor.socket, server_side=True)
+    threading.Thread(target=servidor.serve_forever, daemon=True).start()
+    url = f"https://localhost:{servidor.server_port}/"
+
+    for var in ("HTTPS_PROXY", "https_proxy", "HTTP_PROXY", "http_proxy", "REQUESTS_CA_BUNDLE", "CURL_CA_BUNDLE"):
+        monkeypatch.delenv(var, raising=False)
+    monkeypatch.setenv("NO_PROXY", "*")
+    import certifi
+    import requests
+
+    monkeypatch.setattr(certifi, "where", lambda: str(tmp_path / "raiz.pem"))
+    monkeypatch.setattr(requests.utils, "DEFAULT_CA_BUNDLE_PATH", str(tmp_path / "raiz.pem"))
+    monkeypatch.setattr(requests.adapters, "DEFAULT_CA_BUNDLE_PATH", str(tmp_path / "raiz.pem"))
+    monkeypatch.setattr(ri, "_CADEIAS", {})
+    get_real = requests.get
+    baixados = []
+
+    def get(u, **kw):
+        if u.startswith("http://ca.teste/"):
+            baixados.append(u)
+            r = requests.models.Response()
+            r.status_code, r._content = 200, inter.public_bytes(serialization.Encoding.DER)
+            return r
+        return get_real(u, **kw)
+
+    monkeypatch.setattr(ri.requests, "get", get)
+    try:
+        assert "6 de novembro 10h" in ri._get(url).text
+        assert baixados == ["http://ca.teste/intermediaria.crt"]
+        # Sem o intermediário, a raiz sozinha não valida o servidor: a verificação continua valendo.
+        with pytest.raises(requests.exceptions.SSLError):
+            get_real(url, verify=str(tmp_path / "raiz.pem"), timeout=10)
+    finally:
+        servidor.shutdown()

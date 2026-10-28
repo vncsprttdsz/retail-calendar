@@ -50,7 +50,7 @@ def diagnostico(empresas: list[dict]) -> None:
             urls = [urls]
         for url in urls:
             try:
-                r = requests.get(url, headers=HEADERS, timeout=40)
+                r = _requisitar(url)
             except Exception as e:
                 print(f"\n  {item['ticker']} {url}: FALHA {type(e).__name__}: {str(e)[:120]}")
                 continue
@@ -122,7 +122,7 @@ def diagnostico_mz(empresas: list[dict]) -> None:
         if not urls:
             continue
         try:
-            r = requests.get(urls[0], headers=HEADERS, timeout=40)
+            r = _requisitar(urls[0])
             html = r.text
         except Exception as e:
             print(f"\n== MZ {item['ticker']}: site FALHA {type(e).__name__}")
@@ -511,8 +511,64 @@ def _pagina_pt(ticker: str, url: str) -> str:
     return r.text
 
 
+_CADEIAS: dict[str, str] = {}  # host -> arquivo com as CAs do certifi + intermediários baixados
+
+
+def _cadeia_completa(host: str, porta: int = 443) -> str | None:
+    """Servidor que não manda o certificado intermediário (ex.: ri.vivara.com.br): o navegador o
+    baixa pelo endereço do emissor (AIA) gravado no certificado; aqui fazemos o mesmo. A conexão
+    continua verificada: o intermediário só vale se for assinado por uma CA raiz do certifi."""
+    import os
+    import ssl
+    import tempfile
+
+    import certifi
+
+    if host in _CADEIAS:
+        return _CADEIAS[host]
+    # Só lê o certificado do servidor para achar o emissor; nada da página é usado sem verificação.
+    der = ssl.PEM_cert_to_DER_cert(ssl.get_server_certificate((host, porta), timeout=20))
+    intermediarios = []
+    for _ in range(3):
+        m = re.search(rb"https?://[\x21-\x7e]+?\.(?:crt|cer|der)", der)
+        if not m:
+            break
+        r = requests.get(m[0].decode(), headers=HEADERS, timeout=20)
+        r.raise_for_status()
+        der = r.content
+        pem = r.text if r.content.lstrip().startswith(b"-----BEGIN") else ssl.DER_cert_to_PEM_cert(der)
+        if pem in intermediarios:
+            break
+        intermediarios.append(pem)
+    if not intermediarios:
+        return None
+    with open(certifi.where()) as f:
+        cas = f.read()
+    fd, caminho = tempfile.mkstemp(prefix="cadeia-", suffix=".pem")
+    with os.fdopen(fd, "w") as f:
+        f.write(cas + "\n" + "\n".join(intermediarios))
+    _CADEIAS[host] = caminho
+    log.info("%s: certificado intermediário ausente no servidor; baixado do emissor", host)
+    return caminho
+
+
+def _requisitar(url: str, timeout: int = 40) -> requests.Response:
+    try:
+        return requests.get(url, headers=HEADERS, timeout=timeout)
+    except requests.exceptions.SSLError as e:
+        if "unable to get local issuer" not in str(e):
+            raise
+        from urllib.parse import urlsplit
+
+        partes = urlsplit(url)
+        cadeia = _cadeia_completa(partes.hostname or "", partes.port or 443)
+        if not cadeia:
+            raise
+        return requests.get(url, headers=HEADERS, timeout=timeout, verify=cadeia)
+
+
 def _get(url: str) -> requests.Response:
-    r = requests.get(url, headers=HEADERS, timeout=40)
+    r = _requisitar(url)
     r.raise_for_status()
     return r
 
@@ -607,9 +663,9 @@ def sondar(urls: list[str], padrao: str = r"to Report|Quarter 20\d\d|conference 
 
     for url in urls:
         try:
-            r = requests.get(url, headers=HEADERS, timeout=60)
+            r = _requisitar(url, timeout=60)
         except Exception as e:
-            print(f"\n== {url}: FALHA {type(e).__name__}: {str(e)[:150]}")
+            print(f"\n== {url}: FALHA {type(e).__name__}: {str(e)[:300]}")
             continue
         tipo = r.headers.get("content-type", "")
         print(f"\n== {url} -> HTTP {r.status_code} {tipo} {len(r.content)}b")
