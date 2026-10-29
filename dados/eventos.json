@@ -683,12 +683,27 @@
   {
     "ticker": "MELI",
     "empresa": "MercadoLibre",
+    "evento": "Call 3Q26",
+    "data": "2026-11-04",
+    "hora": "19:00",
+    "periodo": "",
+    "visto_em": "2026-10-29T17:06:25Z",
+    "extras": {
+      "fonte": "RI",
+      "link": "https://event.choruscall.com/mediaframe/webcast.html?webcastid=1iH9zOZN"
+    }
+  },
+  {
+    "ticker": "MELI",
+    "empresa": "MercadoLibre",
     "evento": "Resultado 3Q26",
     "data": "2026-11-04",
     "hora": "17:00",
     "periodo": "",
     "visto_em": "2026-10-03T18:11:43Z",
-    "extras": {}
+    "extras": {
+      "fonte": "RI"
+    }
   },
   {
     "ticker": "PGMN3",
@@ -946,7 +961,8 @@
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
       "fonte": "RI",
-      "fim": "11:00"
+      "fim": "11:00",
+      "link": "https://magalu.zoom.us/webinar/register/WN_EW_7AKE-QQa5uOCvLFVLNQ"
     }
   },
   {
