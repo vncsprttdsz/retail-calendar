@@ -637,14 +637,15 @@
   "sequencia": 0
  },
  "PFRM3 call 3Q26": {
-  "assinatura": "4366a05648832328",
+  "assinatura": "7646af2990af330b",
   "data": "2026-11-13",
   "evento": {
    "data": "2026-11-13",
    "empresa": "PROFARMA",
    "evento": "Call 3Q26",
    "extras": {
-    "fonte": "RI"
+    "fonte": "RI",
+    "link": "https://us06web.zoom.us/webinar/register/WN_IDFA-MAkQ4Cfv3B2Gu_g5g"
    },
    "hora": null,
    "periodo": "",
@@ -656,7 +657,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 1
  },
  "PFRM3 resultado 3Q26": {
   "assinatura": "f455d71ceb969efc",
