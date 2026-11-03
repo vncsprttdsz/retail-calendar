@@ -185,14 +185,15 @@
   "sequencia": 0
  },
  "CEAB3 call 3Q26": {
-  "assinatura": "eac99929ab29e206",
+  "assinatura": "29381a89aeafd3da",
   "data": "2026-11-05",
   "evento": {
    "data": "2026-11-05",
    "empresa": "CEA MODAS",
    "evento": "Call 3Q26",
    "extras": {
-    "fonte": "RI"
+    "fonte": "RI",
+    "link": "https://mzgroup.zoom.us/webinar/register/WN_uc-gnGaPT02Qys7YswFS-Q#/registration"
    },
    "hora": "11:00",
    "periodo": "",
@@ -204,7 +205,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 1
  },
  "CEAB3 resultado 3Q26": {
   "assinatura": "30d5d8311ebaac83",
