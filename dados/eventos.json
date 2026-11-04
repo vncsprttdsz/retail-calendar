@@ -662,10 +662,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2025-12-09"
-    }
+    "extras": {}
   },
   {
     "ticker": "CEAB3",
@@ -723,12 +720,12 @@
     "empresa": "RAIADROGASIL",
     "evento": "Call 3Q26",
     "data": "2026-11-04",
-    "hora": "10:00",
+    "hora": null,
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
-      "fonte": "RI",
-      "fim": "11:30"
+      "fonte": "CVM",
+      "entregue": "2025-12-09"
     }
   },
   {
@@ -884,7 +881,8 @@
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
-      "fonte": "RI"
+      "fonte": "RI",
+      "link": "https://us06web.zoom.us/webinar/register/WN_2ZyqBiBqRDCTxnw7UPpssg"
     }
   },
   {
