@@ -712,12 +712,13 @@
     "empresa": "RAIADROGASIL",
     "evento": "Call 3Q26",
     "data": "2026-11-04",
-    "hora": null,
+    "hora": "10:00",
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
       "fonte": "CVM",
-      "entregue": "2025-12-09"
+      "entregue": "2025-12-09",
+      "fim": "11:30"
     }
   },
   {
@@ -748,11 +749,12 @@
     "empresa": "CEA MODAS",
     "evento": "Call 3Q26",
     "data": "2026-11-05",
-    "hora": null,
+    "hora": "11:00",
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
-      "fonte": "RI"
+      "fonte": "RI",
+      "link": "https://mzgroup.zoom.us/webinar/register/WN_uc-gnGaPT02Qys7YswFS-Q#/registration"
     }
   },
   {
@@ -817,7 +819,8 @@
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
       "fonte": "RI",
-      "fim": "15:00"
+      "fim": "15:00",
+      "link": "https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeResultados3T26-SmartFit_953"
     }
   },
   {

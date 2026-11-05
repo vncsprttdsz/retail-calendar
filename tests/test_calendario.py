@@ -1417,3 +1417,19 @@ def test_sem_urldefense_sequencia_de_caracteres():
     codigo = base64.urlsafe_b64encode(b"#%20").decode().rstrip("=")
     assert ri._sem_urldefense(f"https://urldefense.com/v3/__https://x.com/*/a**Bb__;{codigo}!!abc$") == "https://x.com/#/a%20b"
     assert ri._sem_urldefense("https://zoom.us/webinar/register/WN_x") == "https://zoom.us/webinar/register/WN_x"
+
+
+def test_call_do_dia_sem_popup_mantem_horario_e_link():
+    # No dia do call a home tira o pop-up: a agenda traz o call sem horário e sem link.
+    link = "https://mzgroup.zoom.us/webinar/register/WN_x#/registration"
+    antigo = Evento("ASAI3", "Assaí", "Call 3Q26", date(2026, 11, 5), time(11), extras={"fonte": "RI", "link": link})
+    novo = Evento("ASAI3", "Assaí", "Call 3Q26", date(2026, 11, 5), extras={"fonte": "RI"})
+    [e] = historico.mesclar([antigo], [novo], date(2026, 11, 5), {"ASAI3"})
+    assert (e.hora, e.extras.get("link")) == (time(11), link)
+    # Horário e link novos continuam valendo; mudança de data é outro evento (sem herança).
+    novo = Evento("ASAI3", "Assaí", "Call 3Q26", date(2026, 11, 5), time(14), extras={"link": "https://outro"})
+    [e] = historico.mesclar([antigo], [novo], date(2026, 11, 5), {"ASAI3"})
+    assert (e.hora, e.extras["link"]) == (time(14), "https://outro")
+    novo = Evento("ASAI3", "Assaí", "Call 3Q26", date(2026, 11, 6))
+    r = historico.mesclar([antigo], [novo], date(2026, 11, 1), {"ASAI3"})
+    assert [(e.data, e.hora, e.extras.get("link")) for e in r] == [(date(2026, 11, 6), None, None)]

@@ -21,6 +21,16 @@ def salvar(caminho: Path, eventos: list[Evento]) -> None:
     caminho.write_text(json.dumps(dados, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def _herdar(e: Evento, anterior: Evento) -> None:
+    """Horário (início e fim) e link que a fonte deixou de mostrar ficam os já conhecidos."""
+    if e.hora is None and anterior.hora is not None:
+        e.hora = anterior.hora
+        if anterior.extras.get("fim") and not e.extras.get("fim"):
+            e.extras = {**e.extras, "fim": anterior.extras["fim"]}
+    if anterior.extras.get("link") and not e.extras.get("link"):
+        e.extras = {**e.extras, "link": anterior.extras["link"]}
+
+
 def mesclar(
     antigos: list[Evento],
     novos: list[Evento],
@@ -35,6 +45,10 @@ def mesclar(
     eventos de empresas que saíram da cobertura também. Itens de `preservar` — ticker
     ou (ticker, tipo) — tiveram a fonte fora do ar nesta rodada e mantêm também os
     eventos futuros do histórico. Calls de hoje ficam (a agenda do RI tira o evento do dia).
+
+    Mesmo evento (mesma data) que agora vem sem horário ou sem link mantém os do histórico: no dia
+    do call a home tira o pop-up e a agenda volta a mostrar o call sem horário e sem link; isso não
+    é mudança (senão o convite seria atualizado para dia inteiro e sem o link).
     """
     from .ajustes import tipo
     agora_iso = (agora or datetime.now(timezone.utc)).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -43,6 +57,8 @@ def mesclar(
     for e in novos:
         anterior = por_chave.get(e.chave)
         e.visto_em = anterior.visto_em if anterior and anterior.visto_em else agora_iso
+        if anterior:
+            _herdar(e, anterior)
         resultado[e.chave] = e
     for e in antigos:
         if e.chave in resultado or e.ticker not in tickers:
