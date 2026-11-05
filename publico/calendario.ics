@@ -815,17 +815,14 @@ SUMMARY:ASAI Resultado 3Q26
 CATEGORIES:Resultados
 END:VEVENT
 BEGIN:VEVENT
-UID:fdb3c664362f8533@retail-calendar
+UID:2f1d8be26cbb8608@retail-calendar
 DTSTAMP:20261009T081503Z
-DTSTART:20261105T140000Z
-DTEND:20261105T150000Z
+DTSTART;VALUE=DATE:20261105
+DTEND;VALUE=DATE:20261106
 TRANSP:TRANSPARENT
 X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
 SUMMARY:CEAB Call 3Q26
-DESCRIPTION:Webcast: https://mzgroup.zoom.us/webinar/register/WN_uc-gnGaPT0
- 2Qys7YswFS-Q#/registration
-URL:https://mzgroup.zoom.us/webinar/register/WN_uc-gnGaPT02Qys7YswFS-Q#/reg
- istration
 CATEGORIES:Resultados
 END:VEVENT
 BEGIN:VEVENT
@@ -882,10 +879,6 @@ DTEND:20261105T180000Z
 TRANSP:TRANSPARENT
 X-MICROSOFT-CDO-BUSYSTATUS:FREE
 SUMMARY:SMFT Call 3Q26
-DESCRIPTION:Webcast: https://tenmeetings.com.br/ten-events/#/webinar?evento
- =ConferenciadeResultados3T26-SmartFit_953
-URL:https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeRes
- ultados3T26-SmartFit_953
 CATEGORIES:Resultados
 END:VEVENT
 BEGIN:VEVENT

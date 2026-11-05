@@ -672,10 +672,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-03-20"
-    }
+    "extras": {}
   },
   {
     "ticker": "MELI",
@@ -698,9 +695,7 @@
     "hora": "18:00",
     "periodo": "",
     "visto_em": "2026-10-03T18:11:43Z",
-    "extras": {
-      "fonte": "RI"
-    }
+    "extras": {}
   },
   {
     "ticker": "PGMN3",
@@ -710,10 +705,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-02-13"
-    }
+    "extras": {}
   },
   {
     "ticker": "RADL3",
@@ -736,10 +728,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2025-12-10"
-    }
+    "extras": {}
   },
   {
     "ticker": "ASAI3",
@@ -759,12 +748,11 @@
     "empresa": "CEA MODAS",
     "evento": "Call 3Q26",
     "data": "2026-11-05",
-    "hora": "11:00",
+    "hora": null,
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
-      "fonte": "RI",
-      "link": "https://mzgroup.zoom.us/webinar/register/WN_uc-gnGaPT02Qys7YswFS-Q#/registration"
+      "fonte": "RI"
     }
   },
   {
@@ -829,8 +817,7 @@
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
       "fonte": "RI",
-      "fim": "15:00",
-      "link": "https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeResultados3T26-SmartFit_953"
+      "fim": "15:00"
     }
   },
   {
