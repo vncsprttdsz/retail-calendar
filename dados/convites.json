@@ -48,55 +48,7 @@
   "sequencia": 0,
   "uid": "2e1a1b55c63ab43a2677@retail-calendar"
  },
- "ASAI3 call 3Q26": {
-  "assinatura": "652c5eebb289da77",
-  "data": "2026-11-06",
-  "evento": {
-   "data": "2026-11-06",
-   "empresa": "ASSAI",
-   "evento": "Call 3Q26",
-   "extras": {
-    "fonte": "RI",
-    "link": "https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeResultados3T26_460"
-   },
-   "hora": "11:00",
-   "periodo": "",
-   "ticker": "ASAI3",
-   "visto_em": "2026-10-09T08:15:03Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 1,
-  "uid": "e68f2c6355011eaf2516@retail-calendar"
- },
- "ASAI3 resultado 3Q26": {
-  "assinatura": "fbfad40171a00990",
-  "data": "2026-11-05",
-  "evento": {
-   "data": "2026-11-05",
-   "empresa": "ASSAI",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "entregue": "2026-03-23",
-    "fonte": "CVM"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "ASAI3",
-   "visto_em": "2026-10-03T17:10:57Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "8d55cf812d7c84b2b8a8@retail-calendar"
- },
- "AUAU3 call 3Q26 dia inteiro": {
+ "AUAU3 call 3Q26": {
   "assinatura": "219b02fc03596ac1",
   "data": "2026-11-13",
   "evento": {
@@ -104,6 +56,7 @@
    "empresa": "PETZCOBASI",
    "evento": "Call 3Q26",
    "extras": {
+    "fim": "11:00",
     "fonte": "RI",
     "link": "https://mzgroup.zoom.us/webinar/register/WN_pte2LmcIQACKHORiOQ1p-g#/registration"
    },
@@ -117,8 +70,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 2,
-  "uid": "71cb9ecfc73aba2b2655@retail-calendar"
+  "sequencia": 0,
+  "uid": "24825447e85e1180cf4f@retail-calendar"
  },
  "AUAU3 resultado 3Q26": {
   "assinatura": "418a4c732cc52b64",
@@ -144,7 +97,7 @@
   "sequencia": 0,
   "uid": "2dd05c4a988b55a8bbc4@retail-calendar"
  },
- "AZZA3 call 3Q26 dia inteiro": {
+ "AZZA3 call 3Q26": {
   "assinatura": "f7c0e79a203c97bc",
   "data": "2026-11-12",
   "evento": {
@@ -165,8 +118,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1,
-  "uid": "221f655e082377baf322@retail-calendar"
+  "sequencia": 0,
+  "uid": "4d60305098a9bff3dcfb@retail-calendar"
  },
  "AZZA3 resultado 3Q26": {
   "assinatura": "d9f8510674004e23",
@@ -192,39 +145,16 @@
   "sequencia": 0,
   "uid": "6613ad93816c850b03c3@retail-calendar"
  },
- "CEAB3 call 3Q26": {
-  "assinatura": "29381a89aeafd3da",
-  "data": "2026-11-05",
-  "evento": {
-   "data": "2026-11-05",
-   "empresa": "CEA MODAS",
-   "evento": "Call 3Q26",
-   "extras": {
-    "fonte": "RI",
-    "link": "https://mzgroup.zoom.us/webinar/register/WN_uc-gnGaPT02Qys7YswFS-Q#/registration"
-   },
-   "hora": "11:00",
-   "periodo": "",
-   "ticker": "CEAB3",
-   "visto_em": "2026-10-09T08:15:03Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 2,
-  "uid": "a5264effe4c03b5c9025@retail-calendar"
- },
  "DMVF3 call 3Q26 dia inteiro": {
-  "assinatura": "e4a27750262ae51e",
+  "assinatura": "3d72867fd7ce886e",
   "data": "2026-11-13",
   "evento": {
    "data": "2026-11-13",
    "empresa": "D1000VFARMA",
    "evento": "Call 3Q26",
    "extras": {
-    "fonte": "RI"
+    "fonte": "RI",
+    "link": "https://us06web.zoom.us/webinar/register/WN_dGuQ7fSiQUuOqpIbEwPo3Q"
    },
    "hora": null,
    "periodo": "",
@@ -236,7 +166,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0,
+  "sequencia": 1,
   "uid": "d3fc2697c4ec46d945fb@retail-calendar"
  },
  "DMVF3 resultado 3Q26": {
@@ -263,7 +193,7 @@
   "sequencia": 0,
   "uid": "602ec3e1037b71fd5004@retail-calendar"
  },
- "GMAT3 call 3Q26 dia inteiro": {
+ "GMAT3 call 3Q26": {
   "assinatura": "25c8b78ffb8eb049",
   "data": "2026-11-13",
   "evento": {
@@ -284,8 +214,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1,
-  "uid": "79947134a00f448956ff@retail-calendar"
+  "sequencia": 0,
+  "uid": "df239418fdd8819522f8@retail-calendar"
  },
  "GMAT3 resultado 3Q26": {
   "assinatura": "70df5a7c6fb2fde7",
@@ -310,102 +240,6 @@
   ],
   "sequencia": 0,
   "uid": "0df84a7abb4186d96545@retail-calendar"
- },
- "LJQQ3 call 3Q26": {
-  "assinatura": "d504d22442f7d8bb",
-  "data": "2026-11-06",
-  "evento": {
-   "data": "2026-11-06",
-   "empresa": "QUERO-QUERO",
-   "evento": "Call 3Q26",
-   "extras": {
-    "fonte": "RI",
-    "link": "https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeResultados3T26-LOJASQUERO-QUERO_948"
-   },
-   "hora": "09:00",
-   "periodo": "",
-   "ticker": "LJQQ3",
-   "visto_em": "2026-10-09T08:15:03Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 1,
-  "uid": "36c9b3c5a768052bdde7@retail-calendar"
- },
- "LJQQ3 resultado 3Q26": {
-  "assinatura": "f8362e778a53cf2e",
-  "data": "2026-11-05",
-  "evento": {
-   "data": "2026-11-05",
-   "empresa": "QUERO-QUERO",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "entregue": "2026-06-30",
-    "fonte": "CVM"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "LJQQ3",
-   "visto_em": "2026-10-03T17:10:57Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "a83474c6be752af9d8f3@retail-calendar"
- },
- "LREN3 call 3Q26": {
-  "assinatura": "459c0bd37513c481",
-  "data": "2026-11-06",
-  "evento": {
-   "data": "2026-11-06",
-   "empresa": "LOJAS RENNER",
-   "evento": "Call 3Q26",
-   "extras": {
-    "fonte": "RI",
-    "link": "https://us06web.zoom.us/webinar/register/WN_2ZyqBiBqRDCTxnw7UPpssg"
-   },
-   "hora": "10:00",
-   "periodo": "",
-   "ticker": "LREN3",
-   "visto_em": "2026-10-09T08:15:03Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 1,
-  "uid": "fc42af52435495b8dad3@retail-calendar"
- },
- "LREN3 resultado 3Q26": {
-  "assinatura": "aa1a005fd7593d9b",
-  "data": "2026-11-05",
-  "evento": {
-   "data": "2026-11-05",
-   "empresa": "LOJAS RENNER",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "entregue": "2026-03-02",
-    "fonte": "CVM"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "LREN3",
-   "visto_em": "2026-10-03T17:10:57Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "ad93437c6a48f6ce5365@retail-calendar"
  },
  "MELI resultado 1Q27": {
   "assinatura": "8d87c7b9a09d5d39",
@@ -524,31 +358,7 @@
   "sequencia": 1,
   "uid": "607191e18c3c6df36b0d@retail-calendar"
  },
- "MGLU3 resultado 3Q26": {
-  "assinatura": "a575efe53a5b4b5d",
-  "data": "2026-11-09",
-  "evento": {
-   "data": "2026-11-09",
-   "empresa": "MAGAZ LUIZA",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "entregue": "2026-10-07 19:49:14",
-    "fonte": "CVM"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "MGLU3",
-   "visto_em": "2026-10-08T19:22:14Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "01cdc52eb1a284fbdf5c@retail-calendar"
- },
- "NATU3 call 3Q26 dia inteiro": {
+ "NATU3 call 3Q26": {
   "assinatura": "b53c26975fa5886c",
   "data": "2026-11-13",
   "evento": {
@@ -569,8 +379,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1,
-  "uid": "d8c1554fee71b3d48047@retail-calendar"
+  "sequencia": 0,
+  "uid": "3d89bd7f86ef3ea61748@retail-calendar"
  },
  "NATU3 resultado 3Q26": {
   "assinatura": "8a54f1ffbb7615b5",
@@ -644,78 +454,6 @@
   "sequencia": 0,
   "uid": "b796a0a0faf9a8062f55@retail-calendar"
  },
- "PGMN3 call 3Q26": {
-  "assinatura": "9c1fbb406b72980a",
-  "data": "2026-11-05",
-  "evento": {
-   "data": "2026-11-05",
-   "empresa": "PAGUE MENOS",
-   "evento": "Call 3Q26",
-   "extras": {
-    "fonte": "RI",
-    "link": "https://zoom.us/webinar/register/WN_vMWhDRFBTmSku0xVe1lalQ"
-   },
-   "hora": "10:00",
-   "periodo": "",
-   "ticker": "PGMN3",
-   "visto_em": "2026-10-09T08:15:03Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 1,
-  "uid": "a1aa4da2bb91c73173c2@retail-calendar"
- },
- "PNVL3 call 3Q26": {
-  "assinatura": "8bfdb0bc8e2f0dd6",
-  "data": "2026-11-06",
-  "evento": {
-   "data": "2026-11-06",
-   "empresa": "DIMED",
-   "evento": "Call 3Q26",
-   "extras": {
-    "fonte": "RI",
-    "link": "https://mzgroup.zoom.us/webinar/register/WN_APnoN5HPRWGi6tSv8EbNfg#/registration"
-   },
-   "hora": "09:30",
-   "periodo": "",
-   "ticker": "PNVL3",
-   "visto_em": "2026-10-09T08:15:03Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "ce1d98d743536b31d0cb@retail-calendar"
- },
- "PNVL3 resultado 3Q26": {
-  "assinatura": "887822b8c4fe64d8",
-  "data": "2026-11-05",
-  "evento": {
-   "data": "2026-11-05",
-   "empresa": "DIMED",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "entregue": "2026-03-10",
-    "fonte": "CVM"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "PNVL3",
-   "visto_em": "2026-10-03T17:10:57Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "446825c37d3f54626cc6@retail-calendar"
- },
  "RIAA3 call 3Q26": {
   "assinatura": "07f7424554901e2b",
   "data": "2026-11-10",
@@ -740,30 +478,6 @@
   "sequencia": 1,
   "uid": "964f97015c4df7a7cd22@retail-calendar"
  },
- "RIAA3 resultado 3Q26": {
-  "assinatura": "89767b69035f768f",
-  "data": "2026-11-09",
-  "evento": {
-   "data": "2026-11-09",
-   "empresa": "RIACHUELO",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "entregue": "2026-10-08 08:00:19",
-    "fonte": "CVM"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "RIAA3",
-   "visto_em": "2026-10-09T02:47:33Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "8193d0f5f83357457a8b@retail-calendar"
- },
  "SBFG3 call 3Q26": {
   "assinatura": "dccae8f8bb3db944",
   "data": "2026-11-10",
@@ -787,30 +501,6 @@
   ],
   "sequencia": 0,
   "uid": "ff855078bc71f4dae82d@retail-calendar"
- },
- "SBFG3 resultado 3Q26": {
-  "assinatura": "6f115c2ac5b38c56",
-  "data": "2026-11-09",
-  "evento": {
-   "data": "2026-11-09",
-   "empresa": "GRUPO SBF",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "entregue": "2026-07-30",
-    "fonte": "CVM"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "SBFG3",
-   "visto_em": "2026-10-03T17:10:57Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "fea4bc89b6c4f64989d4@retail-calendar"
  },
  "SE call 3Q26": {
   "assinatura": "8e4141d97b60c327",
@@ -857,32 +547,7 @@
   "sequencia": 1,
   "uid": "ceedfac188827e3915fa@retail-calendar"
  },
- "SMFT3 call 3Q26": {
-  "assinatura": "1780677913a99272",
-  "data": "2026-11-05",
-  "evento": {
-   "data": "2026-11-05",
-   "empresa": "SMART FIT",
-   "evento": "Call 3Q26",
-   "extras": {
-    "fim": "15:00",
-    "fonte": "RI",
-    "link": "https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeResultados3T26-SmartFit_953"
-   },
-   "hora": "13:30",
-   "periodo": "",
-   "ticker": "SMFT3",
-   "visto_em": "2026-10-09T08:15:03Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 3,
-  "uid": "410ec4a6fdb634a205e9@retail-calendar"
- },
- "TFCO4 call 3Q26 dia inteiro": {
+ "TFCO4 call 3Q26": {
   "assinatura": "a6473f2ce6687430",
   "data": "2026-11-13",
   "evento": {
@@ -903,8 +568,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1,
-  "uid": "3ce844a9493e05d2a399@retail-calendar"
+  "sequencia": 0,
+  "uid": "7f7da7be68198f5a132e@retail-calendar"
  },
  "TFCO4 resultado 3Q26": {
   "assinatura": "3cda87c257b58698",
@@ -929,54 +594,6 @@
   ],
   "sequencia": 0,
   "uid": "a9baf9a62c3e1e46a8ad@retail-calendar"
- },
- "VIVA3 call 3Q26": {
-  "assinatura": "d979112c441a2adb",
-  "data": "2026-11-06",
-  "evento": {
-   "data": "2026-11-06",
-   "empresa": "VIVARA S.A.",
-   "evento": "Call 3Q26",
-   "extras": {
-    "fonte": "RI",
-    "link": "https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeResultados3T26-Vivara_939"
-   },
-   "hora": "12:00",
-   "periodo": "",
-   "ticker": "VIVA3",
-   "visto_em": "2026-10-09T08:15:03Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 1,
-  "uid": "741924b3cb91dbb896ad@retail-calendar"
- },
- "VIVA3 resultado 3Q26": {
-  "assinatura": "ae8e3f7f593c55d2",
-  "data": "2026-11-05",
-  "evento": {
-   "data": "2026-11-05",
-   "empresa": "VIVARA S.A.",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "entregue": "2026-05-29",
-    "fonte": "CVM"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "VIVA3",
-   "visto_em": "2026-10-03T17:10:57Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "ed498409e38f0608bf58@retail-calendar"
  },
  "VULC3 call 3Q26 dia inteiro": {
   "assinatura": "45ff0162dbc57e6a",
