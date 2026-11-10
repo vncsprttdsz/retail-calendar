@@ -739,10 +739,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-03-23"
-    }
+    "extras": {}
   },
   {
     "ticker": "CEAB3",
@@ -765,10 +762,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-06-30"
-    }
+    "extras": {}
   },
   {
     "ticker": "LREN3",
@@ -778,10 +772,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-03-02"
-    }
+    "extras": {}
   },
   {
     "ticker": "PGMN3",
@@ -804,10 +795,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-03-10"
-    }
+    "extras": {}
   },
   {
     "ticker": "SMFT3",
@@ -831,10 +819,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-05-29"
-    }
+    "extras": {}
   },
   {
     "ticker": "ASAI3",
@@ -909,10 +894,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-08T19:22:14Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-10-07 19:49:14"
-    }
+    "extras": {}
   },
   {
     "ticker": "RIAA3",
@@ -922,10 +904,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-09T02:47:33Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-10-08 08:00:19"
-    }
+    "extras": {}
   },
   {
     "ticker": "SBFG3",
@@ -935,10 +914,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-07-30"
-    }
+    "extras": {}
   },
   {
     "ticker": "MGLU3",
@@ -949,7 +925,8 @@
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
-      "fonte": "RI",
+      "fonte": "CVM",
+      "entregue": "2026-10-07",
       "fim": "11:00",
       "link": "https://magalu.zoom.us/webinar/register/WN_EW_7AKE-QQa5uOCvLFVLNQ"
     }
