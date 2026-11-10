@@ -1458,3 +1458,10 @@ def test_call_do_dia_sem_popup_mantem_horario_e_link():
     novo = Evento("ASAI3", "Assaí", "Call 3Q26", date(2026, 11, 6))
     r = historico.mesclar([antigo], [novo], date(2026, 11, 1), {"ASAI3"})
     assert [(e.data, e.hora, e.extras.get("link")) for e in r] == [(date(2026, 11, 6), None, None)]
+
+
+@pytest.mark.parametrize("resposta", [{"message": "no events"}, "sem eventos", {"data": []}, ["x"]])
+def test_mz_sem_eventos_futuros_em_outro_formato(monkeypatch, resposta):
+    # Bug real (SMFT3/VIVA3 depois do call): "'str' object has no attribute 'get'".
+    monkeypatch.setattr(ri.requests, "get", lambda *a, **k: type("R", (), {"raise_for_status": lambda s: None, "json": lambda s: resposta})())
+    assert ri.mz_eventos("id") == []

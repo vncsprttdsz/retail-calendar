@@ -109,7 +109,13 @@ def mz_id(html: str) -> str | None:
 def mz_eventos(fm_id: str, tipo: str = "future", lang: str = "pt-br"):
     r = requests.get(f"{MZ_EVENTOS}/{tipo}/{fm_id}/{lang}", headers=HEADERS, timeout=40)
     r.raise_for_status()
-    return r.json()
+    dados = r.json()
+    if isinstance(dados, dict):  # ex.: sem eventos futuros, a API pode responder com um objeto
+        dados = next((v for v in dados.values() if isinstance(v, list)), [])
+    if not isinstance(dados, list):
+        log.info("API de eventos da MZ (%s) sem lista de eventos: %s", fm_id, str(dados)[:100])
+        return []
+    return [ev for ev in dados if isinstance(ev, dict)]
 
 
 def diagnostico_mz(empresas: list[dict]) -> None:
