@@ -21,7 +21,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1
+  "sequencia": 1,
+  "uid": "d9b6587dcc045406038a@retail-calendar"
  },
  "ALLD3 resultado 3Q26": {
   "assinatura": "14ea0a1f52b527ef",
@@ -44,7 +45,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "2e1a1b55c63ab43a2677@retail-calendar"
  },
  "ASAI3 call 3Q26": {
   "assinatura": "652c5eebb289da77",
@@ -67,7 +69,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1
+  "sequencia": 1,
+  "uid": "e68f2c6355011eaf2516@retail-calendar"
  },
  "ASAI3 resultado 3Q26": {
   "assinatura": "fbfad40171a00990",
@@ -90,9 +93,10 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "8d55cf812d7c84b2b8a8@retail-calendar"
  },
- "AUAU3 call 3Q26": {
+ "AUAU3 call 3Q26 dia inteiro": {
   "assinatura": "219b02fc03596ac1",
   "data": "2026-11-13",
   "evento": {
@@ -113,7 +117,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 2
+  "sequencia": 2,
+  "uid": "71cb9ecfc73aba2b2655@retail-calendar"
  },
  "AUAU3 resultado 3Q26": {
   "assinatura": "418a4c732cc52b64",
@@ -136,9 +141,10 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "2dd05c4a988b55a8bbc4@retail-calendar"
  },
- "AZZA3 call 3Q26": {
+ "AZZA3 call 3Q26 dia inteiro": {
   "assinatura": "f7c0e79a203c97bc",
   "data": "2026-11-12",
   "evento": {
@@ -159,7 +165,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1
+  "sequencia": 1,
+  "uid": "221f655e082377baf322@retail-calendar"
  },
  "AZZA3 resultado 3Q26": {
   "assinatura": "d9f8510674004e23",
@@ -182,7 +189,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "6613ad93816c850b03c3@retail-calendar"
  },
  "CEAB3 call 3Q26": {
   "assinatura": "29381a89aeafd3da",
@@ -205,9 +213,10 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 2
+  "sequencia": 2,
+  "uid": "a5264effe4c03b5c9025@retail-calendar"
  },
- "DMVF3 call 3Q26": {
+ "DMVF3 call 3Q26 dia inteiro": {
   "assinatura": "e4a27750262ae51e",
   "data": "2026-11-13",
   "evento": {
@@ -227,7 +236,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "d3fc2697c4ec46d945fb@retail-calendar"
  },
  "DMVF3 resultado 3Q26": {
   "assinatura": "1aace437d03ccaac",
@@ -250,9 +260,10 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "602ec3e1037b71fd5004@retail-calendar"
  },
- "GMAT3 call 3Q26": {
+ "GMAT3 call 3Q26 dia inteiro": {
   "assinatura": "25c8b78ffb8eb049",
   "data": "2026-11-13",
   "evento": {
@@ -273,7 +284,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1
+  "sequencia": 1,
+  "uid": "79947134a00f448956ff@retail-calendar"
  },
  "GMAT3 resultado 3Q26": {
   "assinatura": "70df5a7c6fb2fde7",
@@ -296,7 +308,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "0df84a7abb4186d96545@retail-calendar"
  },
  "LJQQ3 call 3Q26": {
   "assinatura": "d504d22442f7d8bb",
@@ -319,7 +332,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1
+  "sequencia": 1,
+  "uid": "36c9b3c5a768052bdde7@retail-calendar"
  },
  "LJQQ3 resultado 3Q26": {
   "assinatura": "f8362e778a53cf2e",
@@ -342,7 +356,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "a83474c6be752af9d8f3@retail-calendar"
  },
  "LREN3 call 3Q26": {
   "assinatura": "459c0bd37513c481",
@@ -365,7 +380,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1
+  "sequencia": 1,
+  "uid": "fc42af52435495b8dad3@retail-calendar"
  },
  "LREN3 resultado 3Q26": {
   "assinatura": "aa1a005fd7593d9b",
@@ -388,7 +404,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "ad93437c6a48f6ce5365@retail-calendar"
  },
  "MELI resultado 1Q27": {
   "assinatura": "8d87c7b9a09d5d39",
@@ -410,7 +427,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "54c161a87a4a56b64ade@retail-calendar"
  },
  "MELI resultado 2Q27": {
   "assinatura": "244d415ab83e2b4a",
@@ -432,7 +450,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "d5fad4347bb2a7cbd071@retail-calendar"
  },
  "MELI resultado 3Q27": {
   "assinatura": "aad65320c1bd3a15",
@@ -454,7 +473,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "a42fb22fd3a7ee1de9c9@retail-calendar"
  },
  "MELI resultado 4Q26": {
   "assinatura": "d7c8f0da9b38c094",
@@ -476,7 +496,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "d2bbf0586c9036003d64@retail-calendar"
  },
  "MGLU3 call 3Q26": {
   "assinatura": "e57d930b0dba757f",
@@ -500,7 +521,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1
+  "sequencia": 1,
+  "uid": "607191e18c3c6df36b0d@retail-calendar"
  },
  "MGLU3 resultado 3Q26": {
   "assinatura": "a575efe53a5b4b5d",
@@ -523,9 +545,10 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "01cdc52eb1a284fbdf5c@retail-calendar"
  },
- "NATU3 call 3Q26": {
+ "NATU3 call 3Q26 dia inteiro": {
   "assinatura": "b53c26975fa5886c",
   "data": "2026-11-13",
   "evento": {
@@ -546,7 +569,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1
+  "sequencia": 1,
+  "uid": "d8c1554fee71b3d48047@retail-calendar"
  },
  "NATU3 resultado 3Q26": {
   "assinatura": "8a54f1ffbb7615b5",
@@ -569,9 +593,10 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "667480289e3d6678b4a4@retail-calendar"
  },
- "PFRM3 call 3Q26": {
+ "PFRM3 call 3Q26 dia inteiro": {
   "assinatura": "7646af2990af330b",
   "data": "2026-11-13",
   "evento": {
@@ -592,7 +617,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1
+  "sequencia": 1,
+  "uid": "deb050cb183cf1aaf2f8@retail-calendar"
  },
  "PFRM3 resultado 3Q26": {
   "assinatura": "f455d71ceb969efc",
@@ -615,7 +641,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "b796a0a0faf9a8062f55@retail-calendar"
  },
  "PGMN3 call 3Q26": {
   "assinatura": "9c1fbb406b72980a",
@@ -638,7 +665,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1
+  "sequencia": 1,
+  "uid": "a1aa4da2bb91c73173c2@retail-calendar"
  },
  "PNVL3 call 3Q26": {
   "assinatura": "8bfdb0bc8e2f0dd6",
@@ -661,7 +689,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "ce1d98d743536b31d0cb@retail-calendar"
  },
  "PNVL3 resultado 3Q26": {
   "assinatura": "887822b8c4fe64d8",
@@ -684,7 +713,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "446825c37d3f54626cc6@retail-calendar"
  },
  "RIAA3 call 3Q26": {
   "assinatura": "07f7424554901e2b",
@@ -707,7 +737,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1
+  "sequencia": 1,
+  "uid": "964f97015c4df7a7cd22@retail-calendar"
  },
  "RIAA3 resultado 3Q26": {
   "assinatura": "89767b69035f768f",
@@ -730,7 +761,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "8193d0f5f83357457a8b@retail-calendar"
  },
  "SBFG3 call 3Q26": {
   "assinatura": "dccae8f8bb3db944",
@@ -753,7 +785,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "ff855078bc71f4dae82d@retail-calendar"
  },
  "SBFG3 resultado 3Q26": {
   "assinatura": "6f115c2ac5b38c56",
@@ -776,7 +809,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "fea4bc89b6c4f64989d4@retail-calendar"
  },
  "SE call 3Q26": {
   "assinatura": "8e4141d97b60c327",
@@ -799,7 +833,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "137cc28ff7e84226416a@retail-calendar"
  },
  "SE resultado 3Q26": {
   "assinatura": "4dc000a87f213faa",
@@ -819,7 +854,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1
+  "sequencia": 1,
+  "uid": "ceedfac188827e3915fa@retail-calendar"
  },
  "SMFT3 call 3Q26": {
   "assinatura": "1780677913a99272",
@@ -843,9 +879,10 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 3
+  "sequencia": 3,
+  "uid": "410ec4a6fdb634a205e9@retail-calendar"
  },
- "TFCO4 call 3Q26": {
+ "TFCO4 call 3Q26 dia inteiro": {
   "assinatura": "a6473f2ce6687430",
   "data": "2026-11-13",
   "evento": {
@@ -866,7 +903,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1
+  "sequencia": 1,
+  "uid": "3ce844a9493e05d2a399@retail-calendar"
  },
  "TFCO4 resultado 3Q26": {
   "assinatura": "3cda87c257b58698",
@@ -889,7 +927,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "a9baf9a62c3e1e46a8ad@retail-calendar"
  },
  "VIVA3 call 3Q26": {
   "assinatura": "d979112c441a2adb",
@@ -912,7 +951,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 1
+  "sequencia": 1,
+  "uid": "741924b3cb91dbb896ad@retail-calendar"
  },
  "VIVA3 resultado 3Q26": {
   "assinatura": "ae8e3f7f593c55d2",
@@ -935,9 +975,10 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "ed498409e38f0608bf58@retail-calendar"
  },
- "VULC3 call 3Q26": {
+ "VULC3 call 3Q26 dia inteiro": {
   "assinatura": "45ff0162dbc57e6a",
   "data": "2026-11-11",
   "evento": {
@@ -958,7 +999,8 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 2
+  "sequencia": 2,
+  "uid": "4914434911988ea75dd9@retail-calendar"
  },
  "VULC3 resultado 3Q26": {
   "assinatura": "80d073bea37297b5",
@@ -981,6 +1023,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0
+  "sequencia": 0,
+  "uid": "9f12150707c69cc7cc42@retail-calendar"
  }
 }

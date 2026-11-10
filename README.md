@@ -89,7 +89,9 @@ convite de reunião e entra no **calendário principal**. Mudou a data ou o hor�
 atualização do mesmo convite (o Outlook substitui o evento); saiu do calendário, chega um cancelamento.
 Eventos com horário ficam como *Ocupado* (os de dia inteiro, como *Livre*). Divulgação de resultados: 1 hora a partir do fechamento da bolsa
 (B3 e Nasdaq; a Sea, que divulga antes da abertura, na abertura da NYSE), com lembrete 15 min antes.
-Calls: no horário informado pela empresa, com lembrete 30 min antes.
+Calls: no horário informado pela empresa, com lembrete 30 min antes. Call ainda sem horário vai como dia
+inteiro (sem lembrete); quando o horário sai, chega um convite novo com o lembrete e o de dia inteiro é
+cancelado (numa simples atualização, o Outlook manteria o "sem lembrete" da primeira versão).
 
 1. Crie uma conta Gmail só para isso (não use e-mail pessoal ou de trabalho).
 2. Nela, ative a **verificação em duas etapas** e crie uma **senha de app**
@@ -161,8 +163,8 @@ Observações:
 - `calendario_b3/filtros.py` aplica a cobertura e as palavras-chave de `config.yaml`.
 - `dados/eventos.json` guarda o histórico: eventos passados continuam no calendário mesmo
   depois que a B3 os remove; eventos futuros que sumiram (remarcados/cancelados) saem.
-- Se nada for lido da B3 (download falhou ou layout mudou), o calendário **não** é
-  sobrescrito e o workflow falha, e o GitHub envia um e-mail avisando.
+- Se nada for lido da B3 (download falhou ou layout mudou), a rodada segue com os eventos já
+  conhecidos + CVM + sites de RI (convites e WhatsApp continuam) e deixa um aviso no log do workflow.
 
 ## Rodar localmente
 

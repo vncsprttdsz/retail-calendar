@@ -244,6 +244,22 @@ def test_cli_nao_sobrescreve_quando_nada_e_lido(tmp_path: Path):
     assert saida.read_text() == "ANTIGO"
 
 
+def test_cli_b3_fora_do_ar_segue_com_eventos_conhecidos(tmp_path: Path, monkeypatch):
+    # Bug real (nov/26): a página da B3 mudou e a rodada parava inteira (sem RI, convites e WhatsApp).
+    cfg = tmp_path / "config.yaml"
+    cfg.write_text(CONFIG_TESTE, encoding="utf-8")
+    monkeypatch.delenv("COVERAGE_FILE", raising=False)
+    arq, vazio = tmp_path / "cronograma.xlsx", tmp_path / "vazio.csv"
+    arq.write_bytes(planilha_longa())
+    vazio.write_text("nada;aqui\n1;2\n")
+    saida, hist = tmp_path / "cal.ics", tmp_path / "eventos.json"
+    base = ["--config", str(cfg), "--saida", str(saida), "--historico", str(hist)]
+    assert cli.main(base + ["--arquivo", str(arq)]) == 0
+    antes = saida.read_text(encoding="utf-8")
+    assert cli.main(base + ["--arquivo", str(vazio)]) == 0
+    assert saida.read_text(encoding="utf-8").count("BEGIN:VEVENT") == antes.count("BEGIN:VEVENT") == 3
+
+
 def test_html_sem_tabela_nao_quebra():
     assert parser.tabelas_de_html("<html><body><p>sem tabela</p></body></html>") == []
 
@@ -1129,12 +1145,21 @@ def test_convites_novo_atualizacao_e_cancelamento(monkeypatch, tmp_path, caplog)
 
     assert enviar([call]) == 0  # nada mudou: nada reenviado
 
-    # Ganhou horário e link: atualização do mesmo convite (mesmo UID, SEQUENCE maior).
+    # Ganhou horário: convite novo (com lembrete de 30 min) e o de dia inteiro cancelado. Numa
+    # atualização do mesmo convite o Outlook manteria o lembrete da 1ª versão (nenhum).
     com_hora = Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5), time(11), extras={"link": "https://zoom.us/webinar/register/1"})
-    assert enviar([com_hora]) == 1
+    assert enviar([com_hora]) == 2
+    novo, cancelado = (_cal(m) for m in smtp.enviadas[-2:])
+    assert [m["Subject"] for m in smtp.enviadas[-2:]] == ["CEAB Call 3Q26 (05/11 11:00)", "Cancelado: CEAB Call 3Q26 (dia inteiro)"]
+    assert f"UID:{uid}" not in novo and "SEQUENCE:0" in novo and "DTSTART:20261105T140000Z" in novo and "TRIGGER:-PT30M" in novo
+    assert "URL:https://zoom.us/webinar/register/1" in novo
+    assert "METHOD:CANCEL" in cancelado and f"UID:{uid}" in cancelado and "SEQUENCE:1" in cancelado
+    uid = re.search(r"UID:(\S+)", novo)[1]
+
+    # Mudou o horário: atualização do mesmo convite (o lembrete já existe).
+    assert enviar([Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5), time(12), extras=com_hora.extras)]) == 1
     cal = _cal(smtp.enviadas[-1])
-    assert smtp.enviadas[-1]["Subject"] == "Atualizado: CEAB Call 3Q26 (05/11 11:00)"
-    assert f"UID:{uid}" in cal and "SEQUENCE:1" in cal and "DTSTART:20261105T140000Z" in cal and "URL:https://zoom.us/webinar/register/1" in cal
+    assert smtp.enviadas[-1]["Subject"] == "Atualizado: CEAB Call 3Q26 (05/11 12:00)" and f"UID:{uid}" in cal and "SEQUENCE:1" in cal
 
     # Saiu do calendário antes de acontecer: cancelamento.
     assert enviar([]) == 1

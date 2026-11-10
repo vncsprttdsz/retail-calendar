@@ -233,7 +233,13 @@ def main(argv: list[str] | None = None) -> int:
     cfg_cal, cfg_fonte, cfg_ev = cfg["calendario"], cfg["fonte"], cfg.get("eventos", {})
     forcadas = cfg_fonte.get("colunas") or {}
 
-    tabelas = coletar_tabelas(cfg_fonte, args.arquivo)
+    try:
+        tabelas = coletar_tabelas(cfg_fonte, args.arquivo)
+    except Exception as e:
+        if args.inspecionar:
+            raise
+        log.error("página/arquivo da B3 indisponível (%s)", e)
+        tabelas = []
 
     if args.inspecionar:
         for nome, df in tabelas:
@@ -297,13 +303,19 @@ def main(argv: list[str] | None = None) -> int:
         log.info("%s: %d linhas com data", nome, len(extraidas))
         linhas += extraidas
 
-    if not linhas:
-        # Não sobrescreve o calendário: provavelmente a B3 mudou o layout ou o download falhou.
-        log.error("nenhum evento lido da B3 (%d tabelas). Rode com --inspecionar.", len(tabelas))
-        return 2
-
     cobertura = carregar_cobertura(cfg.get("cobertura"), args.config.resolve().parent)
-    novos = filtrar(linhas, cobertura, cfg_ev.get("palavras_chave", []), bool(cfg_ev.get("incluir_todos")))
+    if linhas:
+        novos = filtrar(linhas, cobertura, cfg_ev.get("palavras_chave", []), bool(cfg_ev.get("incluir_todos")))
+    else:
+        # B3 fora do ar ou com layout novo: segue com os eventos já conhecidos (CVM, sites de RI,
+        # convites e WhatsApp continuam funcionando) em vez de parar tudo. Sem histórico, não há base.
+        tickers_b3 = {emp.ticker for emp in cobertura}
+        novos = [e for e in historico.carregar(args.historico) if e.ticker in tickers_b3]
+        log.error("nenhum evento lido da B3 (%d tabelas); seguindo com os %d eventos já conhecidos. "
+                  "Rode com --inspecionar.", len(tabelas), len(novos))
+        print("::warning title=B3::Planilha da B3 não lida; calendário atualizado só com CVM, sites de RI e Yahoo")
+        if not novos:
+            return 2
     encontrados = {e.ticker for e in novos}
     log.info("%d eventos da cobertura (%d empresas)", len(novos), len(encontrados))
     sem_evento = [emp.ticker for emp in cobertura if emp.ticker not in encontrados]

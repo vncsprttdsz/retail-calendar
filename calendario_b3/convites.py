@@ -6,6 +6,9 @@ Tarefas Pendentes, app no celular). O convite (iTIP, METHOD:REQUEST) entra no ca
 Cada evento tem UID fixo por empresa, tipo e trimestre ("LREN call 3Q26"); quando data, horário,
 título ou link mudam, sai uma atualização do mesmo convite com SEQUENCE maior (o Outlook substitui
 o evento), e quando o evento some do calendário sai um cancelamento (METHOD:CANCEL).
+Exceção: call sem horário (dia inteiro, sem lembrete) que ganha horário vira convite novo, e o de dia
+inteiro é cancelado: numa atualização o Outlook mantém o lembrete da 1ª versão (nenhum), e o
+lembrete de 30 min do call nunca apareceria.
 `dados/convites.json` guarda o que já foi enviado.
 
 Variáveis de ambiente (secrets do GitHub):
@@ -38,13 +41,17 @@ log = logging.getLogger(__name__)
 SMTP = ("smtp.gmail.com", 465)
 
 
+DIA_INTEIRO = " dia inteiro"
+
+
 def _chave(e: Evento) -> str:
     t, tipo, rotulo = ajustes.chave(e)
-    return f"{t} {tipo} {rotulo or e.evento}"
+    return f"{t} {tipo} {rotulo or e.evento}" + (DIA_INTEIRO if tipo == "call" and not e.hora else "")
 
 
 def _uid(chave: str) -> str:
-    return hashlib.sha1(f"convite|{chave}".encode()).hexdigest()[:20] + "@retail-calendar"
+    # v2: o UID antigo ("convite|LREN call 3Q26") fica guardado no estado dos convites já enviados.
+    return hashlib.sha1(f"convite|v2|{chave}".encode()).hexdigest()[:20] + "@retail-calendar"
 
 
 # Horário de referência da divulgação de resultados, por bolsa: (fuso, hora, minuto).
@@ -99,12 +106,12 @@ def _assinatura(e: Evento, fuso: str, duracao: int, mercado: dict | None = None)
 
 
 def montar(metodo: str, chave: str, sequencia: int, e: Evento, organizador: str, destinatarios: list[str],
-           fuso: str, duracao: int, agora: datetime, mercado: dict | None = None) -> str:
+           fuso: str, duracao: int, agora: datetime, mercado: dict | None = None, uid: str | None = None) -> str:
     """iCalendar de um convite (REQUEST) ou cancelamento (CANCEL)."""
     linhas = [
         "BEGIN:VCALENDAR", "VERSION:2.0", f"PRODID:{ics.PRODID}", "CALSCALE:GREGORIAN", f"METHOD:{metodo}",
         "BEGIN:VEVENT",
-        f"UID:{_uid(chave)}",
+        f"UID:{uid or _uid(chave)}",
         f"SEQUENCE:{sequencia}",
         f"DTSTAMP:{agora.astimezone(timezone.utc):%Y%m%dT%H%M%SZ}",
         f"ORGANIZER;CN=Calendário de Resultados:mailto:{organizador}",
@@ -181,6 +188,7 @@ def enviar(eventos: list[Evento], caminho_estado: Path, hoje: date, fuso: str, d
         return 0
     enviados = 0
     agora = datetime.now(timezone.utc)
+    com_horario = {chave for metodo, chave, *_ in plano if metodo == "REQUEST"} | set(estado)
     try:
         conexao = (smtp_factory or (lambda: smtplib.SMTP_SSL(*SMTP, timeout=60)))()
         conexao.login(de, senha)
@@ -193,14 +201,18 @@ def enviar(eventos: list[Evento], caminho_estado: Path, hoje: date, fuso: str, d
             nome = ics.titulo(e)
             visto, _ = _convite(e, fuso, mercado or {})  # assunto com o horário que vai no convite
             anterior = estado.get(chave) or {}
+            uid = anterior.get("uid") or _uid(chave)
             reenvio = metodo == "REQUEST" and anterior.get("assinatura") == assinatura  # só para quem entrou na lista
-            if metodo == "CANCEL":
+            if metodo == "CANCEL" and chave.endswith(DIA_INTEIRO) and chave.removesuffix(DIA_INTEIRO) in com_horario:
+                assunto = f"Cancelado: {nome} (dia inteiro)"
+                texto = f"{nome}: substituído pelo convite com horário (lembrete 30 min antes)."
+            elif metodo == "CANCEL":
                 assunto, texto = f"Cancelado: {nome}", f"{nome} ({_quando(visto)}) saiu do calendário de resultados."
             elif seq == 0 or reenvio:
                 assunto, texto = f"{nome} ({_quando(visto)})", f"{nome}: {_quando(visto)}" + (f"\nWebcast: {e.extras['link']}" if e.extras.get("link") else "")
             else:
                 assunto, texto = f"Atualizado: {nome} ({_quando(visto)})", f"{nome}: {_quando(visto)}" + (f"\nWebcast: {e.extras['link']}" if e.extras.get("link") else "")
-            cal = montar(metodo, chave, seq, e, de, para, fuso, duracao, agora, mercado)
+            cal = montar(metodo, chave, seq, e, de, para, fuso, duracao, agora, mercado, uid)
             try:
                 if i:
                     relogio.sleep(pausa)
@@ -215,7 +227,7 @@ def enviar(eventos: list[Evento], caminho_estado: Path, hoje: date, fuso: str, d
             else:
                 recebidos = set(anterior.get("para") or []) if reenvio else set()
                 estado[chave] = {"sequencia": seq, "assinatura": assinatura, "data": e.data.isoformat(), "evento": e.para_json(),
-                                 "para": sorted(recebidos | {_hash(d) for d in destino})}
+                                 "para": sorted(recebidos | {_hash(d) for d in destino}), "uid": uid}
     finally:
         try:
             conexao.quit()
