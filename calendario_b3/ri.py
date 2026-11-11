@@ -245,13 +245,22 @@ def _sem_urldefense(link: str) -> str:
         return link
 
 
+# Gravação de call antigo (ex.: "vulcabras_3t23_por.mp4" no lugar do Zoom do 3T26, depois do call): não é link de
+# inscrição/transmissão, e trocar o link por ela atualizaria o convite depois do evento.
+_RE_GRAVACAO = re.compile(r"\.(mp4|m4v|mov|mp3|m4a|wav|webm|pdf)(\?|#|$)", re.I)
+
+
+def e_gravacao(link: str) -> bool:
+    return bool(_RE_GRAVACAO.search(link or ""))
+
+
 def links_de_call(html: str) -> list[str]:
     """Links de inscrição/transmissão do call; o do call em português primeiro, o em inglês por último."""
     html = html or ""
     achados = {}
     for m in _RE_LINK_CALL.finditer(html):
         link = _sem_urldefense(m.group(0).replace("&amp;", "&"))
-        if re.search(r"\.(png|jpe?g|svg|gif|css|js)(\?|$)", link, re.I) or link in achados:
+        if re.search(r"\.(png|jpe?g|svg|gif|css|js)(\?|$)", link, re.I) or e_gravacao(link) or link in achados:
             continue
         achados[link] = _idioma_do_link(html, m.start())
     return sorted(achados, key=lambda l: -achados[l])  # sorted é estável: empate mantém a ordem da página
@@ -266,6 +275,8 @@ def de_mz(ticker: str, eventos: list[dict]) -> list[EventoRI]:
         if not cls or not ev.get("event_date"):
             continue
         link = (ev.get("external_link") or "").strip()
+        if e_gravacao(link):
+            link = ""
         if not link:
             achados = links_de_call(f"{ev.get('event_details') or ''} {ev.get('advanced') or ''}")
             link = achados[0] if achados else ""

@@ -1465,3 +1465,53 @@ def test_mz_sem_eventos_futuros_em_outro_formato(monkeypatch, resposta):
     # Bug real (SMFT3/VIVA3 depois do call): "'str' object has no attribute 'get'".
     monkeypatch.setattr(ri.requests, "get", lambda *a, **k: type("R", (), {"raise_for_status": lambda s: None, "json": lambda s: resposta})())
     assert ri.mz_eventos("id") == []
+
+
+def _utc(dia, h, m=0):
+    """Horário de Brasília (UTC−3) em UTC."""
+    from datetime import datetime, timezone, timedelta
+    return datetime(dia.year, dia.month, dia.day, h, m, tzinfo=timezone(timedelta(hours=-3))).astimezone(timezone.utc)
+
+
+def test_call_que_ja_comecou_nao_muda_horario_nem_link():
+    # Bug real (VULC3, 11/11/2026): depois do call, o RI passou a mostrar a gravação de 2023 no lugar do Zoom; o
+    # link mudou e o convite foi atualizado às 15h, depois do evento.
+    dia, zoom = date(2026, 11, 11), "https://mzgroup.zoom.us/webinar/register/WN_k1#/registration"
+    antigo = Evento("VULC3", "Vulcabras", "Call 3Q26", dia, extras={"fonte": "RI", "link": zoom})
+    gravacao = "https://mzcast.mziq.com/webcast/vulcabras/vulcabras_3t23_por.mp4"
+    novo = lambda link, hora=None: Evento("VULC3", "Vulcabras", "Call 3Q26", dia, hora, extras={"fonte": "RI", "link": link})  # noqa: E731
+    [e] = historico.mesclar([antigo], [novo("https://outro.zoom")], dia, {"VULC3"}, agora=_utc(dia, 15, 5))
+    assert e.extras["link"] == zoom                              # dia inteiro: depois das 9h, congelado
+    [e] = historico.mesclar([antigo], [novo("https://outro.zoom")], dia, {"VULC3"}, agora=_utc(dia, 8))
+    assert e.extras["link"] == "https://outro.zoom"              # antes de começar, mudança vale
+    com_hora = Evento("VULC3", "Vulcabras", "Call 3Q26", dia, time(10), extras={"link": zoom, "fim": "11:00"})
+    [e] = historico.mesclar([com_hora], [novo("https://outro", time(14))], dia, {"VULC3"}, agora=_utc(dia, 10, 30))
+    assert (e.hora, e.extras["link"], e.extras["fim"]) == (time(10), zoom, "11:00")
+    [e] = historico.mesclar([com_hora], [novo("https://outro", time(14))], dia, {"VULC3"}, agora=_utc(dia, 9, 30))
+    assert (e.hora, e.extras["link"]) == (time(14), "https://outro")  # remarcado antes de começar
+    # dia seguinte: congelado sem precisar de "agora"
+    [e] = historico.mesclar([com_hora], [novo(gravacao)], date(2026, 11, 12), {"VULC3"})
+    assert (e.hora, e.extras["link"]) == (time(10), zoom)
+    # gravação não é link de call
+    assert ri.links_de_call(f'<a href="{gravacao}">replay</a> <a href="{zoom}">inscrição</a>') == [zoom]
+    [r] = ri.de_mz("VULC3", [{"event_name": "Teleconferência de Resultados 3T26", "event_date": "2026-11-11",
+                              "external_link": gravacao}])
+    assert r.link == ""
+
+
+def test_convite_nao_atualiza_depois_que_o_evento_comecou():
+    dia, fuso = date(2026, 11, 11), "America/Sao_Paulo"
+    antes = Evento("VULC3", "Vulcabras", "Call 3Q26", dia, extras={"link": "https://zoom/a"})
+    depois = Evento("VULC3", "Vulcabras", "Call 3Q26", dia, extras={"link": "https://zoom/b"})
+    [(_, chave, seq, _, assinatura, _)] = convites.planejar([antes], {}, dia, fuso, 60, para=["a@x"], agora=_utc(dia, 7))
+    estado = {chave: {"sequencia": seq, "assinatura": assinatura, "data": dia.isoformat(), "evento": antes.para_json(),
+                      "para": [convites._hash("a@x")], "uid": "u"}}
+    plano = lambda ev, h: convites.planejar(ev, estado, dia, fuso, 60, para=["a@x"], agora=_utc(dia, h))  # noqa: E731
+    assert [(m, s) for m, _, s, *_ in plano([depois], 8)] == [("REQUEST", 1)]   # antes das 9h: atualiza
+    assert plano([depois], 15) == []                                              # depois: não mexe no convite
+    assert plano([], 15) == []                                                    # nem cancela
+    assert [m for m, *_ in plano([], 8)] == ["CANCEL"]
+    # call novo cujo horário já passou não vira convite
+    tarde = Evento("ASAI3", "Assaí", "Call 3Q26", dia, time(10))
+    assert convites.planejar([tarde], {}, dia, fuso, 60, para=["a@x"], agora=_utc(dia, 11)) == []
+    assert len(convites.planejar([tarde], {}, dia, fuso, 60, para=["a@x"], agora=_utc(dia, 9))) == 1

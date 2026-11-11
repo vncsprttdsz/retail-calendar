@@ -13,7 +13,7 @@ import json
 import logging
 import sys
 import traceback
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -342,7 +342,7 @@ def main(argv: list[str] | None = None) -> int:
     falhas = set(falhas) | falhas_ri
     novos += externos
     tickers = {e.ticker for e in cobertura} | {str(i["ticker"]).upper() for i in cfg.get("exterior") or []}
-    eventos = historico.mesclar(antes, novos, hoje, tickers, preservar=falhas)
+    eventos = historico.mesclar(antes, novos, hoje, tickers, agora=datetime.now(timezone.utc), preservar=falhas)
     historico.salvar(args.historico, eventos)
     if antes:  # primeira execução não gera aviso de "tudo novo"
         notificar.enviar(notificar.diferencas(antes, eventos, hoje))

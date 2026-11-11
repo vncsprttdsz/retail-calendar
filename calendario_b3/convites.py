@@ -143,17 +143,24 @@ def _hash(email: str) -> str:
 
 
 def planejar(eventos: list[Evento], estado: dict, hoje: date, fuso: str, duracao: int, mercado: dict | None = None,
-             para: list[str] | None = None) -> list[tuple]:
+             para: list[str] | None = None, agora: datetime | None = None) -> list[tuple]:
     """O que enviar: [(metodo, chave, sequencia, evento, assinatura, destinatarios), ...].
 
     Evento novo ou alterado vai para todos; evento sem mudança vai só para quem ainda não o recebeu
-    (ex.: alguém entrou na lista), com a mesma SEQUENCE."""
+    (ex.: alguém entrou na lista), com a mesma SEQUENCE.
+
+    Evento que já começou (`agora` depois do horário; sem horário, depois das 9h do dia) não recebe convite
+    novo, atualização nem cancelamento: o convite que a pessoa tem fica como estava (o Outlook aplica a
+    atualização ao evento inteiro, e mudar o convite depois do call só apaga o que valia)."""
+    from .historico import comecou
     para = para or []
     futuros = {_chave(e): e for e in eventos if e.data >= hoje}
     plano = []
     for chave, e in sorted(futuros.items(), key=lambda kv: (kv[1].data, kv[0])):
         assinatura = _assinatura(e, fuso, duracao, mercado)
         anterior = estado.get(chave)
+        if comecou(e, agora, fuso) or (anterior and comecou(Evento.de_json(anterior["evento"]), agora, fuso)):
+            continue
         if anterior is None:
             plano.append(("REQUEST", chave, 0, e, assinatura, para))
         elif anterior["assinatura"] != assinatura:
@@ -164,14 +171,15 @@ def planejar(eventos: list[Evento], estado: dict, hoje: date, fuso: str, duracao
             if novos:
                 plano.append(("REQUEST", chave, anterior["sequencia"], e, assinatura, novos))
     for chave, anterior in estado.items():
-        if chave not in futuros and anterior["data"] >= hoje.isoformat():  # sumiu antes de acontecer
+        if chave not in futuros and anterior["data"] >= hoje.isoformat() \
+                and not comecou(Evento.de_json(anterior["evento"]), agora, fuso):  # sumiu antes de acontecer
             e = Evento.de_json(anterior["evento"])
             plano.append(("CANCEL", chave, anterior["sequencia"] + 1, e, anterior["assinatura"], para))
     return plano
 
 
 def enviar(eventos: list[Evento], caminho_estado: Path, hoje: date, fuso: str, duracao: int,
-           smtp_factory=None, pausa: float = 1.0, mercado: dict | None = None) -> int:
+           smtp_factory=None, pausa: float = 1.0, mercado: dict | None = None, agora: datetime | None = None) -> int:
     """Envia convites novos, atualizações e cancelamentos. Devolve quantos e-mails saíram.
     `mercado`: {ticker: (bolsa, "fechamento"|"abertura")} para o horário da divulgação (padrão: B3, fechamento)."""
     de, senha = os.environ.get("CONVITE_EMAIL", "").strip(), os.environ.get("CONVITE_SENHA", "").replace(" ", "")
@@ -180,14 +188,17 @@ def enviar(eventos: list[Evento], caminho_estado: Path, hoje: date, fuso: str, d
         log.info("CONVITE_EMAIL/CONVITE_SENHA/CONVITE_PARA não configurados; convites não enviados")
         return 0
     estado = json.loads(caminho_estado.read_text(encoding="utf-8")) if caminho_estado.exists() else {}
-    plano = planejar(eventos, estado, hoje, fuso, duracao, mercado, para)
+    # "agora" coerente com "hoje": se quem chama passa outro dia (testes, reprocessamento), vale o início desse dia
+    agora = agora or datetime.now(timezone.utc)
+    if agora.astimezone(ZoneInfo(fuso)).date() != hoje:
+        agora = datetime.combine(hoje, time(0), ZoneInfo(fuso))
+    plano = planejar(eventos, estado, hoje, fuso, duracao, mercado, para, agora)
     # Eventos que já passaram saem do estado (não há o que atualizar).
     estado = {k: v for k, v in estado.items() if v["data"] >= hoje.isoformat()}
     if not plano:
         caminho_estado.write_text(json.dumps(estado, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
         return 0
     enviados = 0
-    agora = datetime.now(timezone.utc)
     com_horario = {chave for metodo, chave, *_ in plano if metodo == "REQUEST"} | set(estado)
     try:
         conexao = (smtp_factory or (lambda: smtplib.SMTP_SSL(*SMTP, timeout=60)))()
