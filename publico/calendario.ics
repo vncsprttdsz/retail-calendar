@@ -1094,10 +1094,9 @@ TRANSP:TRANSPARENT
 X-MICROSOFT-CDO-BUSYSTATUS:FREE
 X-MICROSOFT-CDO-ALLDAYEVENT:TRUE
 SUMMARY:VULC Call 3Q26
-DESCRIPTION:Webcast: https://mzgroup.zoom.us/webinar/register/WN_k1FkDZBUR7
- 6KU5VCnOgOtw#/registration
-URL:https://mzgroup.zoom.us/webinar/register/WN_k1FkDZBUR76KU5VCnOgOtw#/reg
- istration
+DESCRIPTION:Webcast: https://mzcast.mziq.com/webcast/vulcabras/vulcabras_3t
+ 23_por.mp4
+URL:https://mzcast.mziq.com/webcast/vulcabras/vulcabras_3t23_por.mp4
 CATEGORIES:Resultados
 END:VEVENT
 BEGIN:VEVENT

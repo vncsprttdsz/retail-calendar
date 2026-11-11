@@ -978,9 +978,7 @@
     "hora": "10:30",
     "periodo": "",
     "visto_em": "2026-10-09T10:11:32Z",
-    "extras": {
-      "fonte": "RI"
-    }
+    "extras": {}
   },
   {
     "ticker": "VULC3",
@@ -990,10 +988,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-03-10"
-    }
+    "extras": {}
   },
   {
     "ticker": "AZZA3",
@@ -1018,7 +1013,7 @@
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {
       "fonte": "RI",
-      "link": "https://mzgroup.zoom.us/webinar/register/WN_k1FkDZBUR76KU5VCnOgOtw#/registration"
+      "link": "https://mzcast.mziq.com/webcast/vulcabras/vulcabras_3t23_por.mp4"
     }
   },
   {
