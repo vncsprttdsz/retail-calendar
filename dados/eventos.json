@@ -998,10 +998,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-03-25"
-    }
+    "extras": {}
   },
   {
     "ticker": "VULC3",
@@ -1180,7 +1177,7 @@
     "empresa": "NATURA",
     "evento": "Call 3Q26",
     "data": "2026-11-13",
-    "hora": "07:00",
+    "hora": "09:00",
     "periodo": "",
     "visto_em": "2026-10-09T08:15:03Z",
     "extras": {

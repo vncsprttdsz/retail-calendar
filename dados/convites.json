@@ -121,30 +121,6 @@
   "sequencia": 0,
   "uid": "4d60305098a9bff3dcfb@retail-calendar"
  },
- "AZZA3 resultado 3Q26": {
-  "assinatura": "d9f8510674004e23",
-  "data": "2026-11-11",
-  "evento": {
-   "data": "2026-11-11",
-   "empresa": "AZZAS 2154",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "entregue": "2026-03-25",
-    "fonte": "CVM"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "AZZA3",
-   "visto_em": "2026-10-03T17:10:57Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "6613ad93816c850b03c3@retail-calendar"
- },
  "DMVF3 call 3Q26 dia inteiro": {
   "assinatura": "3d72867fd7ce886e",
   "data": "2026-11-13",
@@ -334,7 +310,7 @@
   "uid": "d2bbf0586c9036003d64@retail-calendar"
  },
  "NATU3 call 3Q26": {
-  "assinatura": "b53c26975fa5886c",
+  "assinatura": "52a71c8ff09ea253",
   "data": "2026-11-13",
   "evento": {
    "data": "2026-11-13",
@@ -344,7 +320,7 @@
     "fonte": "RI",
     "link": "https://tenmeetings.com.br/ten-events/#/webinar?evento=ConferenciadeResultados3T26_158"
    },
-   "hora": "07:00",
+   "hora": "09:00",
    "periodo": "",
    "ticker": "NATU3",
    "visto_em": "2026-10-09T08:15:03Z"
@@ -354,7 +330,7 @@
    "7a8223113896",
    "eb589560c66d"
   ],
-  "sequencia": 0,
+  "sequencia": 1,
   "uid": "3d89bd7f86ef3ea61748@retail-calendar"
  },
  "NATU3 resultado 3Q26": {
@@ -476,29 +452,5 @@
   ],
   "sequencia": 0,
   "uid": "a9baf9a62c3e1e46a8ad@retail-calendar"
- },
- "VULC3 call 3Q26 dia inteiro": {
-  "assinatura": "3f55d3583be6958c",
-  "data": "2026-11-11",
-  "evento": {
-   "data": "2026-11-11",
-   "empresa": "VULCABRAS",
-   "evento": "Call 3Q26",
-   "extras": {
-    "fonte": "RI",
-    "link": "https://mzcast.mziq.com/webcast/vulcabras/vulcabras_3t23_por.mp4"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "VULC3",
-   "visto_em": "2026-10-09T08:15:03Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 3,
-  "uid": "4914434911988ea75dd9@retail-calendar"
  }
 }
