@@ -472,9 +472,42 @@ _RE_HORA_TEXTO = re.compile(
 )
 
 
-def horarios_no_texto(texto: str) -> dict[tuple[int, int], time]:
+# Um horário e o rótulo que vem depois dele, até o próximo horário: "07:00 a.m. | Nova York", "11:00 (Brasil) /".
+_RE_HORA_ROTULO = re.compile(r"(?<!\d)(\d{1,2})\s*(?:h\s*(\d{2})?|:(\d{2}))(?:\s*([ap])\.?\s?m\b\.?)?([^\d]{0,40})", re.I)
+_RE_BRASILIA = re.compile(r"bras[íi]lia|\bbrasil\b|\bBRT\b", re.I)
+_RE_NOVA_YORK = re.compile(r"nova york|new york|\bNY\b|\bE[SD]?T\b|eastern", re.I)
+
+
+def _hora_brasilia(trecho: str, dia: date) -> time | None:
+    """Horário de Brasília na lista de fusos após a data: o rotulado como Brasília; se o primeiro horário for
+    o de Nova York e nenhum vier como Brasília, ele convertido. None: sem rótulos (vale o primeiro horário)."""
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+
+    achados = []
+    for m in _RE_HORA_ROTULO.finditer(trecho):
+        hora, minuto = int(m[1]), int(m[2] or m[3] or 0)
+        if m[4] and m[4].lower() == "p" and hora < 12:
+            hora += 12
+        elif m[4] and m[4].lower() == "a" and hora == 12:
+            hora = 0
+        if hora < 24 and minuto < 60:
+            achados.append((time(hora, minuto), m[5]))
+    for t, rotulo in achados:
+        if _RE_BRASILIA.search(rotulo):
+            return t
+    if achados and _RE_NOVA_YORK.search(achados[0][1]):
+        t = achados[0][0]
+        ny = datetime(dia.year, dia.month, dia.day, t.hour, t.minute, tzinfo=ZoneInfo("America/New_York"))
+        return ny.astimezone(ZoneInfo("America/Sao_Paulo")).time()
+    return None
+
+
+def horarios_no_texto(texto: str, hoje: date | None = None) -> dict[tuple[int, int], time]:
     """Horário do call escrito por extenso na home, ex. "Videoconferência: 6 de novembro 10h (Brasil) /
-    8h (US-ET)" -> {(11, 6): 10:00}. Vale o primeiro horário após a data (Brasília nos sites daqui)."""
+    8h (US-ET)" -> {(11, 6): 10:00}. Com vários fusos, vale o rotulado como Brasília (a Natura põe Nova York
+    primeiro: "07:00 a.m. | Nova York 09:00 a.m. | Brasília"); sem rótulo, o primeiro horário após a data."""
+    hoje = hoje or date.today()
     saida: dict[tuple[int, int], time] = {}
     for m in _RE_HORA_TEXTO.finditer(texto or ""):
         if m["d1"]:
@@ -487,7 +520,15 @@ def horarios_no_texto(texto: str) -> dict[tuple[int, int], time]:
         if m["ampm"] and m["ampm"].lower() == "p" and hora < 12:
             hora += 12
         if 1 <= mes <= 12 and hora < 24 and minuto < 60:
-            saida.setdefault((mes, dia), time(hora, minuto))
+            try:
+                d = date(hoje.year, mes, dia)
+            except ValueError:
+                continue
+            if d < hoje - timedelta(days=60):
+                d = date(hoje.year + 1, mes, dia)
+            # lista de fusos logo após a data (até o próximo bloco de texto)
+            trecho = re.split(r"(?i)divulga|per[íi]odo de sil|clique|acesse|transmiss", texto[m.start("h"): m.start("h") + 160])[0]
+            saida.setdefault((mes, dia), _hora_brasilia(trecho, d) or time(hora, minuto))
     return saida
 
 
@@ -651,11 +692,11 @@ def eventos_da_empresa(item: dict, hoje: date) -> list[EventoRI]:
         raise ConnectionError("site de RI inacessível")
     # Horário do call só no texto da home (ex.: Renner: "Videoconferência: 6 de novembro 10h";
     # SBFG: pop-up "VIDEOCONFERÊNCIA ... Terça-feira, 10 de Novembro de 2026 11h (Brasília)").
-    horas = horarios_no_texto(_texto(home))
+    horas = horarios_no_texto(_texto(home), hoje)
     if any(e.tipo == "call" and not e.inicio and e.dia >= hoje for e in eventos):
         # C&A: o pop-up é uma imagem ("Agenda_3T26_PT.png"); o texto vem por OCR.
         for img in imagens_de_popup(home):
-            horas = {**horarios_no_texto(ocr(img)), **horas}
+            horas = {**horarios_no_texto(ocr(img), hoje), **horas}
     for e in eventos:
         if e.tipo == "call" and not e.inicio and (e.dia.month, e.dia.day) in horas:
             e.inicio = horas[(e.dia.month, e.dia.day)]

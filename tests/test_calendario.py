@@ -1092,6 +1092,26 @@ def test_ocr_real_cea_e_panvel():
     assert ri.horarios_no_texto(panvel) == {(11, 6): time(9, 30)}
 
 
+def test_horario_de_brasilia_entre_varios_fusos():
+    # Textos reais das homes de RI, 12/11/2026. A Natura põe Nova York antes de Brasília (o calendário
+    # marcava o call às 07:00, o horário de NY).
+    natura = ("Participe da Teleconferência de Resultados do 3T26 da Natura Sexta-Feira, 13 de Novembro de 2026 "
+              "07:00 a.m. | Nova York 09:00 a.m. | Brasília 12:00 p.m. | Londres A transmissão será em Português "
+              "com tradução simultânea para o Inglês A Divulgação dos Resultados do 3T26 ocorrerá no dia 12 de "
+              "Novembro de 2026, quinta-feira, após o fechamento do mercado.")
+    mateus = ("Divulgação de Resultados 3T26 12 de novembro de 2026 – Após o fechamento do mercado "
+              "Videoconferência (acesse aqui) Data: 13 de novembro 11h (BRT) 10h (Nova York)")
+    allied = ("Videoconferência 13 de novembro de 2026 (sexta-feira) Horário: 10h Brasília | 08h EST "
+              "Clique aqui para acessar a videoconferência")
+    hoje = date(2026, 11, 12)
+    assert ri.horarios_no_texto(natura, hoje) == {(11, 13): time(9)}
+    assert ri.horarios_no_texto(mateus, hoje) == {(11, 13): time(11)}
+    assert ri.horarios_no_texto(allied, hoje) == {(11, 13): time(10)}
+    # só Nova York: convertido para Brasília (EST em novembro, EDT em agosto)
+    assert ri.horarios_no_texto("Teleconferência 13 de novembro 07:00 a.m. (Nova York)", hoje) == {(11, 13): time(9)}
+    assert ri.horarios_no_texto("Teleconferência 13 de agosto 10:00 a.m. ET", date(2026, 8, 1)) == {(8, 13): time(11)}
+
+
 def test_uid_muda_quando_call_ganha_horario():
     # Mesmo UID para o call "dia inteiro" e com horário fazia o Outlook manter 24h de duração.
     sem_hora = Evento("CEAB3", "CEA", "Call 3Q26", date(2026, 11, 5))
