@@ -1022,10 +1022,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-05-25"
-    }
+    "extras": {}
   },
   {
     "ticker": "AUAU3",
@@ -1035,10 +1032,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-03-31"
-    }
+    "extras": {}
   },
   {
     "ticker": "AZZA3",
@@ -1061,10 +1055,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-09T10:11:32Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-09-23"
-    }
+    "extras": {}
   },
   {
     "ticker": "GMAT3",
@@ -1074,10 +1065,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-07-02"
-    }
+    "extras": {}
   },
   {
     "ticker": "NATU3",
@@ -1087,10 +1075,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-03T17:10:57Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2025-12-04"
-    }
+    "extras": {}
   },
   {
     "ticker": "PFRM3",
@@ -1100,10 +1085,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-09T10:11:32Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-09-15"
-    }
+    "extras": {}
   },
   {
     "ticker": "TFCO4",
@@ -1113,10 +1095,7 @@
     "hora": null,
     "periodo": "",
     "visto_em": "2026-10-08T19:27:44Z",
-    "extras": {
-      "fonte": "CVM",
-      "entregue": "2026-06-18"
-    }
+    "extras": {}
   },
   {
     "ticker": "ALLD3",

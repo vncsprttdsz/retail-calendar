@@ -24,30 +24,6 @@
   "sequencia": 1,
   "uid": "d9b6587dcc045406038a@retail-calendar"
  },
- "ALLD3 resultado 3Q26": {
-  "assinatura": "14ea0a1f52b527ef",
-  "data": "2026-11-12",
-  "evento": {
-   "data": "2026-11-12",
-   "empresa": "ALLIED",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "entregue": "2026-05-25",
-    "fonte": "CVM"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "ALLD3",
-   "visto_em": "2026-10-03T17:10:57Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "2e1a1b55c63ab43a2677@retail-calendar"
- },
  "AUAU3 call 3Q26": {
   "assinatura": "219b02fc03596ac1",
   "data": "2026-11-13",
@@ -73,54 +49,6 @@
   "sequencia": 0,
   "uid": "24825447e85e1180cf4f@retail-calendar"
  },
- "AUAU3 resultado 3Q26": {
-  "assinatura": "418a4c732cc52b64",
-  "data": "2026-11-12",
-  "evento": {
-   "data": "2026-11-12",
-   "empresa": "PETZCOBASI",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "entregue": "2026-03-31",
-    "fonte": "CVM"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "AUAU3",
-   "visto_em": "2026-10-03T17:10:57Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "2dd05c4a988b55a8bbc4@retail-calendar"
- },
- "AZZA3 call 3Q26": {
-  "assinatura": "f7c0e79a203c97bc",
-  "data": "2026-11-12",
-  "evento": {
-   "data": "2026-11-12",
-   "empresa": "AZZAS 2154",
-   "evento": "Call 3Q26",
-   "extras": {
-    "fonte": "RI",
-    "link": "https://us06web.zoom.us/j/82791796700"
-   },
-   "hora": "10:00",
-   "periodo": "",
-   "ticker": "AZZA3",
-   "visto_em": "2026-10-09T08:15:03Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "4d60305098a9bff3dcfb@retail-calendar"
- },
  "DMVF3 call 3Q26 dia inteiro": {
   "assinatura": "3d72867fd7ce886e",
   "data": "2026-11-13",
@@ -145,30 +73,6 @@
   "sequencia": 1,
   "uid": "d3fc2697c4ec46d945fb@retail-calendar"
  },
- "DMVF3 resultado 3Q26": {
-  "assinatura": "1aace437d03ccaac",
-  "data": "2026-11-12",
-  "evento": {
-   "data": "2026-11-12",
-   "empresa": "D1000VFARMA",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "entregue": "2026-09-23 16:56:35",
-    "fonte": "CVM"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "DMVF3",
-   "visto_em": "2026-10-09T10:11:32Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "602ec3e1037b71fd5004@retail-calendar"
- },
  "GMAT3 call 3Q26": {
   "assinatura": "25c8b78ffb8eb049",
   "data": "2026-11-13",
@@ -192,30 +96,6 @@
   ],
   "sequencia": 0,
   "uid": "df239418fdd8819522f8@retail-calendar"
- },
- "GMAT3 resultado 3Q26": {
-  "assinatura": "70df5a7c6fb2fde7",
-  "data": "2026-11-12",
-  "evento": {
-   "data": "2026-11-12",
-   "empresa": "GRUPO MATEUS",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "entregue": "2026-07-02",
-    "fonte": "CVM"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "GMAT3",
-   "visto_em": "2026-10-03T17:10:57Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "0df84a7abb4186d96545@retail-calendar"
  },
  "MELI resultado 1Q27": {
   "assinatura": "8d87c7b9a09d5d39",
@@ -333,30 +213,6 @@
   "sequencia": 1,
   "uid": "3d89bd7f86ef3ea61748@retail-calendar"
  },
- "NATU3 resultado 3Q26": {
-  "assinatura": "8a54f1ffbb7615b5",
-  "data": "2026-11-12",
-  "evento": {
-   "data": "2026-11-12",
-   "empresa": "NATURA",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "entregue": "2025-12-04",
-    "fonte": "CVM"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "NATU3",
-   "visto_em": "2026-10-03T17:10:57Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "667480289e3d6678b4a4@retail-calendar"
- },
  "PFRM3 call 3Q26 dia inteiro": {
   "assinatura": "7646af2990af330b",
   "data": "2026-11-13",
@@ -381,30 +237,6 @@
   "sequencia": 1,
   "uid": "deb050cb183cf1aaf2f8@retail-calendar"
  },
- "PFRM3 resultado 3Q26": {
-  "assinatura": "f455d71ceb969efc",
-  "data": "2026-11-12",
-  "evento": {
-   "data": "2026-11-12",
-   "empresa": "PROFARMA",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "entregue": "2026-09-15 18:54:09",
-    "fonte": "CVM"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "PFRM3",
-   "visto_em": "2026-10-09T10:11:32Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "b796a0a0faf9a8062f55@retail-calendar"
- },
  "TFCO4 call 3Q26": {
   "assinatura": "a6473f2ce6687430",
   "data": "2026-11-13",
@@ -428,29 +260,5 @@
   ],
   "sequencia": 0,
   "uid": "7f7da7be68198f5a132e@retail-calendar"
- },
- "TFCO4 resultado 3Q26": {
-  "assinatura": "3cda87c257b58698",
-  "data": "2026-11-12",
-  "evento": {
-   "data": "2026-11-12",
-   "empresa": "TRACK FIELD",
-   "evento": "Resultado 3Q26",
-   "extras": {
-    "entregue": "2026-06-18",
-    "fonte": "CVM"
-   },
-   "hora": null,
-   "periodo": "",
-   "ticker": "TFCO4",
-   "visto_em": "2026-10-08T19:27:44Z"
-  },
-  "para": [
-   "1a7f01c059d8",
-   "7a8223113896",
-   "eb589560c66d"
-  ],
-  "sequencia": 0,
-  "uid": "a9baf9a62c3e1e46a8ad@retail-calendar"
  }
 }
